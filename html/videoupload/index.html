@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+            
+    <meta charset="UTF-8">
+            <title>单张图片上传</title>
+            
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+            
+    <script src="js/exif.js" type="text/javascript"></script>
+        
+</head>
+    
+<body>
+        
+<div id="wrap">
+                <input id="fil" type="file"/>
+    <button onclick="submitbt()">提交</button>
+            
+</div>
+
+        
+        
+<script type="text/javascript">
+
+
+    $(function () {
+        var fil = $("#fil");
+        upload(fil);
+
+        function upload(idName) {
+
+
+            $("<video>").insertAfter("input");
+            fil.bind('change', function () {
+                var fordate = new FormData(); //得到一个FormData对象：
+
+                var fils = $("#fil").get(0).files[0]; //得到file对象
+                console.log(fils);
+                if (fils) {
+                    EXIF.getData(fils, function () {
+                        console.log(EXIF.pretty(this));
+                        EXIF.getAllTags(this);
+                        console.log(EXIF.getTag(this, 'Orientation'));
+                        Orientation = EXIF.getTag(this, 'Orientation');
+                        //return;
+                    });
+
+                    fordate.append('pic', fils); //用append方法添加键值对
+                    var srcc = window.URL.createObjectURL(fils); //传入的参数创建一个指向该参数对象的URL
+                    console.log(fordate);
+
+                    $("video").attr({
+                        'src': srcc,
+                        'width': 500 + 'px',
+                        'heigth': 500 + 'px'
+                    });
+
+                    $.ajax({ //发送ajax请求
+                        url: "index4.php",
+                        type: "post",
+                        data: fordate,
+                        processData: false,
+                        contentType: false,
+                        success: function (html) {
+                            console.log(html);
+                        }
+                    });
+
+                    EXIF.getData(document.querySelector('img'), function () {
+                        console.log(EXIF.pretty(this));
+                        EXIF.getAllTags(this);
+                        console.log(EXIF.getTag(this, 'Orientation'));
+                        OrienCtation = EXIF.getTag(this, 'Orientation');
+                        //return;
+                    });
+
+                    //转换成base64
+                    var reader = new FileReader();
+                    reader.onload = function (fileEvent) {
+
+                        base64 = fileEvent.target.result;
+                        console.log(base64);
+                        EXIF.getData(fileEvent, function () {
+                            console.log(EXIF.pretty(this));
+                            EXIF.getAllTags(this);
+                            console.log(EXIF.getTag(this, 'Orientation'));
+                            OrienCtation = EXIF.getTag(this, 'Orientation');
+                            //return;
+                        });
+                    };
+                    reader.readAsDataURL(fils)
+                    // console.log(reader.readAsDataURL(fils))
+                }
+            });
+        }
+
+
+    });
+
+</script>
+    
+</body>
+</html>

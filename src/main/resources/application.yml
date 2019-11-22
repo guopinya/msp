@@ -1,0 +1,54 @@
+# 日志打印级别
+logging:
+  level:
+    web: debug
+    com.project2501: debug
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: id_worker_str
+  mapper-locations: classpath:/mapper/**/*Mapper.xml
+
+server:
+  #  domain: http://u2265268x2.iok.la
+  domain: http://www.2501p.com
+  port: 8877
+
+shiro:
+  loginUrl: /jumpLogin
+  userNativeSessionManager: true
+  sessionManager:
+    sessionIdUrlRewritingEnabled: false
+
+spring:
+  # 数据源
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/msp?useSSL=true&useUnicode=true&serverTimezone=GMT%2B8&characterEncoding=UTF%2D8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: dt123456
+  jackson:
+    default-property-inclusion: non_null
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+      file-size-threshold: 1024MB
+
+justauth:
+  enabled: true
+  type:
+    qq:
+      union-id: true
+      client-id: 101796940
+      client-secret: 17b9b4d6c098a41350ef1246e33191b5
+      redirect-uri: ${server.domain}/api/login/qq/callback
+    weibo:
+      client-id: 2323725804
+      client-secret: 6d23814af790f4ffbccee47c419081f3
+      redirect-uri: ${server.domain}/api/login/weibo/callback
+    wechat:
+      client-id: wx4207467706549963
+      client-secret: 452189a2f763f47e1d21bb29cf5c72d3
+      redirect-uri: ${server.domain}/api/login/wechat/callback

@@ -1,0 +1,32 @@
+<div class="layui-form" lay-filter="LAY-user-career-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        <input type="hidden" name="careerId" value="{{ d.params.careerId || '' }}">
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">身份名称</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="careerName" value="{{ d.params.careerName || '' }}" lay-verify="required"
+                       placeholder="请输入身份名称" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">认证等级</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let current = d.params.careerCertLevel; }}
+                {{# let attribute0 = (current === 0 || !current) ? 'checked' : ''; }}
+                <input type="radio" name="careerCertLevel" value="0" title="无需认证" {{ attribute0 }}>
+                {{# let attribute1 = (current === 1) ? 'checked' : ''; }}
+                <input type="radio" name="careerCertLevel" value="1" title="需要认证" {{ attribute1 }}>
+            </script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <input class="layui-btn" lay-filter="LAY-user-career-save" lay-submit readonly type="button" value="保存">
+        <input class="layui-btn layui-btn-primary" id="LAY-user-career-return" readonly type="button" value="返回">
+    </div>
+</div>

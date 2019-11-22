@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>帖子详情</title>
+    <meta content="width=device-width,target-densitydpi=device-dpi, user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="true" name="HandheldFriendly"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta content="模型APP内测招募" property="title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="image"/>
+
+    <meta content="模型APP内测招募" property="og:title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="og:image"/>
+
+
+    <script type="text/javascript">
+        if (/Android (\d+\.\d+)/.test(navigator.userAgent)) {
+            var version = parseFloat(RegExp.$1);
+            if (version > 2.3) {
+                var phoneScale = parseInt(window.screen.width) / 750;
+                document.write('<meta name="viewport" content="width=750, minimum-scale = ' + phoneScale + ', maximum-scale = ' + phoneScale + ', target-densitydpi=device-dpi">');
+            } else {
+                document.write('<meta name="viewport" content="width=, target-densitydpi=device-dpi">');
+            }
+        } else {
+            document.write('<meta name="viewport" content="width=750, user-scalable=no">');
+        }
+    </script>
+    <link href="css/style.css" rel="stylesheet">
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="js/pinchzoom.js" type="text/javascript"></script>
+
+    <!-- 浏览器分享 -->
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+    <!-- <script type="text/javascript" src="js/share.js"></script> -->
+
+    <!-- 微信分享 -->
+
+    <!-- <script type="text/javascript" src="js/wxShare.js"></script> -->
+
+    <link href="mescroll/mescroll.min.css" rel="stylesheet"></link>
+    <script type="text/javascript">
+        var host = window.location.host;
+    </script>
+    <style type="text/css">
+        .mescroll {
+            position: fixed;
+            top: 0px;
+            bottom: 110px;
+            height: auto;
+        }
+
+        .mescroll-totop {
+            bottom: 270px;
+            right: 30px;
+        }
+
+        .data-list {
+            border-top: 4px solid #eee;
+        }
+
+        .data-list li {
+            position: relative;
+            padding: 10px 8px 10px 120px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-list .pd-img {
+            position: absolute;
+            left: 18px;
+            top: 18px;
+            width: 80px;
+            height: 80px;
+        }
+
+        .data-list .pd-name {
+            font-size: 16px;
+            line-height: 20px;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .data-list .pd-price {
+            margin-top: 8px;
+            color: red;
+        }
+
+        .data-list .pd-sold {
+            font-size: 12px;
+            margin-top: 8px;
+            color: gray;
+        }
+    </style>
+
+</head>
+<body>
+<!--<div id="head_back">
+    <p class="title">帖子详情</p>
+    <div class="back_app"></div>
+</div>-->
+<div id="postDetail">
+    <div class="content">
+
+        <div class="box">
+            <div class="mescroll" id="mescroll">
+                <div class="myDatum">
+                    <div class="head_box">
+                        <div class="head_img user_img"></div>
+                        <div class="usr_detail">
+                            <p class="use_name"></p>
+                            <p class="use_time"></p>
+                        </div>
+                        <div class="attention" data-isFollow="" data-userid="">关注</div>
+                    </div>
+                    <p class="describe"></p>
+                    <div class="img_big"></div>
+
+                    <div class="bt_box">
+
+                    </div>
+                    <div class="operation">
+                        <p class="text"><span><sup>...</sup></span>&nbsp;&nbsp;等<i>0</i>赞</p>
+                        <div class="img">
+                            <!--<img src="img/association/img.png"/>
+                            <img src="img/association/img.png"/>
+                            <img src="img/association/img.png"/>
+                            <img src="img/association/img.png"/>
+                            <img src="img/association/img.png"/>
+                            <img src="img/association/img.png"/>-->
+                        </div>
+                        <!--<p class="conment">999</p>-->
+                        <!--<p class="like">999</p>-->
+                        <!-- <p class="sttes">认证</p> -->
+                    </div>
+
+
+                </div>
+                <div class="conment_detail">
+
+                    <div class="title"><p class="text">评论&nbsp;&nbsp;（<span></span>）</p></div>
+
+                    <div id="dataList">
+
+                    </div>
+
+
+                    <!--<div class="conment_message">
+                        <div class="user_head">
+                            <div class="head_img"><img src="img/association/img.png"></div>
+                            <div class="usr_detail">
+                                <p class="use_name">官方认证用户</p>
+                                <p class="use_time">2018-04-04</p>
+                                <p class="talk">这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样?</p>
+                                <ul>
+                                    <li><span>宁胡扯：</span>这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样?</li>
+                                    <li><span>宁胡扯：</span>这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样?</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="conment_message">
+                        <div class="user_head">
+                            <div class="head_img"><img src="img/association/img.png"></div>
+                            <div class="usr_detail">
+                                <p class="use_name">官方认证用户</p>
+                                <p class="use_time">2018-04-04</p>
+                                <p class="talk">这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样?</p>
+                                <ul>
+                                    <li><span>宁胡扯：</span>这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样?</li>
+                                    <li><span>宁胡扯：</span>这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样?</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="conment_message">
+                        <div class="user_head">
+                            <div class="head_img"><img src="img/association/img.png"></div>
+                            <div class="usr_detail">
+                                <p class="use_name">官方认证用户</p>
+                                <p class="use_time">2018-04-04</p>
+                                <p class="talk">这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样?</p>
+                                <ul>
+                                    <li><span>宁胡扯：</span>这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样?</li>
+                                    <li><span>宁胡扯：</span>这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样?</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="conment_message">
+                        <div class="user_head">
+                            <div class="head_img"><img src="img/association/img.png"></div>
+                            <div class="usr_detail">
+                                <p class="use_name">官方认证用户</p>
+                                <p class="use_time">2018-04-04</p>
+                                <p class="talk">这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样?</p>
+                                <ul>
+                                    <li><span>宁胡扯：</span>这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样?</li>
+                                    <li><span>宁胡扯：</span>这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样这个怎么样?</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+
+
+            </div>
+
+            <!--<div class="issue_show" onclick="issue_show()"><img src="img/association/ico2.png"></div>-->
+
+
+            <div id="suspend_buttom">
+                <div class="morebt" onclick="more()"><img src="img/detail/morebt.png"></div>
+                <!--<div class="backTop" onclick="backTop()"><img src="img/detail/backtop.png"></div>-->
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <div class="black"></div>
+    <div class="bottom_box" data-postid="">
+        <input class="commentTex" maxlength="100" placeholder="觉得不错说两句吧!" type="text"/>
+        <!-- <p class="conment">0</p> -->
+        <p class="share" onclick="sharehint()" style="padding:0"><img src="img/association/share_ico.png"></p>
+        <p class="like" data-postid="">0</p>
+
+        <!--<submitbt></submitbt>-->
+        <button id="submitbt">发送</button>
+    </div>
+
+
+    <!--发布选项浮层-->
+    <div id="issue_select">
+        <div class="white"></div>
+        <div class="box">
+            <a class="issue_post" onclick="addRecord('POSTS','1')"><img src="img/issue/ico1.png"><span>发布帖子</span></a>
+            <!-- <a onclick="addRecord('TREASURE','2')"  class="issue_product"><img src="img/issue/ico2.png"><span>发布藏品</span></a> -->
+            <a class="issue_product2" onclick="addRecord('AUCTION','3')"><img src="img/issue/ico3.png"><span>发布商品</span></a>
+            <div class="delete" onclick="issue_close()"></div>
+        </div>
+    </div>
+
+
+    <!--取消关注提示框-->
+    <div class="hint_box3 hintBox" style="display: none;">
+        <div class="click"></div>
+        <div class="box">
+            <!--<p class="title">您是否已收到货品？</p>-->
+            <p class="text">确定要取消关注 <span></span>吗？</p>
+            <div class="bt">
+                <button class="close">手滑了</button>
+                <button class="affirm">取消关注</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="hint_box4 hintBox" style="display: none;">
+        <div class="click"></div>
+        <div class="box">
+            <p class="text">是否要删除该帖子？</p>
+            <div class="bt">
+                <button class="close">手滑了</button>
+                <button class="affirm">确定</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!--更多浮层-->
+    <div id="more_box">
+        <div class="click"></div>
+        <div class="more">
+            <ul>
+                <p class="title">快速跳转</p>
+                <li onclick="window.location.href='index.html'">
+                    <div class="img"><img src="img/more/home.png"></div>
+                    <p>首页</p></li>
+                <li class="linkmsg" onclick="privateLetterTA()">
+                    <div class="img"><img src="img/more/message.png"></div>
+                    <p>消息</p></li>
+                <li onclick="hint('暂未开放')">
+                    <div class="img"><img src="img/more/Report.png"></div>
+                    <p>举报</p></li>
+            </ul>
+            <ul class="manage">
+                <p class="title">内容管理</p>
+
+            </ul>
+            <ul class="share_box">
+                <p class="title">分享给朋友</p>
+                <li onclick="call('wechatFriend')">
+                    <div class="img"><img src="img/more/wechat.png"></div>
+                    <p>微信</p></li>
+                <li onclick="call('wechatTimeline')">
+                    <div class="img"><img src="img/more/friends.png"></div>
+                    <p>朋友圈</p></li>
+                <li onclick="call('qqFriend')">
+                    <div class="img"><img src="img/more/qq.png"></div>
+                    <p>QQ</p></li>
+                <li onclick="call('weibo')">
+                    <div class="img"><img src="img/more/weibo.png"></div>
+                    <p>微博</p></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="hint_box">
+        <p></p>
+    </div>
+
+    <div id="share_box"><img class="share" src="img/share_img.png"></div>
+
+
+</div>
+
+
+<script src="js/common.js" type="text/javascript"></script>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+
+<!--上拉加载文件-->
+<script charset="utf-8" src="mescroll/mescroll.min.js"></script>
+<script type="text/javascript">
+
+
+    let shareTitle, shareDese, shareImg, usernames, useId;
+
+
+    var height = $(window).height();
+
+    var postid, postType;
+
+    //验证是否已转换
+    function verify(productId, type, btType, postId) {
+        var paramObject = getParamObject();
+        paramObject.timestamp = new Date().getTime(); // 请求时间戳
+        paramObject.requestId = md5($.param(paramObject)); // 请求ID
+        paramObject.treasureId = productId; // 请求ID
+        $.ajax({
+            url: link + "/goods/treasure/getOne?" + $.param(paramObject),
+            dataType: "Json",
+            success: function (res) {
+                console.log(res);
+                handler({
+                    res: res,
+                    fun1: function () {
+                        if (res.count == 0) {
+                            postid = postId;
+                            postType = type;
+                            switch (btType) {
+                                case 1:
+                                    window.location.href = "issue_auction.html?type=1&auctionId=" + productId;
+                                    break;
+                                case 2:
+                                    window.location.href = "issue_object.html?type=1&id=1&postId=" + productId;
+                                    break;
+                                case 3:
+                                    $(".hint_box4").show();
+
+                                    break;
+                            }
+                        } else if (res.count == 1) {
+                            switch (btType) {
+                                case 1:
+                                    hint('该藏品已经在拍卖了！');
+                                    break;
+                                case 2:
+                                    hint('该藏品正在拍卖了，无法编辑！');
+                                    break;
+                                case 3:
+                                    hint('该藏品正在拍卖，不能删除!');
+                                    break;
+                            }
+                        }
+
+
+                    }
+                })
+            },
+            error: function (e) {
+
+            }
+        });
+    }
+
+
+    // 点击下面分享按钮
+    function sharehint() {
+        $("#more_box").show();
+        $("#more_box ul").hide();
+        $("#more_box .share_box").show();
+    }
+
+    function deletHint(postId, type) {
+        postid = postId;
+        postType = type;
+        $(".hint_box4").show();
+    }
+
+    function deletPro(postId, type) {
+        var paramObject = getParamObject();
+        paramObject.timestamp = new Date().getTime(); // 请求时间戳
+        paramObject.requestId = md5($.param(paramObject)); // 请求ID
+        paramObject.postId = postId; // 请求ID
+        paramObject.postStatus = 'DELETED'; // 请求ID
+        $.ajax({
+            url: link + "/social/posts/modifyPost",
+            type: "POST",
+            data: paramObject,
+            dataType: "Json",
+            success: function (res) {
+                console.log(res);
+                handler({
+                    res: res,
+                    fun1: function () {
+                        window.location.href = 'myHome.html'
+                    }
+                })
+            },
+            error: function (e) {
+
+            }
+        });
+    }
+
+
+    //			var productId = getQueryStringByName("productId");
+    var paramObject = getParamObject();
+    paramObject.postId = getQueryStringByName("postId"); // 帖子ID
+    paramObject.timestamp = new Date().getTime(); // 请求时间戳
+    paramObject.requestId = md5($.param(paramObject)); // 请求ID
+    $.ajax({
+        url: link + "/social/posts/getOnePost?" + $.param(paramObject),
+        dataType: "Json",
+        success: function (res) {
+            console.log(res);
+            handler({
+                res: res,
+                fun1: function () {
+                    let pd = res.data;
+                    let redactButtom = '';
+
+                    shareTitle = pd.title;
+                    shareDese = delHtmlTag(pd.text);
+                    console.log(shareDese);
+                    if (pd.images) {
+                        var imgArr = pd.images.split(";");
+                        console.log(imgArr);
+                        shareImg = 'http://www.2501p.com/api' + imgArr[0];
+                    }
+                    shareMsg(shareTitle, shareDese, shareImg);
+                    $('title').text(pd.title);
+
+                    if (res.count == 1) {
+                        $(".linkmsg").hide();
+                    }
+                    usernames = res.data.username;
+                    useId = res.data.userId;
+
+                    if (res.count == 1) {
+                        if (pd.postType == "POSTS") {
+                            // redactButtom = '<li onclick="window.location.href=\'issue_post.html?type=1&postId='+pd.postId+'\'"><div class="img"><img src="img/more/editor.png"></div><p>编辑</p></li>'+
+                            redactButtom = '<li onclick="window.location.href=\'issue_fromPosts.html?postId=' + pd.postId + '\'"><div class="img"><img src="img/more/Convert_to_collection.png"></div><p>转藏品</p></li>' +
+                                '<li onclick="hint(\'暂未开放\')"><div class="img"><img src="img/more/editor.png"></div><p>编辑</p></li>' +
+                                '<li onclick="deletHint(\'' + pd.postId + '\',\'POSTS\')"><div class="img"><img src="img/more/delete.png"></div><p>删除</p></li>' +
+                                '<li onclick="hint(\'暂未开放\')"><div class="img"><img src="img/more/hidden.png"></div><p>隐藏</p></li>'
+                        } else {
+                            redactButtom = '<li onclick="verify(\'' + pd.itemId + '\',\'TREASURE\',1)"><div class="img"><img src="img/more/conversion.png"></div><p>转为拍品</p></li>' +
+                                // '<li onclick="verify(\''+pd.itemId+'\',\'TREASURE\',2,\''+pd.postId+'\')"><div class="img"><img src="img/more/editor.png"></div><p>编辑</p></li>'+
+                                '<li onclick="hint(\'暂未开放\')"><div class="img"><img src="img/more/editor.png"></div><p>编辑</p></li>' +
+                                '<li onclick="verify(\'' + pd.itemId + '\',\'TREASURE\',3,\'' + pd.postId + '\')"><div class="img"><img src="img/more/delete.png"></div><p>删除</p></li>' +
+                                // '<li><div class="img"><img src="img/more/hidden.png"></div><p>隐藏</p></li>'
+                                '<li onclick="hint(\'暂未开放\')"><div class="img"><img src="img/more/hidden.png"></div><p>隐藏</p></li>'
+                        }
+                        $("#more_box .manage").append(redactButtom);
+                    } else {
+                        $("#more_box .manage").hide();
+                    }
+
+
+                    /* redactButtom = '<li onclick="window.location.href=\'issue_auction.html?auctionId='+pd.itemId+'\'"><div class="img"><img src="img/more/conversion.png"></div><p>转为拍品</p></li>'+
+                    '<li onclick="window.location.href=\'issue_object.html?id=1&postId='+pd.itemId+'\'"><div class="img"><img src="img/more/editor.png"></div><p>编辑</p></li>'+
+                    '<li onclick="deletPro('+pd.itemId+')"><div class="img"><img src="img/more/delete.png"></div><p>删除</p></li>'+
+                    '<li><div class="img"><img src="img/more/hidden.png"></div><p>隐藏</p></li>' */
+
+
+                    /* if(pd.avatarPath){
+                        var headImg = link+pd.avatarPath
+                    }else{
+                        var headImg = 'img/association/img.png'
+                    }
+
+
+                    let type = checkUrl(img);
+                    console.log(type);
+                    if(type == false){
+                        var imgArr = img.split("."); //原图list数组
+                        inhtml +='<img class="imgwidth" src="'+link+imgArr[0]+'.thumbnail.'+imgArr[1]+'" onerror="src=\''+link+imgArr[0]+'.'+imgArr[1]+'\'">'
+                    }else{
+                        inhtml +='<img class="imgwidth" src="'+img+'">'
+                    } */
+
+
+                    $(".user_img").append(headImgHtml(pd.avatarPath));
+                    $(".usr_detail .use_name").text(userName(pd.username));
+                    var postTime = pd.startTime.substring(0, 16).replace("T", " ");
+                    $(".usr_detail .use_time").text(postTime);
+                    $(".attention").attr("data-userid", pd.userId);
+                    $(".head_box").addClass('user_' + pd.userId);
+                    $(".myDatum .usr_detail,.myDatum .head_img").click(function () {
+                        window.location.href = 'myHome.html?userId=' + pd.userId
+                    });
+
+                    if (pd.isFollow == true) {
+                        $(".attention").addClass("hover");
+                        $(".attention").text("已关注")
+                    }
+                    $(".attention").attr("data-isfollow", pd.isFollow);
+
+
+                    var mainVideo = "";
+                    var images = "";
+                    if (pd.mainVideo) {
+                        mainVideo = pd.mainVideo
+                    }
+                    if (pd.images) {
+                        images = pd.images
+                    }
+
+                    $(".img_big").append(postDetailHtml(mainVideo, images));
+                    $(".describe").html('<p class="title" style="font-weight: bold;">' + pd.title + '</p><p>' + texHtml(pd.text) + '</p>');
+
+//			                $(".bottom_box").addClass('user_'+pd.postId);
+                    $(".bottom_box").addClass('post_' + pd.postId);
+
+                    $(".bottom_box .like").attr("data-postid", pd.postId);
+                    $(".bottom_box").attr("data-postid", pd.postId);
+                    $(".bottom_box .like").text(NumberHandle(pd.goodNum));
+                    $(".bottom_box .like").addClass('like' + pd.postId);
+                    $(".operation .text i").text(NumberHandle(pd.goodNum));
+                    $(".operation .text i").addClass('like' + pd.postId);
+                    if (pd.plantGrass == true) {
+                        $(".bottom_box .like").addClass("hover")
+                    }
+
+                    $(".conment ").text(pd.commentNum);
+
+                    var str = "";
+
+
+                    if (Istrue(pd.groupId)) {//圈子
+                        str += '<div class="quanzi" onclick="window.location.href=\'circleDetail.html?groupId=' + pd.groupId + '\'">' +
+                            '<img src="img/index/lable1_1.png"><p>' + pd.groupName + '</p><img src="img/index/lable1_2.png">' +
+                            '</div>'
+                    }
+                    //部落标签
+                    if (Istrue(pd.hordeId)) {
+                        str += '<div class="tribe" onclick="window.location.href=\'circleDetail.html?hordeId=' + pd.hordeId + '\'">' +
+                            '<img src="img/index/lable2_1.png"><p>' + pd.hordeName + '</p>' +
+                            '</div>'
+                    }
+                    if (Istrue(pd.themeId)) {//标签
+                        str += '<div class="lable" onclick="window.location.href=\'attention_topic.html?themeId=' + pd.themeId + '\'">' +
+                            '<p>' + pd.themeName + '</p>' +
+                            '</div>'
+                    }
+
+
+                    if (pd.groupId || pd.hordeId || pd.themeId) {
+
+                        $(".bt_box").html(str)
+                    } else {
+                        $(".bt_box").hide();
+                    }
+                    $(".operation").click(function () {
+                        window.location.href = "plantList.html?postId=" + pd.postId
+                    })
+
+
+                }
+            })
+        },
+        error: function (e) {
+
+        }
+    });
+
+    /* 帖子转
+    function fromPost(){
+
+    } */
+
+
+    // 参数对象
+    var paramObjects = getParamObject();
+
+    // 创建mescroll对象
+    var mescroll = new MeScroll("mescroll", {
+        up: {
+            callback: upCallback, //上拉回调,此处可简写; 相当于 callback: function (page) { getListData(page); }
+            isBounce: false, //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+            noMoreSize: 1,
+            clearEmptyId: "dataList", //1.下拉刷新时会自动先清空此列表,再加入数据; 2.无任何数据时会在此列表自动提示空
+
+            toTop: { //配置回到顶部按钮
+                src: "../res/img/mescroll-totop.png" //默认滚动到1000px显示,可配置offset修改
+            }
+        }
+    });
+
+    //上拉加载的回调 page = {num:1, size:10}; num:当前页 默认从1开始, size:每页数据条数,默认10
+    function upCallback(page) {
+        paramObjects.postId = getQueryStringByName("postId"); // 帖子ID
+        paramObjects.pageNumber = page.num; // 页码, 默认从1开始 如何修改从0开始 ?
+        paramObjects.pageSize = page.size; // 页长, 默认每页10条
+        paramObjects.requestId = md5($.param(paramObjects)); // 请求ID
+        paramObjects.timestamp = new Date().getTime(); // 请求时间戳
+
+        $.ajax({
+            url: link + "/social/postcomment/getPostCommentList?" + $.param(paramObjects),
+            success: function (res) {
+                console.log(res);
+                handler({
+                    res: res,
+                    fun1: function () {
+                        $(".conment_detail .title span").text(res.count);
+                        var curPageData = res.data; // 接口返回的当前页数据列表
+                        var totalSize = res.count; // 接口返回的总数据量(比如列表有26个数据,每页10条,共3页; 则totalSize值为26)
+                        mescroll.endBySize(curPageData.length, totalSize); // 联网成功的回调,隐藏下拉刷新和上拉加载的状态;
+                        setListData(curPageData); // 设置列表数据
+                    }
+                })
+            },
+            error: function (e) {
+                mescroll.endErr()
+            }
+        });
+    }
+
+    // 设置列表数据
+    function setListData(curPageData) {
+        var str = "";
+        for (var i = 0; i < curPageData.length; i++) {
+            let pd = curPageData[i];
+            let imgSrc;
+            // 计算剩余时间
+            residueTime(pd.endTimestamp);
+            if (pd.avatarPath) {
+                imgSrc = pd.avatarPath;
+            }
+            if (pd.isVisible == true) {
+                let createTime = pd.createTime.replace("T", " ");
+                str += '<div class="conment_message">' +
+                    '<div class="user_head">' +
+                    '<div class="head_img" onclick="window.location.href=\'myHome.html?userId=' + pd.userId + '\'">' + headImgHtml(imgSrc) + '</div>' +
+                    '<div class="usr_detail" onclick="window.location.href=\'myHome.html?userId=' + pd.userId + '\'">' +
+                    '<p class="use_name">' + userName(pd.username) + '</p>' +
+                    '<p class="use_time">' + createTime + '</p>' +
+                    '<p class="talk">' + pd.content + '</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>'
+            }
+
+        }
+        $("#dataList").append(str);
+    }
+
+
+    postcollectList();
+
+    //获取点赞人列表
+    function postcollectList() {
+        var paramObject2 = getParamObject();
+        paramObject2.pageNumber = 1; // 页码, 默认从1开始 如何修改从0开始 ?
+        paramObject2.pageSize = 6; // 页长, 默认每页10条
+        paramObject2.postId = getQueryStringByName("postId"); // 帖子Id
+        paramObject2.viewType = 'ALL'; // 所有人
+        paramObject2.orderBy = 'user_level'; // 用户等级
+        paramObject2.orderMode = 'DESC'; // 倒序
+        paramObject2.timestamp = new Date().getTime(); // 请求时间戳
+        paramObject2.requestId = md5($.param(paramObject2)); // 请求ID
+        $.ajax({
+            url: link + "/social/postcollect/getUserListIsGood?" + $.param(paramObject2),
+            dataType: "Json",
+            success: function (res) {
+                console.log(res);
+                handler({
+                    res: res,
+                    fun1: function () {
+                        let str = "";
+                        var pd = res.data;
+                        for (var i = 0; i < res.data.length; i++) {
+                            var imgList = pd[i].avatarPath.split('.');
+                            str += '<img src="' + link + imgList[0] + '.thumbnail.' + imgList[1] + '" alt="">'
+                        }
+                        if (res.count < 6) {
+                            $(".operation .text span").hide();
+                        }
+                        console.log(str);
+                        $(".operation .img").html(str)
+                    }
+
+                })
+            },
+            error: function (e) {
+
+            }
+        });
+    }
+
+</script>
+
+<script>
+    //解决iOS第三方软键盘唤起时底部input输入框被遮挡问题
+    var u = navigator.userAgent;
+
+    //			var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+
+    //			if(isiOS) {
+    var bfscrolltop = document.body.scrollTop; //获取软键盘唤起前浏览器滚动部分的高度
+    $(".commentTex").focus(function () {
+        //		toggleBody(1)
+        $(".bottom_box p").hide();
+        $("#submitbt").show();
+        $(".black").fadeIn(200);
+        interval = setInterval(function () { //设置一个计时器，时间设置与软键盘弹出所需时间相近
+            document.body.scrollTop = document.body.scrollHeight; //获取焦点后将浏览器内所有内容高度赋给浏览器滚动部分高度
+        }, 100)
+    }).blur(function () { //设定输入框失去焦点时的事件
+        clearInterval(interval); //清除计时器
+        document.body.scrollTop = bfscrolltop; //将软键盘唤起前的浏览器滚动部分高度重新赋给改变后的高度
+    });
+
+    //			}
+    //  		$(".commentTex").focus(function(){//获得焦点
+    //  			$(".bottom_box p").hide();
+    //  			$("#submitbt").show();
+    //  			$(".black").fadeIn(200)
+    //  		});
+    $(".black").click(function () {
+        $(this).fadeOut(200);
+        $(".bottom_box p").show();
+        $("#submitbt").hide();
+    });
+    //  		$(".commentTex").blur(function(){//失去焦点
+    //  			$(".bottom_box p").show();
+    //  			$("#submitbt").hide();
+    //  		})
+    var userId = "";
+    $(".attention").click(function () {
+        var isfollow = $(this).attr('data-isfollow');
+        userId = $(this).data('userid');
+        if (isfollow == 'false') {
+            plantGrassOrCancel(userId)//添加或删除关注人
+        } else {
+            let name = $(this).prev().find(".use_name").text();
+            $(".hint_box3 .text span").text(name);
+            $(".hint_box3").fadeIn(200)
+        }
+    });
+    $(".click").click(function () {
+        $(this).parent().fadeOut(200)
+    });
+    $(".hint_box3 .close").click(function () {
+        $(".hint_box3").fadeOut(200);
+    });
+
+    $(".hint_box3 .affirm").click(function () {
+        $(".hint_box3").fadeOut(200);
+        plantGrassOrCancel(userId)//添加或删除关注人
+    });
+
+    $(".hint_box4 .close").click(function () {
+        $(".hint_box4").fadeOut(200);
+    });
+
+    $(".hint_box4 .affirm").click(function () {
+        deletPro(postid, postType)
+    });
+
+
+    $(".like").click(function () {
+        var post_id = $(this).attr('data-postid');
+        // alert(22222)
+        // alert(post_id)
+        postcollect(post_id, "1");
+//      		postcollectList();
+    });
+
+    $("#menu ul li").click(function () {
+        $("#menu ul li").removeClass("current");
+        $(this).addClass("current");
+    });
+
+    $("#submitbt").click(function () {
+        var post_id = $(this).parent().attr('data-postid');
+        var content = $(".commentTex").val();
+        if (content == "") {
+            alert("请输入评论内容");
+            return false;
+        }
+        addPostComment(content, post_id)
+    });
+
+
+    /**
+     * 私信TA
+     */
+    function privateLetterTA() {
+        localStorage.setItem('rong_target_name', usernames);
+        location.href = 'messageChat.html?targetId=' + useId + '&targetType=1';
+    }
+
+
+</script>
+
+<script>
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<title>前端用户</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a><cite>用户管理</cite></a>
+        <a><cite>前端用户</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-user-front-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto;">账号类型</label>
+                    <div class="layui-input-inline">
+                        <select name="userType">
+                            <option value="">不限</option>
+                            <option value="0">普通账号</option>
+                            <option value="1">官方账号</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto;">昵称</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="username" placeholder="请输入昵称" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto;">手机号码</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="mobile" placeholder="请输入手机号码" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto;">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status">
+                            <option value="">不限</option>
+                            <option value="normal">正常</option>
+                            <option value="freeze">封号</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-user-front-search" lay-filter="LAY-user-front-search" lay-submit>
+                        查询
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-user-front-add">添加</button>
+            </div>
+
+            <table id="LAY-user-front-table" lay-filter="LAY-user-front-table"></table>
+
+            <script id="typeTpl" type="text/html">
+                {{# if (d.userType === '0') { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">普通账号</button>
+                {{# } else if (d.userType === '1') { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">官方账号</button>
+                {{# } else { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
+                {{# } }}
+            </script>
+            <script id="statusTpl" type="text/html">
+                {{# if (d.status === 'normal') { }}
+                <button class="layui-btn layui-btn-xs">正常</button>
+                {{# } else if (d.status === 'freeze') { }}
+                <button class="layui-btn layui-btn-xs layui-btn-danger">封号</button>
+                {{# } else { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
+                {{# } }}
+            </script>
+            <script id="LAY-user-front-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="look">查看</a>
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="wallet">钱包</a>
+                {{# if (d.status === 'normal') { }}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="freeze">封号</a>
+                {{# } else { }}
+                <a class="layui-btn layui-btn-xs" lay-event="normal">解封</a>
+                {{# } }}
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'table', 'upload'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            table = layui.table,
+            upload = layui.upload;
+
+        // 获取身份列表
+        let careerList;
+        admin.req({
+            url: '/api/manager/career/getCareerList',
+            data: {},
+            done: function (res) {
+                careerList = res.data;
+            }
+        });
+
+        // 表单渲染
+        form.render(null, 'LAY-user-front-form');
+
+        // 监听搜索
+        form.on('submit(LAY-user-front-search)', function (data) {
+            let field = data.field;
+
+            // 执行重载
+            table.reload('LAY-user-front-table', {
+                where: field
+            });
+        });
+
+        // 添加
+        $('#LAY-user-front-add').on('click', function () {
+            openUserFrontPopup({FORM_TYPE: 'add', userType: '1'});
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-user-front-table',
+            url: '/api/admin/user/fronts',
+            cols: [[
+                {title: '账号', field: 'userId'},
+                {title: '账号类型', field: 'userType', templet: '#typeTpl'},
+                {title: '昵称', field: 'username'},
+                {title: '手机号码', field: 'mobile'},
+                {title: '状态', field: 'status', templet: '#statusTpl'},
+                {title: '创建时间', field: 'createTime', sort: true},
+                {title: '最近登录时间', field: 'recentLogin', sort: true},
+                {title: '操作', align: 'center', fixed: 'right', toolbar: '#LAY-user-front-toolbar'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 监听工具条
+        table.on('tool(LAY-user-front-table)', function (obj) {
+            let data = obj.data;
+            data.FORM_TYPE = obj.event;
+
+            // 查看
+            if (obj.event === 'look') {
+                openUserFrontPopup(data);
+            }
+            // 修改
+            if (obj.event === 'edit') {
+                openUserFrontPopup(data);
+            }
+            // 钱包
+            if (obj.event === 'wallet') {
+                location.hash = '/error/404/';
+            }
+            // 封号
+            if (obj.event === 'freeze') {
+                openUserFrontPopup2(data);
+            }
+            // 解封
+            if (obj.event === 'normal') {
+                openUserFrontPopup2(data);
+            }
+        });
+
+        // 打开用户详情
+        function openUserFrontPopup(data) {
+            admin.popup({
+                title: '用户详情',
+                area: ['800px', '584px'],
+                id: 'LAY-user-front-popup',
+                success: function (layero, index) {
+                    view(this.id).render('user/front/form', data).done(function () {
+                        let formData = new FormData();
+                        // 上传渲染
+                        upload.render({
+                            elem: '#LAY-user-front-upload',
+                            auto: false,
+                            field: 'avatarFile',
+                            accept: 'images',
+                            acceptMime: 'image/*',
+                            choose: function (obj) {
+                                // 预读本地文件示例，不支持ie8
+                                obj.preview(function (index, file, result) {
+                                    formData.set('avatarFile', file);
+                                    // 图片链接（base64）
+                                    $('#LAY-user-front-avatar').attr('src', result);
+                                });
+                            }
+                        });
+
+                        // 表单渲染
+                        form.render(null, 'LAY-user-front-form2');
+
+                        // 监听保存
+                        form.on('submit(LAY-user-front-save)', function (obj) {
+                            let field = obj.field;
+                            for (let name in field) {
+                                if (name !== 'avatarFile') formData.set(name, field[name]);
+                            }
+                            // 提交 Ajax 成功后，关闭当前弹层并重载表格
+                            admin.req({
+                                url: '/api/admin/user/fronts',
+                                type: field.userId ? 'put' : 'post',
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    $('#LAY-user-front-search').click();
+                                }
+                            });
+                        });
+
+                        // 监听身份
+                        $('#LAY-user-front-popup').on('click', '#LAY-user-front-career', function () {
+                            // 打开用户职业详情
+                            openUserFrontPopup3({
+                                userId: data.userId,
+                                selected: $(this).data('value'),
+                                careerList: careerList
+                            });
+                        });
+
+                        // 监听返回
+                        $('#LAY-user-front-popup').on('click', '#LAY-user-front-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+
+                    });
+                }
+            });
+        }
+
+        // 打开冻结用户
+        function openUserFrontPopup2(data) {
+            layer.confirm('确定要将该用户冻结/解封吗?', {
+                icon: 3,
+                title: '冻结/解封用户',
+                id: 'LAY-user-front-popup2',
+                skin: 'layui-layer-admin',
+                success: function (layero, index) {
+                    let elemClose = $('<i class="layui-icon" close>&#x1006;</i>');
+                    layero.append(elemClose);
+                    elemClose.on('click', function () {
+                        layer.close(index);
+                    });
+                    $('#LAY-user-front-popup2').css('padding', ' 20px 20px 20px 55px');
+                    $('.layui-layer-btn a').css({'height': '35px', 'line-height': '35px'});
+                    $('.layui-layer-btn0').css({'border-color': '#009688', 'background-color': '#009688'});
+                }
+            }, function (index) {
+
+                admin.req({
+                    url: '/api/admin/user/fronts',
+                    type: 'put',
+                    data: {userId: data.userId, status: data.FORM_TYPE},
+                    done: function (res) {
+                        layer.close(index);
+                        layer.msg('冻结/解封用户成功', {icon: 1});
+
+                        $('#LAY-user-front-search').click();
+                    }
+                });
+            });
+        }
+
+        // 打开选择用户职业
+        function openUserFrontPopup3(data) {
+            admin.popup({
+                title: '选择用户职业',
+                area: ['350px', ''],
+                offset: '100px',
+                id: 'LAY-user-front-popup3',
+                success: function (layero, index) {
+                    view(this.id).render('user/front/form2', data).done(function () {
+                        // 监听选择
+                        $('#LAY-user-front-popup3').on('click', '.layui-btn-xs', function () {
+                            // 检查是否已选3个
+                            let length = 0;
+                            let current = this;
+                            $('#LAY-user-front-popup3 .layui-btn-warm').each(function (index, element) {
+                                if (current !== element) length++;
+                            });
+
+                            if (length === 3) return layer.msg('最多选择三个身份！');
+
+                            $(this).toggleClass('layui-btn-warm');
+                            $(this).toggleClass('layui-btn-primary');
+                        });
+
+                        // 监听保存
+                        $('#LAY-user-front-popup3').on('click', '#LAY-user-front-save2', function () {
+                            let reqData = {
+                                userId: data.userId,
+                                careerFirstId: null,
+                                careerSecondId: null,
+                                careerThirdId: null
+                            };
+                            let careerIds = '';
+                            let careerNames = '';
+
+                            $('#LAY-user-front-popup3 .layui-btn-warm').each(function (index, element) {
+                                if (index === 0) {
+                                    reqData.careerFirstId = $(element).data('value');
+                                    careerIds += reqData.careerFirstId;
+                                    careerNames += $(element).text();
+                                }
+                                if (index === 1) {
+                                    reqData.careerSecondId = $(element).data('value');
+                                    careerIds += ' | ' + reqData.careerSecondId;
+                                    careerNames += ' | ' + $(element).text();
+                                }
+                                if (index === 2) {
+                                    reqData.careerThirdId = $(element).data('value');
+                                    careerIds += ' | ' + reqData.careerThirdId;
+                                    careerNames += ' | ' + $(element).text();
+                                }
+                            });
+
+                            admin.req({
+                                url: '/api/admin/user/fronts/userCareer',
+                                type: 'put',
+                                data: reqData,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+
+                                    $('#LAY-user-front-career').data('value', careerIds);
+                                    $('#LAY-user-front-career').prev().html(careerNames);
+                                }
+                            });
+                        });
+
+                        // 监听返回
+                        $('#LAY-user-front-popup3').on('click', '#LAY-user-front-return2', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+
+                    });
+                }
+            });
+        }
+
+    });
+</script>

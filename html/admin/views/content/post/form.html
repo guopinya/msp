@@ -1,0 +1,195 @@
+<div class="layui-form" lay-filter="LAY-content-post-form2" style="padding: 20px 40px 0 0;">
+    <style>
+        .layui-upload-img {
+            width: 89px;
+            height: 89px;
+            margin: 0 4px 4px 0;
+        }
+    </style>
+    <script template type="text/html">
+        <input type="hidden" name="postId" value="{{ d.params.postId || '' }}">
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">图片</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let images = d.params.images || ''; }}
+                {{# let imageArray = images ? images.split(';') : []; }}
+                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                    <div class="layui-upload-list" style="margin-bottom: 0;">
+                        {{# for (let i = 0; i < imageArray.length; i++) { }}
+                        <img src="{{ '/api' + imageArray[i] }}" alt="" class="layui-upload-img">
+                        {{# } }}
+                    </div>
+                </blockquote>
+                <button type="button" class="layui-btn layui-btn-normal" id="LAY-content-post-upload">选择图片</button>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let attribute = (d.params.FORM_TYPE !== 'add') ? 'disabled' : ''; }}
+                <input type="text" name="title" value="{{ d.params.title || '' }}" lay-verify="required"
+                       placeholder="请输入标题" autocomplete="off" class="layui-input" {{ attribute }}>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">内容</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <textarea type="text" name="text" lay-verify="required" placeholder="请输入内容" autocomplete="off"
+                          class="layui-textarea">{{ d.params.text || '' }}</textarea>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">发布人</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <select name="userId" lay-search>
+                    <option value="">请选择发布人</option>
+                    {{# let userList = d.params.userList; }}
+                    {{# for (let i = 0; i < userList.length; i++) { }}
+                    {{# let attribute = (d.params.userId === userList[i].userId) ? 'selected' : ''; }}
+                    <option value="{{ userList[i].userId }}" {{ attribute }}>{{ userList[i].username }}</option>
+                    {{# } }}
+                </select>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属圈子</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <select name="groupId" lay-search>
+                    <option value="">请选择所属圈子</option>
+                    {{# let groupList = d.params.groupList; }}
+                    {{# for (let i = 0; i < groupList.length; i++) { }}
+                    {{# let attribute = (d.params.groupId === groupList[i].groupId) ? 'selected' : ''; }}
+                    <option value="{{ groupList[i].groupId }}" {{ attribute }}>{{ groupList[i].groupName }}</option>
+                    {{# } }}
+                </select>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属部落</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <select name="hordeId" lay-search>
+                    <option value="">请选择所属部落</option>
+                    {{# let hordeList = d.params.hordeList; }}
+                    {{# for (let i = 0; i < hordeList.length; i++) { }}
+                    {{# let attribute = (d.params.hordeId === hordeList[i].hordeId) ? 'selected' : ''; }}
+                    <option value="{{ hordeList[i].hordeId }}" {{ attribute }}>{{ hordeList[i].hordeName }}</option>
+                    {{# } }}
+                </select>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属话题</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <select name="themeId" lay-search>
+                    <option value="">请选择所属话题</option>
+                    {{# let themeList = d.params.themeList; }}
+                    {{# for (let i = 0; i < themeList.length; i++) { }}
+                    {{# let current = themeList[i]; }}
+                    {{# let themeList2 = current.childList; }}
+                    <optgroup label="{{ current.themeName }}">
+                        {{# for (let j = 0; j < themeList2.length; j++) { }}
+                        {{# let current2 = themeList2[j]; }}
+                        {{# let attribute = (d.params.themeId === current2.themeId) ? 'selected' : ''; }}
+                        <option value="{{ current2.themeId }}" {{ attribute }}>{{ current2.themeName }}</option>
+                        {{# } }}
+                    </optgroup>
+                    {{# } }}
+                </select>
+            </script>
+        </div>
+    </div>
+
+    <script template type="text/html">
+        {{# if (d.params.FORM_TYPE !== 'add') { }}
+        <div class="layui-form-item">
+            <div class="layui-col-md6">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    {{# let postType = d.params.postType; }}
+                    {{# if (postType === 'POSTS') { }}
+                    <p class="layui-form-mid">普通帖子</p>
+                    {{# } else if (postType === 'TREASURE') { }}
+                    <p class="layui-form-mid">藏品副本</p>
+                    {{# } else if (postType === 'AUCTION') { }}
+                    <p class="layui-form-mid">拍品副本</p>
+                    {{# } else { }}
+                    <p class="layui-form-mid"></p>
+                    {{# } }}
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <label class="layui-form-label">发布时间</label>
+                <div class="layui-input-block">
+                    <p class="layui-form-mid">{{ d.params.startTime || '' }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-col-md6">
+                <label class="layui-form-label">点赞数</label>
+                <div class="layui-input-block">
+                    <p class="layui-form-mid">{{ d.params.goodNum || '0' }}</p>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <label class="layui-form-label">评论数</label>
+                <div class="layui-input-block">
+                    <p class="layui-form-mid">{{ d.params.commentNum || '0' }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            {{# let reviewerId = d.params.reviewerId; }}
+            <div class="layui-col-md6">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    {{# let postStatus = d.params.postStatus; }}
+                    {{# if (postStatus === 'RELEASED' && reviewerId) { }}
+                    <p class="layui-form-mid">发布已审核</p>
+                    {{# } else if (postStatus === 'RELEASED' && !reviewerId) { }}
+                    <p class="layui-form-mid">发布未审核</p>
+                    {{# } else if (postStatus === 'DELETED') { }}
+                    <p class="layui-form-mid">删除</p>
+                    {{# } else if (postStatus === 'DRAFT') { }}
+                    <p class="layui-form-mid">草稿</p>
+                    {{# } else { }}
+                    <p class="layui-form-mid">未知</p>
+                    {{# } }}
+                </div>
+            </div>
+            {{# if (reviewerId) { }}
+            <div class="layui-col-md6">
+                <label class="layui-form-label">审核人</label>
+                <div class="layui-input-block">
+                    <p class="layui-form-mid">{{ d.params.reviewerName || '' }}</p>
+                </div>
+            </div>
+            {{# } }}
+        </div>
+        {{# } }}
+    </script>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            {{# if (d.params.FORM_TYPE !== 'look') { }}
+            <input value="保存" class="layui-btn" readonly lay-submit lay-filter="LAY-content-post-save">
+            {{# } }}
+            <input value="返回" class="layui-btn layui-btn-primary" readonly id="LAY-content-post-return">
+        </script>
+    </div>
+</div>

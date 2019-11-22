@@ -1,0 +1,140 @@
+<title>身份管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a><cite>用户管理</cite></a>
+        <a><cite>身份管理</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-user-career-form">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">身份名称</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="name" placeholder="请输入身份名称" type="text">
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-user-career-search" lay-filter="LAY-user-career-search"
+                            lay-submit>搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-user-career-add">添加</button>
+            </div>
+
+            <table id="LAY-user-career-table" lay-filter="LAY-user-career-table"></table>
+
+            <script id="levelTpl" type="text/html">
+                {{# let level = d.careerCertLevel; }}
+                {{# if (level === 0) { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">无需认证</button>
+                {{# } else if (level === 1) { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">需要认证</button>
+                {{# } else { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
+                {{# } }}
+            </script>
+            <script id="LAY-user-career-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'tree', 'table'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            table = layui.table;
+
+        // 表单渲染
+        form.render(null, 'LAY-user-career-form');
+
+        // 表单监听 搜索按钮
+        form.on('submit(LAY-user-career-search)', function (obj) {
+            // 执行重载
+            table.reload('LAY-user-career-table', {
+                where: obj.field
+            });
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-user-career-table',
+            url: '/api/admin/user/careers',
+            cols: [[
+                {title: '身份ID', field: 'careerId'},
+                {title: '身份名称', field: 'careerName'},
+                {title: '认证等级', templet: '#levelTpl'},
+                {title: '操作', align: 'center', toolbar: '#LAY-user-career-toolbar'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 表格监听 工具条
+        table.on('tool(LAY-user-career-table)', function (obj) {
+            let data = obj.data;
+            // 修改
+            if (obj.event === 'edit') {
+                data.FORM_TYPE = 'put';
+                // 打开身份详情
+                openUserRolePopup(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-user-career-add').on('click', function () {
+            // 打开身份详情
+            openUserRolePopup({FORM_TYPE: 'post'});
+        });
+
+        // 打开身份详情
+        function openUserRolePopup(data) {
+            admin.popup({
+                title: '身份详情',
+                area: ['372px', ''],
+                offset: '100px',
+                id: 'LAY-user-career-popup',
+                success: function (layero, index) {
+                    view(this.id).render('user/career/form', data).done(function () {
+                        // 表单渲染
+                        form.render(null, 'LAY-user-career-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-user-career-save)', function (obj) {
+
+                            admin.req({
+                                url: '/api/admin/user/careers',
+                                type: data.FORM_TYPE,
+                                data: obj.field,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    $('#LAY-user-career-search').click();
+                                }
+                            });
+                        });
+
+                        // 监听 返回按钮
+                        $('#LAY-user-career-popup').on('click', '#LAY-user-career-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+    });
+</script>

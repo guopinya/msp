@@ -1,0 +1,259 @@
+<title>后端用户</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a><cite>用户管理</cite></a>
+        <a><cite>后端用户</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-user-back-form">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">角色</label>
+                    <div class="layui-input-inline">
+                        <select id="LAY-user-back-role" name="roleId">
+                            <option value="">不限</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">用户名</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="username" placeholder="请输入用户名" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">手机号码</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="phoneNumber" placeholder="请输入手机号码"
+                               type="text">
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-user-back-search" lay-filter="LAY-user-back-search" lay-submit>
+                        搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-user-back-add">添加</button>
+            </div>
+
+            <table id="LAY-user-back-table" lay-filter="LAY-user-back-table"></table>
+
+
+            <script id="avatarTpl" type="text/html">
+                {{# let imageURL = d.avatar || '/user/1141245074473861122.png'; }}
+                <img style="display: inline-block; height: 100%;" src="{{ '/api' + imageURL }}" alt="">
+            </script>
+            <script id="statusTpl" type="text/html">
+                {{# if (d.status === 'normal') { }}
+                <button class="layui-btn layui-btn-xs">正常</button>
+                {{# } else if (d.status === 'freeze') { }}
+                <button class="layui-btn layui-btn-xs layui-btn-danger">封号</button>
+                {{# } else { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
+                {{# } }}
+            </script>
+            <script id="LAY-user-back-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="look">查看</a>
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
+                {{# if (d.status === 'normal') { }}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="freeze">封号</a>
+                {{# } else { }}
+                <a class="layui-btn layui-btn-xs" lay-event="normal">解封</a>
+                {{# } }}
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'table', 'upload'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            table = layui.table,
+            upload = layui.upload;
+
+        // 获取角色数据
+        let roleData;
+        admin.req({
+            url: '/api/admin/user/roles',
+            data: {},
+            done: function (res) {
+                roleData = res.data;
+
+                for (let i = 0; i < roleData.length; i++) {
+                    let current = roleData[i];
+                    $('#LAY-user-back-role').append('<option value="' + current.id + '">' + current.name + '</option>')
+                }
+
+                // 表单渲染
+                form.render('select', 'LAY-user-back-form');
+            }
+        });
+
+        // 表单渲染
+        form.render(null, 'LAY-user-back-form');
+
+        // 表单监听 搜索按钮
+        form.on('submit(LAY-user-back-search)', function (obj) {
+            // 执行重载
+            table.reload('LAY-user-back-table', {
+                where: obj.field
+            });
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-user-back-table',
+            url: '/api/admin/user/backs',
+            cols: [[
+                {title: '用户名', field: 'username'},
+                {title: '头像', templet: '#avatarTpl'},
+                {title: '昵称', field: 'nickname'},
+                {title: '手机号码', field: 'phoneNumber'},
+                {title: '状态', templet: '#statusTpl'},
+                {title: '创建时间', field: 'createTime'},
+                {title: '最近登录时间', field: 'lastLoginTime'},
+                {title: '操作', align: 'center', fixed: 'right', toolbar: '#LAY-user-back-toolbar'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 表格监听 工具条
+        table.on('tool(LAY-user-back-table)', function (obj) {
+            let data = obj.data;
+            data.FORM_TYPE = obj.event;
+
+            // 查看
+            if (obj.event === 'look') {
+                openUserBackPopup(data);
+            }
+            // 修改
+            if (obj.event === 'edit') {
+                openUserBackPopup(data);
+            }
+            // 封号
+            if (obj.event === 'freeze') {
+                openUserBackPopup2(data);
+            }
+            // 解封
+            if (obj.event === 'normal') {
+                openUserBackPopup2(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-user-back-add').on('click', function () {
+            // 打开用户详情
+            openUserBackPopup({FORM_TYPE: 'add'});
+        });
+
+        // 打开用户详情
+        function openUserBackPopup(data) {
+            data.roleData = roleData;
+
+            admin.popup({
+                title: '用户详情',
+                area: ['548px', ''],
+                offset: '100px',
+                id: 'LAY-user-back-popup',
+                success: function (layero, index) {
+                    view(this.id).render('user/back/form', data).done(function () {
+                        let formData = new FormData();
+                        // 上传渲染
+                        upload.render({
+                            elem: '#LAY-user-back-upload',
+                            auto: false,
+                            accept: 'images',
+                            acceptMime: 'image/*',
+                            choose: function (obj) {
+                                // 预读本地文件示例，不支持ie8
+                                obj.preview(function (index, file, result) {
+                                    formData.set('avatarFile', file);
+                                    // 图片链接（base64）
+                                    $('#LAY-user-back-avatar').attr('src', result);
+                                });
+                            }
+                        });
+
+                        // 表单渲染
+                        form.render(null, 'LAY-user-back-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-user-back-save)', function (data) {
+                            let field = data.field; //获取提交的字段
+                            for (let name in field) {
+                                formData.set(name, field[name]);
+                            }
+
+                            admin.req({
+                                url: '/api/admin/user/backs',
+                                type: field.id ? 'put' : 'post',
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    $('#LAY-user-back-search').click();
+                                }
+                            });
+                        });
+
+                        // 监听 返回按钮
+                        $('#LAY-user-back-popup').on('click', '#LAY-user-back-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+
+        // 打开冻结/解封用户
+        function openUserBackPopup2(data) {
+            layer.confirm('确定要将该用户冻结/解封吗?', {
+                icon: 3,
+                title: '冻结/解封用户',
+                id: 'LAY-user-back-popup2',
+                skin: 'layui-layer-admin',
+                success: function (layero, index) {
+                    let elemClose = $('<i class="layui-icon" close>&#x1006;</i>');
+                    layero.append(elemClose);
+                    elemClose.on('click', function () {
+                        layer.close(index);
+                    });
+                    $('#LAY-user-back-popup2').css('padding', ' 20px 20px 20px 55px');
+                    $('.layui-layer-btn a').css({'height': '35px', 'line-height': '35px'});
+                    $('.layui-layer-btn0').css({'border-color': '#009688', 'background-color': '#009688'});
+                }
+            }, function (index) {
+
+                admin.req({
+                    url: '/api/admin/user/backs',
+                    type: 'put',
+                    data: {id: data.id, status: data.FORM_TYPE},
+                    done: function (res) {
+                        layer.close(index);
+                        layer.msg('冻结/解封用户成功', {icon: 1});
+
+                        $('#LAY-user-back-search').click();
+                    }
+                });
+            });
+        }
+
+    });
+</script>

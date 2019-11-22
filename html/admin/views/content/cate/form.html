@@ -1,0 +1,44 @@
+<div class="layui-form" lay-filter="LAY-content-cate-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        <input type="hidden" name="cateId" value="{{ d.params.cateId || '' }}">
+        <input type="hidden" name="parentId" value="{{ d.params.parentId || '' }}">
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类图片</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <img src="{{ '/api' + d.params.cateImg }}" alt="" width="120" height="120" id="LAY-content-cate-image">
+
+                <button type="button" class="layui-btn layui-btn-normal" style="margin-top: 82px;"
+                        id="LAY-content-cate-upload">选择图片
+                </button>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类名称</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="cateName" value="{{ d.params.cateName || '' }}" lay-verify="required"
+                       placeholder="请输入分类名称" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序数字</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="sortNumber" value="{{ d.params.sortNumber || '' }}" lay-verify="number"
+                       placeholder="请输入排序数字" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            <input type="button" value="保存" class="layui-btn" readonly lay-submit lay-filter="LAY-content-cate-save">
+            <input type="button" value="返回" class="layui-btn layui-btn-primary" readonly id="LAY-content-cate-return">
+        </script>
+    </div>
+</div>

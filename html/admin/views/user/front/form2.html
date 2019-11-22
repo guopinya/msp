@@ -1,0 +1,21 @@
+<div class="layui-form" id="LAY-user-front-form2">
+    <div class="layui-btn-container">
+        <script template type="text/html">
+            {{# let list = d.params.careerList; }}
+            {{# let selected = d.params.selected; }}
+
+            {{# for (let i = 0; i < list.length; i++) { }}
+            {{# let className = 'layui-btn-primary'; }}
+            {{# if (selected.indexOf(list[i].careerId) >= 0) className = 'layui-btn-warm'; }}
+            <button type="button" class="layui-btn layui-btn-xs {{ className }}" data-value="{{ list[i].careerId }}">{{
+                list[i].careerName }}
+            </button>
+            {{# } }}
+        </script>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-bottom: 0;">
+        <input class="layui-btn" id="LAY-user-front-save2" readonly type="button" value="保存">
+        <input class="layui-btn layui-btn-primary" id="LAY-user-front-return2" readonly type="button" value="返回">
+    </div>
+</div>

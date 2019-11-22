@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <meta content="width=device-width,target-densitydpi=device-dpi, user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="true" name="HandheldFriendly"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <link href="css/style.css" rel="stylesheet">
+    <meta content="模型APP内测招募" property="title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="image"/>
+
+    <meta content="模型APP内测招募" property="og:title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="og:image"/>
+    <script type="text/javascript">
+        if (/Android (\d+\.\d+)/.test(navigator.userAgent)) {
+            let version = parseFloat(RegExp.$1);
+            if (version > 2.3) {
+                let phoneScale = window.screen.width / 750;
+                document.write('<meta name="viewport" content="width=750, minimum-scale = ' + phoneScale + ', maximum-scale = ' + phoneScale + ', target-densitydpi=device-dpi">');
+            } else {
+                document.write('<meta name="viewport" content="width=, target-densitydpi=device-dpi">');
+            }
+        } else {
+            document.write('<meta name="viewport" content="width=750, user-scalable=no">');
+        }
+    </script>
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="login">
+    <div class="scrill">
+        <h9 class="siginbt" id="sign_btn">
+            <a href="sigin.html">萌新注册</a>
+        </h9>
+        <h9 class="forget_ps" id="forget_btn">
+            <a href="forget_ps.html">忘记密码？</a>
+        </h9>
+        <!-- <div class="logo">
+            <img src="img/logo.png" alt="">
+        </div> -->
+        <p class="textitle">欢迎进入美塑派</p>
+        <!-- <ul class="nav_box">
+            <li class="nav1" style="margin-left:8%" onclick="location.replace('?auth_type=captcha');">验证码登录</li>
+            <li class="nav2" style="margin-left:6%" onclick="location.replace('?auth_type=password');">密码登录</li>
+        </ul> -->
+        <!--验证码登录输入框-->
+        <div class="yzm login_box">
+            <!--手机号码-->
+            <div class="input_box" id="mobile_div">
+                <label for="mobile"></label>
+                <input class="mobile" id="mobile" maxlength="11" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"
+                       placeholder="请输入手机号" style="width: 620px; border: none;" type="tel">
+            </div>
+            <!--用户名-->
+            <!-- <div class="input_box" id="username_div" style="display: none">
+                <label for="username"></label>
+                <input type="text" id="username" class="use_name" maxlength="20" placeholder="请输入手机号码/用户名"
+                       style="width: 620px; border-right: none;">
+            </div> -->
+            <!--短信验证码-->
+            <div class="input_box" id="sms_code_div">
+                <label for="sms_code"></label>
+                <input class="code" id="sms_code" maxlength="6" placeholder="请输入短信验证码" type="text"/>
+                <button class="send send_code" onclick="sendSmsCode(null, null);" type="button">发送验证码</button>
+            </div>
+            <!--密码-->
+            <div class="input_box" id="password_div" style="display: none">
+                <label for="password"></label>
+                <input class="use_pa" id="password" maxlength="20"
+                       onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[\W]/g,''))"
+                       onkeyup="value=value.replace(/[\W]/g,'')"
+                       placeholder="请输入密码"
+                       style="width: 620px; border-right: none;"
+                       type="password">
+            </div>
+            <!--图形验证码-->
+            <!--<div class="input_box" id="img_code_div">
+                <label for="img_code"></label>
+                <input type="text" id="img_code" maxlength="4" class="code_img" value="" placeholder="请输入图形验证码"/>
+                <img src="" alt="" onclick="updateCaptchaImage();"/>
+            </div>-->
+        </div>
+        <button class="submitbt submitbt1" onclick="login()" type="submit">登录</button>
+        <!-- <div  class="submitbt submitbt1">登录</div> -->
+        <!--游客登录-->
+        <!-- <div class="youke">
+            <a href="index.html">
+                <h9>随便逛逛</h9>
+            </a>
+        </div> -->
+
+        <ul class="nav_box ">
+            <li class="youke" onclick="window.location.href='index.html'">
+                <h9>随便逛逛</h9>
+            </li>
+            <li class="nav1" onclick="location.replace('?auth_type=captcha');" style="display: none;">验证码登录</li>
+            <li class="nav2" onclick="location.replace('?auth_type=password');">密码登录</li>
+        </ul>
+        <!--第三方登录-->
+        <div class="login_mode">
+            <div class="title">
+                <div style="float:left">
+                    <img alt="" src="img/login/u34.png">
+                </div>
+                <p>第三方账号快捷登录</p>
+                <div style="float:right">
+                    <img alt="" src="img/login/u34.png">
+                </div>
+            </div>
+            <ul class="link_sing">
+                <li onclick="thirdPartyLogin('qq');">
+                    <img alt="" src="img/login/ico_qq.png">
+                </li>
+                <li onclick="thirdPartyLogin('wechat');">
+                    <img alt="" src="img/login/ico_wx.png">
+                </li>
+                <li onclick="thirdPartyLogin('weibo');">
+                    <img alt="" src="img/login/ico_wb.png">
+                </li>
+            </ul>
+        </div>
+        <div class="hint_box">
+            <p></p>
+        </div>
+    </div>
+</div>
+<div id="affirm_box" style="display: none;">
+    <div class="click"></div>
+    <div class="box">
+        <div class="closebt" onclick="$('#affirm_box').hide();"></div>
+        <h1 class="title">绑定手机号</h1>
+        <!--手机号-->
+        <label for="telMobile"></label>
+        <input class="telMobile" id="telMobile" maxlength="11" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"
+               placeholder="请输入手机号"
+               type="tel">
+        <!--短信验证码-->
+        <label for="mobileCode"></label>
+        <input class="code" id="mobileCode" maxlength="6" placeholder="请输入短信验证码" type="text"/>
+        <button class="send_code" onclick="sendSmsCode('binding', authType);" style="font-size: 26px;">发送验证码</button>
+        <!--确认按钮-->
+        <button class="affirm" onclick="binding();" type="button">确认</button>
+    </div>
+</div>
+<script src="js/common.js" type="text/javascript"></script>
+<script type="text/javascript">
+    shareMsg(); //分享
+
+
+    // 授权类型
+    var authType = getQueryStringByName('auth_type') || 'captcha';
+    // 密码登录
+    console.log(authType);
+    if ('password' === authType) {
+
+        $("#sms_code_div").hide();
+        $("#sign_btn, #forget_btn, #password_div").show();
+        $(".nav1").show();
+        $(".nav2").hide();
+    }
+    // 默认验证码登录
+    else {
+        $("#sms_code_div").show();
+        $("#sign_btn, #forget_btn, #password_div").hide();
+        $(".nav1").hide();
+        $(".nav2").show();
+    }
+
+    // 更新验证码图片
+    updateCaptchaImage();
+
+    // 更新验证码图片
+    function updateCaptchaImage() {
+        $('#img_code_div img').attr('src', link + '/kaptcha?v=' + new Date().getTime());
+    }
+
+    /**
+     * 登录
+     */
+    var mobile, smsCode, password;
+
+    function login() {
+        // 检查请求参数
+        let result = checkRequestParameters();
+        if (false === result) return;
+
+        $.ajax({
+            'url': link + '/login/' + authType,
+            'method': 'POST',
+            'data': {
+                'mobile': mobile,
+                'smsCode': smsCode,
+                'password': password
+            }
+        }).done(function (response) {
+            console.log(response);
+
+            handler({
+                res: response,
+                fun1: function () {
+                    onLoginSuccess(response.data);
+                },
+                fun2: function () {
+                    // 更新验证码图片
+                    updateCaptchaImage();
+                }
+            });
+        });
+    }
+
+    /**
+     * 检查请求参数
+     * @return {boolean}
+     */
+    function checkRequestParameters() {
+        mobile = $('#mobile').val();  // 手机号
+        smsCode = $('#sms_code').val(); // 短信验证码
+        password = $('#password').val(); // 密码
+
+        // 手机验证码验证
+        if (mobile === '') {
+            hint('请输入手机号');
+            return false;
+        }
+        if (!reg.test(mobile)) {
+            hint('手机号格式错误');
+            return false;
+        }
+        if (authType === 'captcha') {
+            if (smsCode === '') {
+                hint('请输入短信验证码');
+                return false;
+            }
+        } else {
+            if (password === '') {
+                hint('请输入密码');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // 第三方登录
+    function thirdPartyLogin(authType) {
+        location.href = link + '/login/' + authType + '?domain=' + encodeURIComponent(location.protocol + '//' + location.host);
+    }
+
+    // 显示绑定手机号码
+    if (location.hash === '#auth_redirect') {
+        $('#affirm_box').show();
+        toggleBody(1)
+    }
+
+    // 绑定
+    function binding() {
+        // 检查请求参数
+        let result = checkRequestParameters2();
+        if (false === result) return;
+
+        let paramObject = getParamObject();
+        paramObject.mobile = mobile;
+        paramObject.smsCode = smsCode;
+        paramObject.from_wap = '1';
+
+        $.ajax({
+            'url': link + '/login/' + authType + '/binding',
+            'method': 'POST',
+            'data': paramObject
+        }).done(function (response) {
+            console.log(response);
+
+            handler({
+                res: response,
+                fun1: function () {
+                    toggleBody(0);
+                    onLoginSuccess(response.data);
+                }
+            });
+        });
+    }
+
+    /**
+     * 检查请求参数
+     * @return {boolean}
+     */
+    function checkRequestParameters2() {
+        mobile = $('#telMobile').val();  //手机号
+        smsCode = $('#mobileCode').val(); //短信验证码
+
+        // 手机验证码验证
+        if (mobile === '') {
+            hint('请输入手机号');
+            return false;
+        }
+        if (!reg.test(mobile)) {
+            hint('手机号格式错误');
+            return false;
+        }
+        if (smsCode === '') {
+            hint('请输入短信验证码');
+            return false;
+        }
+        return true;
+    }
+
+    function onLoginSuccess(data) {
+        localStorage.setItem('rong_token', data["ryToken"]);
+
+        let rongUser = {
+            id: data.userId,
+            name: data.username,
+            portrait: location.protocol + '//' + location.host + '/api' + data.avatarPath
+        };
+        localStorage.setItem('rong_current_user2', JSON.stringify(rongUser));
+
+        // 进入社群首页
+        location.href = '/';
+    }
+</script>
+</body>
+</html>

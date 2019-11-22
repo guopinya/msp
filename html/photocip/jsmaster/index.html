@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta content="width=device-width,user-scalable=no" name="viewport"/>
+    <meta content="" name="description">
+    <meta charset="UTF-8">
+    <title>移动端图片上传裁切demo</title>
+    <style type="text/css">
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+        }
+
+        #wrap {
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        header {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 60px;
+            background: #393a3f;
+            font: 20px/60px "宋体";
+            text-align: center;
+            color: #fff;
+        }
+
+        .page {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            transition: .5s;
+            background: #000;
+        }
+
+        .fileBtn {
+            box-sizing: border-box;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 200px;
+            height: 50px;
+            font: 20px/50px "宋体";
+            text-align: center;
+            border: 1px solid #179e16;
+            border-radius: 5px;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            background: #1aad19;
+            color: #fff;
+
+
+        }
+
+        input {
+            display: none;
+        }
+
+        .pageHide {
+            -webkit-transform: translateY(100%);
+            transform: translateY(100%);
+        }
+
+        .con {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 60px;
+            bottom: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #img {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -100px 0 0 -100px;
+            width: 200px;
+            height: 200px;
+            background: url('loading.gif') no-repeat center center;
+        }
+
+        #saveBtn {
+            position: absolute;
+            right: 5px;
+            top: 10px;
+            width: 70px;
+            font: 14px/30px "宋体";
+            text-align: center;
+            background: #1aad19;
+            text-decoration: none;
+            color: #fff;
+            border: 1px solid #179e16;
+            border-radius: 5px;
+        }
+
+        #select {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 200px;
+            border: 1px solid #6af7d7;
+            background: rgba(106, 247, 215, .1);
+        }
+
+        #select span {
+            position: absolute;
+            box-sizing: border-box;
+        }
+
+        #select .top {
+            top: -2px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            border-top: 4px solid transparent;
+            /*#6af7d7*/
+        }
+
+        #select .bottom {
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            border-bottom: 4px solid transparent;
+            /*#6af7d7*/
+        }
+
+        #select .left {
+            top: 0;
+            left: -2px;
+            height: 100%;
+            width: 20px;
+            border-left: 4px solid transparent;
+            /*#6af7d7*/
+        }
+
+        #select .right {
+            top: 0px;
+            right: -2px;
+            height: 100%;
+            width: 20px;
+            border-right: 4px solid transparent;
+            /*#6af7d7*/
+        }
+
+        #select .left-top {
+            top: -2px;
+            left: -2px;
+            height: 30px;
+            width: 30px;
+            border-top: 4px solid #6af7d7;
+            border-left: 4px solid #6af7d7;
+            /*#6af7d7*/
+        }
+
+        #select .right-top {
+            top: -2px;
+            right: -2px;
+            height: 30px;
+            width: 30px;
+            border-top: 4px solid #6af7d7;
+            border-right: 4px solid #6af7d7;
+            /*#6af7d7*/
+        }
+
+        #select .left-bottom {
+            bottom: -2px;
+            left: -2px;
+            height: 30px;
+            width: 30px;
+            border-bottom: 4px solid #6af7d7;
+            border-left: 4px solid #6af7d7;
+            /*#6af7d7*/
+        }
+
+        #select .right-bottom {
+            bottom: -2px;
+            right: -2px;
+            height: 30px;
+            width: 30px;
+            border-bottom: 4px solid #6af7d7;
+            border-right: 4px solid #6af7d7;
+            /*#6af7d7*/
+        }
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <section class="page">
+        <header>
+            图片上传裁切
+        </header>
+        <label class="fileBtn">
+            请选择图片上传
+            <input accept="image/*" id="file" type="file">
+        </label>
+    </section>
+    <section class="page pageHide">
+        <header>
+            图片编辑 <a class="btn" href="javascript:" id="saveBtn">保存</a>
+        </header>
+        <div class="con">
+            <canvas id="c" style="background: rgba(0,0,0,0.5);"></canvas>
+            <div id="select">
+                <!-- <span class="top"></span>
+                <span class="right"></span>
+                <span class="bottom"></span>
+                <span class="left"></span>
+                <span class="left-top"></span>
+                <span class="left-bottom"></span>
+                <span class="right-top"></span>
+                <span class="right-bottom"></span> -->
+            </div>
+        </div>
+    </section>
+    <section class="page pageHide" id="result">
+        <header>
+            长按保存图片
+        </header>
+        <img id="img" src="">
+    </section>
+</div>
+
+<script src="MTween.js" type="text/javascript"></script>
+<script type="text/javascript">
+    function addGesture(init) {
+        var el = init.el;
+        var isGesture = false;
+        var startDis = 0;
+        var startDeg = 0;
+        el.addEventListener('touchstart', function (e) {
+            if (e.touches.length >= 2) {
+                isGesture = true;
+                startDis = getDis(e.touches[0], e.touches[1]);
+                startDeg = getDeg(e.touches[0], e.touches[1]);
+                init.start && init.start.call(el, e);
+            }
+        });
+        el.addEventListener('touchmove', function (e) {
+            if (e.touches.length >= 2 && isGesture) {
+                var nowDis = getDis(e.touches[0], e.touches[1]);
+                var nowDeg = getDeg(e.touches[0], e.touches[1]);
+                /*
+                    e.scale = 0;
+                    计算缩放值:
+                        change时，两根手指之间的距离 和 start时 两根手指之间的距离的比值
+                */
+                e.scale = nowDis / startDis;
+                e.rotation = startDeg - nowDeg;
+                init.change && init.change.call(el, e);
+            }
+        });
+        el.addEventListener('touchend', function (e) {
+            if (isGesture) {
+                isGesture = false;
+                init.end && init.end.call(el, e);
+            }
+        });
+
+        function getDis(point, point2) {
+            console.log(point, point2);
+            var x = point2.pageX - point.pageX;
+            var y = point2.pageY - point.pageY;
+            return Math.sqrt(x * x + y * y);
+        }
+
+        function getDeg(point, point2) {
+            var x = point2.pageX - point.pageX;
+            var y = point2.pageY - point.pageY;
+            return Math.atan2(x, y) * 180 / Math.PI;
+        }
+    }
+
+    document.addEventListener('touchstart', function (e) {
+        e.preventDefault();
+    });
+    (function () {
+        var page = document.querySelectorAll('.page');
+        var file = document.querySelector('#file');
+        var c = document.querySelector('#c');
+        var cxt = c.getContext("2d");
+        var saveBtn = document.querySelector('#saveBtn');
+        var maxSize = 10 * 1024 * 1024;
+        var label = document.querySelector('label');
+        var select = document.querySelector('#select');
+        var selectW = css(select, "width");
+        var selectH = css(select, "height");
+
+        label.addEventListener('touchstart', function (e) {
+            e.stopPropagation();
+        });
+        img.addEventListener('touchstart', function (e) {
+            e.stopPropagation();
+        });
+        c.width = page[0].clientWidth;
+        c.height = page[0].clientHeight - 60;
+        c.fillStyle = "green";
+        file.onchange = function (e) {
+            var files = e.target.files[0];
+            if (files.size > maxSize) {
+                alert("对不起不能上传10M以上的文件");
+            } else {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = new Image();
+                    img.onload = function () {
+                        var width = img.width;
+                        var height = img.height;
+                        var scale = 1;
+                        if (width > c.width || height > c.height) {
+                            if (width > height) {
+                                scale = c.width / width;
+                            } else {
+                                scale = c.height / height;
+                            }
+                        } else if (width < selectW || height < selectH) {
+                            if (height > width) {
+                                scale = selectW / width;
+                            } else {
+                                scale = selectH / height;
+                            }
+                        }
+                        width *= scale;
+                        height *= scale;
+                        setImage(img, width, height);
+                    };
+                    img.src = e.target.result;
+                    page[1].className = "page";
+                };
+                reader.readAsDataURL(files);
+            }
+        };
+
+        function setImage(img, width, height) {
+            var left = (c.width - width) / 2;
+            var top = (c.height - height) / 2;
+            var con = document.querySelector('.con');
+            var rotate = 0;
+            var scale = 1;
+            var startScale = 1;
+            var startWidth = width;
+            var startHeight = height;
+            var startLeft = left;
+            var startTop = top;
+            var isDrag = true;
+            var isResize = true;
+            var htmlClient = {
+                w: con.clientWidth,
+                h: con.clientHeight
+            };
+            cxt.drawImage(img, left, top, width, height);
+            addGesture({
+                el: con,
+                start: function () {
+                    startWidth = width;
+                    startHeight = height;
+                    startLeft = left;
+                    startTop = top;
+                },
+                change: function (e) {
+                    isDrag = false;
+                    isResize = false;
+                    cxt.clearRect(0, 0, c.width, c.height);
+                    startWidth = width * e.scale;
+                    startHeight = height * e.scale;
+                    startLeft = left - (startWidth - width) / 2;
+                    startTop = top - (startHeight - height) / 2;
+                    cxt.drawImage(img, startLeft, startTop, startWidth, startHeight);
+                },
+                end: function () {
+                    width = startWidth;
+                    height = startHeight;
+                    left = startLeft;
+                    top = startTop;
+                }
+            });
+            /* 拖拽 canvas */
+            drag({
+                el: c,
+                start: function (e) {
+                    isDrag = true;
+                    startTop = top;
+                    startLeft = left;
+                },
+                move: function (e) {
+                    if (isDrag) {
+                        top = startTop + e.pointDis.y;
+                        left = startLeft + e.pointDis.x;
+                        cxt.clearRect(0, 0, c.width, c.height);
+                        cxt.drawImage(img, left, top, width, height);
+                    }
+                }
+            });
+
+            /*拖拽选框*/
+            var startSelect = {};
+            var selectRect = select.getBoundingClientRect();
+            css(select, "translateX", (htmlClient.w - selectRect.width) / 2);
+            css(select, "translateY", (htmlClient.h - selectRect.height) / 2);
+            drag({
+                el: select,
+                start: function (e) {
+                    if (e.target.tagName == "SPAN") {
+                        return;
+                    }
+                    isDrag = true;
+                    isResize = false;
+                    startSelect.x = css(this, "translateX");
+                    startSelect.y = css(this, "translateY");
+                },
+                move: function (e) {
+                    if (isResize) {
+                        return;
+                    }
+                    if (isDrag) {
+                        var now = {
+                            x: startSelect.x + e.pointDis.x,
+                            y: startSelect.y + e.pointDis.y
+                        };
+                        var rect = this.getBoundingClientRect();
+                        var maxX = (htmlClient.w - rect.width);
+                        var maxY = (htmlClient.h - rect.height);
+                        if (now.x > maxX) {
+                            now.x = maxX;
+                        } else if (now.x < 0) {
+                            now.x = 0;
+                        }
+                        if (now.y > maxY) {
+                            now.y = maxY;
+                        } else if (now.y < 0) {
+                            now.y = 0;
+                        }
+                        css(this, "translateX", now.x);
+                        css(this, "translateY", now.y);
+                    }
+                }
+            });
+
+
+            saveBtn.addEventListener('touchend', function (e) {
+                var rect = select.getBoundingClientRect();
+                var cReac = c.getBoundingClientRect();
+
+                var imgData = cxt.getImageData(rect.left - cReac.left, rect.top - cReac.top, rect.width, rect.height);
+                page[2].className = "page";
+                setTimeout(function () {
+                    var img = document.querySelector('#img');
+                    cxt.clearRect(0, 0, c.width, c.height);
+                    c.width = rect.width;
+                    c.height = rect.height;
+                    cxt.putImageData(imgData, 0, 0);
+                    var src = c.toDataURL("image/png");
+                    var newImage = new Image();
+                    newImage.src = src;
+                    newImage.onload = function () {
+                        img.style.width = newImage.width + "px";
+                        img.style.height = newImage.height + "px";
+                        img.style.margin = "-" + newImage.height / 2 + "px 0 0 -" + newImage.width / 2 + "px";
+                        img.src = src;
+                    };
+                }, 500);
+            });
+        }
+    })();
+
+    function drag(init) {
+        var startPoint = {};
+        var el = init.el;
+        var isDrag = true;
+        el.addEventListener('touchstart', function (e) {
+            if (e.touches.length < 2) {
+                init.start && init.start.call(el, e);
+                var touch = e.changedTouches[0];
+                startPoint.x = Math.round(touch.pageX);
+                startPoint.y = Math.round(touch.pageY);
+                isDrag = true;
+            } else {
+                isDrag = false;
+            }
+        });
+        el.addEventListener('touchmove', function (e) {
+            if (!isDrag || e.touches.length >= 2) {
+                isDrag = false;
+                return;
+            }
+            var touch = e.changedTouches[0];
+            var nowPoint = {
+                x: Math.round(touch.pageX),
+                y: Math.round(touch.pageY)
+            };
+            e.pointDis = {
+                x: nowPoint.x - startPoint.x,
+                y: nowPoint.y - startPoint.y
+            };
+            init.move && init.move.call(el, e);
+            e.preventDefault();
+        });
+        el.addEventListener('touchend', function (e) {
+            if (isDrag) {
+                init.end && init.end.call(el, e);
+            } else {
+                isDrag = true;
+            }
+
+        });
+
+    }
+</script>
+</body>
+</html>

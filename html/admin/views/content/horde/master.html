@@ -1,0 +1,210 @@
+<title>部落达人</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a><cite>内容管理</cite></a>
+        <a><cite>部落管理</cite></a>
+        <a><cite>部落达人</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto"
+             lay-filter="LAY-content-horde-master-form">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">部落名称</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="hordeName" placeholder="请输入部落名称"
+                               type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">用户名</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="username" placeholder="请输入用户名" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">达人等级</label>
+                    <div class="layui-input-inline">
+                        <select name="masterLevel">
+                            <option value="">不限</option>
+                            <option value="0">未加入</option>
+                            <option value="1">申请加入</option>
+                            <option value="2">成员</option>
+                            <option value="3">管理员</option>
+                            <option value="4">酋长</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-content-horde-master-search"
+                            lay-filter="LAY-content-horde-master-search" lay-submit>搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-content-horde-master-add">添加</button>
+            </div>
+
+            <table id="LAY-content-horde-master-table" lay-filter="LAY-content-horde-master-table"></table>
+
+            <script id="avatarTpl" type="text/html">
+                <img style="height: 100%;" src="{{ '/api' + d.avatarPath }}" alt="" lay-event="img">
+            </script>
+            <script id="levelTpl" type="text/html">
+                {{# let masterLevel = d.masterLevel; }}
+                {{# if (masterLevel === 0) { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">未加入</button>
+                {{# } else if (masterLevel === 1) { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">申请加入</button>
+                {{# } else if (masterLevel === 2) { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">成员</button>
+                {{# } else if (masterLevel === 3) { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">管理员</button>
+                {{# } else if (masterLevel === 4) { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">酋长</button>
+                {{# } else { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
+                {{# } }}
+            </script>
+            <script id="followTpl" type="text/html">
+                {{# let isCollected = d.isCollected; }}
+                {{# if (isCollected === true) { }}
+                <button class="layui-btn layui-btn-xs">是</button>
+                {{# } else if (isCollected === false) { }}
+                <button class="layui-btn layui-btn-xs layui-btn-danger">否</button>
+                {{# } else { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
+                {{# } }}
+            </script>
+            <script id="LAY-content-horde-master-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="put">修改</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'table'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            table = layui.table;
+
+        // 表单渲染
+        form.render(null, 'LAY-content-horde-master-form');
+
+        // 表单监听 搜索按钮
+        form.on('submit(LAY-content-horde-master-search)', function (obj) {
+            // 执行重载
+            table.reload('LAY-content-horde-master-table', {
+                where: obj.field
+            });
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-content-horde-master-table',
+            url: '/api/admin/content/hordes/masters',
+            cols: [[
+                {title: '头像', templet: '#avatarTpl'},
+                {title: '用户名', field: 'username'},
+                {title: '部落名称', field: 'hordeName'},
+                {title: '达人等级', templet: '#levelTpl'},
+                {title: '是否关注部落', templet: '#followTpl'},
+                {title: '操作', align: 'center', fixed: 'right', toolbar: '#LAY-content-horde-master-toolbar'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 表格监听 工具条
+        table.on('tool(LAY-content-horde-master-table)', function (obj) {
+            let data = obj.data;
+            data.FORM_TYPE = obj.event;
+
+            // 图片
+            if (obj.event === 'img') {
+                layer.photos({
+                    photos: {data: [{src: '/api' + data.avatarPath}]},
+                    anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                });
+            }
+            // 修改
+            if (obj.event === 'put') {
+                openContentGroupMasterPopup(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-content-horde-master-add').on('click', function () {
+            // 打开部落达人详情
+            openContentGroupMasterPopup({FORM_TYPE: 'post', userList: userList, hordeList: hordeList});
+        });
+
+        // 获取用户列表
+        let userList;
+        admin.req({
+            url: '/api/admin/user/fronts',
+            data: {},
+            done: function (res) {
+                userList = res.data;
+            }
+        });
+
+        // 获取部落列表
+        let hordeList;
+        admin.req({
+            url: '/api/admin/content/hordes',
+            data: {},
+            done: function (res) {
+                hordeList = res.data;
+            }
+        });
+
+        // 打开部落达人详情
+        function openContentGroupMasterPopup(data) {
+            admin.popup({
+                title: '部落达人详情',
+                area: ['402px', ''],
+                offset: '100px',
+                id: 'LAY-content-horde-master-popup',
+                success: function (layero, index) {
+                    view(this.id).render('content/horde/form2', data).done(function () {
+                        // 表单渲染
+                        form.render(null, 'LAY-content-horde-master-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-content-horde-master-save)', function (obj) {
+                            admin.req({
+                                url: '/api/admin/content/hordes/masters',
+                                type: data.FORM_TYPE,
+                                data: obj.field,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    $('#LAY-content-horde-master-search').click();
+                                }
+                            });
+                        });
+
+                        // 监听 返回按钮
+                        $('#LAY-content-horde-master-popup').on('click', '#LAY-content-horde-master-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+
+    });
+</script>

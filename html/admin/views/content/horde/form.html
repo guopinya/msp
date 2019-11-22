@@ -1,0 +1,71 @@
+<div class="layui-form" lay-filter="LAY-content-horde-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        <input type="hidden" name="hordeId" value="{{ d.params.hordeId || '' }}">
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">缩略图片</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <img src="{{ '/api' + d.params.smallImage }}" alt="" width="60" height="60"
+                     id="LAY-content-horde-image">
+
+                <button type="button" class="layui-btn layui-btn-normal" style="margin-top: 22px;"
+                        id="LAY-content-horde-upload">选择图片
+                </button>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">详情图片</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <img src="{{ '/api' + d.params.largeImage }}" alt="" width="262" height="122"
+                     id="LAY-content-horde-image2">
+
+                <button type="button" class="layui-btn layui-btn-normal" style="margin-top: 84px;"
+                        id="LAY-content-horde-upload2">选择图片
+                </button>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属圈子</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <select name="groupId" lay-search>
+                    {{# let groupList = d.params.groupList; }}
+                    {{# for (let i = 0; i < groupList.length; i++) { }}
+                    {{# let attribute = (d.params.groupId === groupList[i].groupId) ? 'selected' : ''; }}
+                    <option value="{{ groupList[i].groupId }}" {{ attribute }}>{{ groupList[i].groupName }}</option>
+                    {{# } }}
+                </select>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">部落名称</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="hordeName" value="{{ d.params.hordeName || '' }}" lay-verify="required"
+                       placeholder="请输入部落名称" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">部落介绍</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <textarea type="text" name="hordeText" lay-verify="required" placeholder="请输入部落介绍" autocomplete="off"
+                          class="layui-textarea">{{ d.params.hordeText || '' }}</textarea>
+            </script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            <input value="保存" class="layui-btn" readonly lay-submit lay-filter="LAY-content-horde-save">
+            <input value="返回" class="layui-btn layui-btn-primary" readonly id="LAY-content-horde-return">
+        </script>
+    </div>
+</div>

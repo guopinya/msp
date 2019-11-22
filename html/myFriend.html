@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>我的好友</title>
+    <meta content="width=device-width,target-densitydpi=device-dpi, user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="true" name="HandheldFriendly"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta content="模型APP内测招募" property="title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="image"/>
+
+    <meta content="模型APP内测招募" property="og:title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="og:image"/>
+    <script type="text/javascript">
+        if (/Android (\d+\.\d+)/.test(navigator.userAgent)) {
+            var version = parseFloat(RegExp.$1);
+            if (version > 2.3) {
+                var phoneScale = parseInt(window.screen.width) / 750;
+                document.write('<meta name="viewport" content="width=750, minimum-scale = ' + phoneScale + ', maximum-scale = ' + phoneScale + ', target-densitydpi=device-dpi">');
+            } else {
+                document.write('<meta name="viewport" content="width=, target-densitydpi=device-dpi">');
+            }
+        } else {
+            document.write('<meta name="viewport" content="width=750, user-scalable=no">');
+        }
+    </script>
+    <link href="css/style.css" rel="stylesheet">
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+
+
+    <link href="mescroll/mescroll.min.css" rel="stylesheet"></link>
+    <style type="text/css">
+        .mescroll {
+            position: fixed;
+            top: 111px;
+            bottom: 0px;
+            height: auto;
+        }
+
+        .mescroll-totop {
+            bottom: 140px;
+        }
+
+        .data-list {
+            border-top: 4px solid #eee;
+        }
+
+        .data-list li {
+            position: relative;
+            padding: 10px 8px 10px 120px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-list .pd-img {
+            position: absolute;
+            left: 18px;
+            top: 18px;
+            width: 80px;
+            height: 80px;
+        }
+
+        .data-list .pd-name {
+            font-size: 16px;
+            line-height: 20px;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .data-list .pd-price {
+            margin-top: 8px;
+            color: red;
+        }
+
+        .data-list .pd-sold {
+            font-size: 12px;
+            margin-top: 8px;
+            color: gray;
+        }
+    </style>
+
+</head>
+<body>
+<div id="myFriend">
+
+
+    <div class="content">
+        <ul class="head_title">
+            <li class="hover" data-id="1">我的关注</li>
+            <li data-id="2">我的粉丝</li>
+        </ul>
+
+
+        <div class="mescroll" id="mescroll">
+            <ul class="circleList recommend" id="dataList">
+
+            </ul>
+        </div>
+
+
+        <!--推荐圈子-->
+        <!--<ul class="circleList recommend circle1">
+            <li>
+                <div class="img"><img src="img/detail/head_img.png"></div>
+                <div class="circleMsg">
+                    <p class="name">圈子名称圈子名称圈子名称圈子名称</p>
+                    <div class="detail">
+                        <p class="people"><span>999</span>人</p>
+                        <p class="number"><span>999</span>帖子</p>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <div class="img"><img src="img/detail/head_img.png"></div>
+                <div class="circleMsg">
+                    <p class="name">圈子名称圈子名称圈子名称圈子名称</p>
+                    <div class="detail">
+                        <p class="people"><span>999</span>人</p>
+                        <p class="number"><span>999</span>帖子</p>
+                    </div>
+                </div>
+            </li>
+        </ul>-->
+
+
+        <!--我的圈子-->
+        <!--<ul class="circleList myCircle circle2">
+            <li>
+                <div class="img"><img src="img/detail/head_img.png"></div>
+                <div class="circleMsg">
+                    <p class="name">圈子名称圈子名称圈子名称圈子名称</p>
+                    <div class="detail">
+                        <p class="people"><span>999</span>人</p>
+                        <p class="number"><span>999</span>帖子</p>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <div class="img"><img src="img/detail/head_img.png"></div>
+                <div class="circleMsg">
+                    <p class="name">圈子名称圈子名称圈子名称圈子名称</p>
+                    <div class="detail">
+                        <p class="people"><span>999</span>人</p>
+                        <p class="number"><span>999</span>帖子</p>
+                    </div>
+                </div>
+            </li>
+        </ul>-->
+    </div>
+    <!--取消关注提示框-->
+    <div class="hint_box3" style="display: none;">
+        <div class="click"></div>
+        <div class="box">
+            <!--<p class="title">您是否已收到货品？</p>-->
+            <p class="text">确定要取消关注 <span>宁胡扯</span>吗？</p>
+            <div class="bt">
+                <button class="close">手滑了</button>
+                <button class="affirm">取消关注</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="js/common.js" type="text/javascript"></script>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+<!--上拉加载文件-->
+<script charset="utf-8" src="mescroll/mescroll.min.js"></script>
+<script type="text/javascript">
+    shareMsg(); //分享
+
+    var index = getQueryStringByName('id');
+    var userId = getQueryStringByName('userId');
+    if (!Istrue(index)) {
+        var index = 0;
+    } else {
+        $(".head_title li").removeClass("hover");
+        $(".head_title li").eq(index).addClass("hover");
+    }
+    if (Istrue(userId)) {
+        $(".head_title li").eq(0).text('TA的关注');
+        $(".head_title li").eq(1).text('TA的粉丝')
+    }
+
+    $(".head_title li").click(function () {
+        $(".head_title li").removeClass("hover");
+        $(this).addClass("hover");
+        index = $(this).index();
+        mescroll.resetUpScroll();
+    });
+
+    // 参数对象
+    var paramObject = getParamObject();
+    // 创建mescroll对象
+    var mescroll = new MeScroll("mescroll", {
+        up: {
+            callback: upCallback, //上拉回调,此处可简写; 相当于 callback: function (page) { getListData(page); }
+            isBounce: false, //此处禁止ios回弹,解析(务必认真阅读,特别是最后一点): http://www.mescroll.com/qa.html#q10
+            noMoreSize: 1,
+            clearEmptyId: "dataList", //1.下拉刷新时会自动先清空此列表,再加入数据; 2.无任何数据时会在此列表自动提示空
+
+            toTop: { //配置回到顶部按钮
+                src: "../res/img/mescroll-totop.png" //默认滚动到1000px显示,可配置offset修改
+            }
+        }
+    });
+
+    //上拉加载的回调 page = {num:1, size:10}; num:当前页 默认从1开始, size:每页数据条数,默认10
+    function upCallback(page) {
+        paramObject.pageNumber = page.num; // 页码, 默认从1开始 如何修改从0开始 ?
+        paramObject.pageSize = page.size; // 页长, 默认每页10条
+        paramObject.requestId = md5($.param(paramObject)); // 请求ID
+        paramObject.timestamp = new Date().getTime(); // 请求时间戳
+        if (index == 0) {
+            $.ajax({
+                url: link + "/social/follow/getmyfollowsList?" + $.param(paramObject),
+                success: function (res) {
+                    console.log(res);
+                    handler({
+                        res: res,
+                        fun1: function () {
+                            var curPageData = res.data; // 接口返回的当前页数据列表
+                            var totalSize = res.count; // 接口返回的总数据量(比如列表有26个数据,每页10条,共3页; 则totalSize值为26)
+                            mescroll.endBySize(curPageData.length, totalSize); // 联网成功的回调,隐藏下拉刷新和上拉加载的状态;
+                            setListData(curPageData); // 设置列表数据
+                        }
+                    })
+                },
+                error: function (e) {
+                    mescroll.endErr()
+                }
+            });
+        } else {
+            $.ajax({
+                url: link + "/social/follow/getmyfansList?" + $.param(paramObject),
+                success: function (res) {
+                    console.log(res);
+                    handler({
+                        res: res,
+                        fun1: function () {
+                            var curPageData = res.data; // 接口返回的当前页数据列表
+                            var totalSize = res.count; // 接口返回的总数据量(比如列表有26个数据,每页10条,共3页; 则totalSize值为26)
+                            mescroll.endBySize(curPageData.length, totalSize); // 联网成功的回调,隐藏下拉刷新和上拉加载的状态;
+                            setListData(curPageData); // 设置列表数据
+                        }
+                    })
+                },
+                error: function (e) {
+                    mescroll.endErr()
+                }
+            });
+        }
+
+    }
+
+    // 设置列表数据
+    function setListData(curPageData) {
+        var str = "";
+        console.log(index);
+        for (var i = 0; i < curPageData.length; i++) {
+            var pd = curPageData[i];
+            var usId = '';
+            if (index == 0) {
+                usId = pd.sellerId
+            } else {
+                usId = pd.userId
+            }
+            str += '<li class="user_' + usId + '">' +
+                '<div onclick="window.location.href=\'myHome.html?userId=' + usId + '\'">' +
+                '<div class="img">' + headImgHtml(pd.avatarPath) + '</div>' +
+                '<div class="circleMsg">' +
+                '<p class="name use_name">' + userName(pd.username) + '</p>' +
+                '<div class="detail">' +
+                '<p class="people">粉丝 <span>' + pd.fansSum + '</span></p>' +
+                '<p class="number">帖子 <span>' + pd.postsSum + '</span></p>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+            if (pd.isFollow == true) {
+                str += '<div class="attention hover" data-userid="' + usId + '" data-isfollow="' + pd.isFollow + '">已关注</div>'
+            } else {
+                str += '<div class="attention" data-userid="' + usId + '" data-isfollow="' + pd.isFollow + '">关注</div>'
+            }
+            str += '</li>'
+        }
+
+        $("#dataList").append(str);
+        plantGrass();
+    }
+
+    //添加或删除关注人点击事件
+    function plantGrass() {
+        $(".attention").click(function () {
+            var isfollow = $(this).attr('data-isfollow');
+            userId = $(this).data('userid');
+            if (isfollow == 'false') {
+                plantGrassOrCancel(userId)//添加或删除关注人
+            } else {
+                let name = $(this).prev().find(".use_name").text();
+                $(".hint_box3 .text span").text(name);
+                $(".hint_box3").fadeIn(200)
+            }
+        });
+
+        $(".close").click(function () {
+            $(".hint_box3").fadeOut(200);
+        });
+        $(".affirm").click(function () {
+            $(".hint_box3").fadeOut(200);
+            plantGrassOrCancel(userId)//添加或删除关注人
+        })
+
+    }
+</script>
+
+<script>
+    $("#menu ul li").click(function () {
+        $("#menu ul li").removeClass("current");
+        $(this).addClass("current");
+    });
+
+</script>
+</body>
+</html>

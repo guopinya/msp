@@ -1,0 +1,63 @@
+<div class="layui-form" lay-filter="LAY-content-question-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        <input type="hidden" name="questionId" value="{{ d.params.questionId || '' }}">
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">发布人</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <select name="userId" lay-search>
+                    <option value="">请选择发布人</option>
+                    {{# let userList = d.params.userList; }}
+                    {{# for (let i = 0; i < userList.length; i++) { }}
+                    {{# let attribute = (d.params.sellerId === userList[i].userId) ? 'selected' : ''; }}
+                    <option value="{{ userList[i].userId }}" {{ attribute }}>{{ userList[i].username }}</option>
+                    {{# } }}
+                </select>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属拍品</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <select name="auctionId" lay-search>
+                    <option value="">请选择所属拍品</option>
+                    {{# let auctionList = d.params.auctionList; }}
+                    {{# for (let i = 0; i < auctionList.length; i++) { }}
+                    {{# let attribute = (d.params.auctionId === auctionList[i].auctionId) ? 'selected' : ''; }}
+                    <option value="{{ auctionList[i].auctionId }}" {{ attribute }}>{{ auctionList[i].title }}</option>
+                    {{# } }}
+                </select>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">问题</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="problem" value="{{ d.params.problem || '' }}" lay-verify="required"
+                       placeholder="请输入问题" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">答案</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="answer" value="{{ d.params.answer || '' }}" placeholder="请输入答案"
+                       autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            <input type="button" value="保存" class="layui-btn" readonly lay-submit
+                   lay-filter="LAY-content-question-save">
+            <input type="button" value="返回" class="layui-btn layui-btn-primary" readonly
+                   id="LAY-content-question-return">
+        </script>
+    </div>
+</div>

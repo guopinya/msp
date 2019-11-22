@@ -1,0 +1,34 @@
+<div class="layui-form" lay-filter="LAY-user-role-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        <input type="hidden" name="id" value="{{ d.params.id || '' }}">
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色名称</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="name" value="{{ d.params.name || '' }}" lay-verify="required"
+                       placeholder="请输入角色名称" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色备注</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <textarea name="remark" lay-verify="required" autocomplete="off" class="layui-textarea">{{ d.params.remark || '' }}</textarea>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">权限范围</label>
+        <div class="layui-input-block">
+            <div id="LAY-user-role-permit"></div>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <input class="layui-btn" lay-filter="LAY-user-role-save" lay-submit readonly value="保存">
+        <input class="layui-btn layui-btn-primary" id="LAY-user-role-return" readonly value="返回">
+    </div>
+</div>

@@ -1,0 +1,110 @@
+<title>话题管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a><cite>内容管理</cite></a>
+        <a><cite>话题管理</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-content-theme-add">添加</button>
+            </div>
+
+            <table id="LAY-content-theme-table" lay-filter="LAY-content-theme-table"></table>
+
+            <script id="LAY-content-theme-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs " lay-event="post">添加下一级</a>
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="put">修改</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'treeTable'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            treeTable = layui.treeTable;
+
+        // 树表格渲染
+        treeTable.render({
+            elem: '#LAY-content-theme-table',
+            url: '/api/admin/content/themes',
+            treeId: 'themeId',// 树形id字段名称
+            treeUpId: 'parentId',// 树形父id字段名称
+            treeShowName: 'themeName',// 以树形式显示的字段
+            cols: [[
+                {title: '话题名称', field: 'themeName'},
+                {title: '话题ID', field: 'themeId'},
+                {title: '父话题ID', field: 'parentId'},
+                {title: '排序数字', field: 'sortNumber'},
+                {title: '操作', align: 'center', toolbar: '#LAY-content-theme-toolbar'}
+            ]],
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 树表格监听 工具条
+        treeTable.on('tool(LAY-content-theme-table)', function (obj) {
+            let data = obj.data;
+            data.FORM_TYPE = obj.event;
+
+            // 添加下一级
+            if (obj.event === 'post') {
+                openContentThemePopup({FORM_TYPE: 'post', parentId: data.themeId});
+            }
+            // 修改
+            if (obj.event === 'put') {
+                openContentThemePopup(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-content-theme-add').on('click', function () {
+            // 打开话题详情
+            openContentThemePopup({FORM_TYPE: 'post', parentId: '0'});
+        });
+
+        // 打开话题详情
+        function openContentThemePopup(data) {
+            admin.popup({
+                title: '话题详情',
+                area: ['390px', ''],
+                offset: '100px',
+                id: 'LAY-content-theme-popup',
+                success: function (layero, index) {
+                    view(this.id).render('content/theme/form', data).done(function () {
+                        // 表单渲染
+                        form.render(null, 'LAY-content-theme-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-content-theme-save)', function (obj) {
+                            admin.req({
+                                url: '/api/admin/content/themes',
+                                type: data.FORM_TYPE,
+                                data: obj.field,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    treeTable.reload('LAY-content-theme-table', {});
+                                }
+                            });
+                        });
+
+                        // 监听 返回按钮
+                        $('#LAY-content-theme-popup').on('click', '#LAY-content-theme-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+
+    });
+</script>

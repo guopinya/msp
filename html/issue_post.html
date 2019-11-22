@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>发布内容</title>
+    <meta content="width=device-width,target-densitydpi=device-dpi, user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="true" name="HandheldFriendly"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta content="模型APP内测招募" property="title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="image"/>
+
+    <meta content="模型APP内测招募" property="og:title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="og:image"/>
+    <script type="text/javascript">
+        if (/Android (\d+\.\d+)/.test(navigator.userAgent)) {
+            var version = parseFloat(RegExp.$1);
+            if (version > 2.3) {
+                var phoneScale = parseInt(window.screen.width) / 750;
+                document.write('<meta name="viewport" content="width=750, minimum-scale = ' + phoneScale + ', maximum-scale = ' + phoneScale + ', target-densitydpi=device-dpi">');
+            } else {
+                document.write('<meta name="viewport" content="width=, target-densitydpi=device-dpi">');
+            }
+        } else {
+            document.write('<meta name="viewport" content="width=750, user-scalable=no">');
+        }
+    </script>
+    <link href="css/style.css" rel="stylesheet">
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="js/jquery.cookie.js" type="text/javascript"></script>
+    <script src="js/exif.js" type="text/javascript"></script>
+
+
+    <link href="mescroll/mescroll.min.css" rel="stylesheet"></link>
+    <style type="text/css">
+        .mescroll {
+            position: fixed;
+            top: 176px;
+            bottom: 0px;
+            height: auto;
+        }
+
+        .mescroll-totop {
+            bottom: 140px;
+        }
+    </style>
+
+
+    <style type="text/css">
+        .main {
+            width: 100%;
+            margin: auto;
+            margin-top: 24px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            width: 680px;
+            height: 88px;
+            background: url("img/order/bt_bg.png");
+            border-radius: 8px;
+            overflow: hidden;
+            border: none;
+            font-size: 30px;
+            color: white;
+            margin-top: 80px;
+        }
+
+        .upimg {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            border: dashed #999999;
+            background: url(img/addimg.svg) no-repeat;
+            background-position: 33px;
+        }
+
+        .upimg input {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0;
+        }
+
+        #showui {
+            /*display: flex;*/
+            justify-content: flex-start;
+            overflow: hidden;
+            margin-bottom: 16px;
+
+        }
+
+        #showui #video {
+            width: 223px;
+            height: 223px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        #showui #video video {
+            width: 223px;
+        }
+
+        #showui li {
+            width: 223px;
+            height: 223px;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-right: 5px;
+            float: left
+        }
+
+        #showui li img.showimg {
+            position: absolute;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 6;
+            width: 223px;;
+        }
+
+        .showdiv {
+            position: absolute;
+            z-index: 9;
+            bottom: 0;
+            width: calc(100% - 20px);
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, .6);
+        }
+
+        .showdiv img {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        #showui li:first-child img.left {
+            opacity: .6;
+            cursor: no-drop;
+        }
+
+        #showui li:last-child img.right {
+            opacity: .6;
+            cursor: no-drop;
+        }
+
+        .oneright {
+            opacity: .6;
+            cursor: no-drop !important;
+        }
+    </style>
+</head>
+
+<body>
+<div id="post">
+    <div id="head">
+        <!-- <div class="head_back"></div> -->
+        <p class="title">发布内容</p>
+
+    </div>
+    <div class="content mescroll" style="top:86px;background: white;">
+        <!-- <div class="container"> -->
+
+        <!-- <dl id="bigimg" class="bigimg part1">
+            <dd><img src="img/issue/bigbg.jpg"></dd>
+        </dl> -->
+        <div class="mark_box">
+            <div class="main">
+                <div id="showimg">
+                    <ul id="showui">
+                    </ul>
+
+                    <div id="showinput">
+
+                    </div>
+                </div>
+                <div class="upimg">
+                    <input accept="image/*" id="upgteimg" multiple="multiple" type="file" value=""/>
+                </div>
+
+                <!--<button class="btn" id="submit">开始上传</button>-->
+            </div>
+
+        </div>
+
+        <div class="msg">
+            <input class="title" id="title" maxlength="24" placeholder="请输入标题文字" type="text"/>
+            <div style="position: relative;">
+                <textarea class="mark_detail textarea" cols="" id="textarea" maxlength="1000" name=""
+                          placeholder="请输入介绍文字限制输入1000字" rows=""></textarea>
+                <p class="showNumber" style="font-size: 24px;color:#afafaf;position: absolute;right:20px;bottom: 35px;">
+                    <span>1000</span>/1000字</p>
+            </div>
+            <script type="text/javascript">
+                $("#textarea").keyup(function () {
+                    //这就是输入值的个数
+                    /* var length=this.value.length;
+                    var value_text = $('#textarea').val();
+                    var valueList = value_text.split("\n");
+                    console.log(valueList)
+                    length = length+5
+                    $(".showNumber span").text(1000-length) */
+
+
+                    var length = this.value.length;
+                    var value_text = $('#textarea').val();
+                    var valueList = (value_text.split("\n")).length - 1;
+                    console.log(valueList);
+                    console.log(length);
+                    if (valueList > 0) {
+                        length = length + valueList * 4;
+                    }
+                    $(".showNumber span").text(1000 - length)
+
+
+                });
+            </script>
+            <!-- <div class="composing">排版</div> -->
+            <!-- <div class="composing_select select_box" style="border-top: 16px solid #f8f8f8;">
+                <p class="name" style="width: 141px;">排版</p>
+                <p class="lable" style="width: 545px;"><span></span><img src="img/issue/arrow.png" alt="" /></p>
+            </div> -->
+            <div class="lable_select select_box lable_box">
+                <p class="name"><i
+                        style="background: #918dff;border-radius: 24px;width: 168px;height: 48px;font-size: 26px;color:#fff;padding:5px 25px;font-style: inherit;">+添加话题</i>
+                </p>
+                <p class="lable" data-themeid="" style="text-align: left;display: none;"><span
+                        style="font-size: 26px;color:#918dff;background: #efeeff;border-radius: 24px;padding:5px 25px;height:48px;"></span>
+                </p>
+            </div>
+            <div class="addr_select select_box lable_box" style="border:none">
+                <p class="name"><i
+                        style="background: #ff6c94;border-radius: 24px;width: 168px;height: 48px;font-size: 26px;color:#fff;padding:5px 25px;font-style: inherit;">+圈子发布</i>
+                </p>
+                <p class="lable" data-groupid="" style="text-align: left;display: none;"><span
+                        style="font-size: 26px;color:#ff6c94;background: #ffe9ef;border-radius: 24px;padding:5px 25px;height:48px;"></span>
+                </p>
+            </div>
+        </div>
+
+        <div class="bt_box">
+            <button class="savebt" onclick="send('DRAFT')">存草稿</button>
+            <button id="submit" onclick="send('RELEASED')">发布</button>
+        </div>
+        <div class="publish">
+            <button class="next" onclick="change('RELEASED')">发布</button>
+        </div>
+
+
+        <div class="hint_box">
+            <p></p>
+        </div>
+        <!-- </div> -->
+    </div>
+
+    <!--图片排版-->
+    <div class="mescroll" id="imgCompose">
+        <div id="head">
+            <p class="title">图片排版</p>
+            <div class="close" onclick="searchClose()"></div>
+        </div>
+        <div class="container">
+            <div class="part1 part">
+                <div class="white_box"></div>
+                <div class="head_title">
+                    <p class="title">大图聚焦</p>
+                    <div class="select">
+                        <input id="item1" name="item" type="radio" value="1">
+                        <label for="item1"></label>
+                    </div>
+                </div>
+                <ul class="img_box">
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                </ul>
+            </div>
+
+            <div class="part2 part">
+                <div class="white_box"></div>
+                <div class="head_title">
+                    <p class="title">双图模式</p>
+                    <div class="select">
+                        <input id="item2" name="item" type="radio" value="2">
+                        <label for="item2"></label>
+                    </div>
+                </div>
+                <ul class="img_box">
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                </ul>
+            </div>
+
+            <div class="part3 part">
+                <div class="white_box"></div>
+                <div class="head_title">
+                    <p class="title">双星环绕</p>
+                    <div class="select">
+                        <input id="item3" name="item" type="radio" value="3">
+                        <label for="item3"></label>
+                    </div>
+                </div>
+                <ul class="img_box">
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                </ul>
+            </div>
+
+            <!-- <div class="part4 part">
+                <div class="white_box"></div>
+                <div class="head_title">
+                    <p class="title">版式4</p>
+                    <div class="select">
+                        <input id="item4" type="radio" name="item" value="4">
+                        <label for="item4"></label>
+                    </div>
+                </div>
+                <ul class="img_box">
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                </ul>
+            </div>
+
+            <div class="part5 part">
+                <div class="white_box"></div>
+                <div class="head_title">
+                    <p class="title">版式5</p>
+                    <div class="select">
+                        <input id="item5" type="radio" name="item" value="5">
+                        <label for="item5"></label>
+                    </div>
+                </div>
+                <ul class="img_box">
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                </ul>
+            </div> -->
+
+            <div class="part6 part">
+                <div class="white_box"></div>
+                <div class="head_title">
+                    <p class="title">众星捧月</p>
+                    <div class="select">
+                        <input id="item6" name="item" type="radio" value="6">
+                        <label for="item6"></label>
+                    </div>
+                </div>
+                <ul class="img_box">
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                </ul>
+            </div>
+
+            <!-- <div class="part7 part">
+                <div class="white_box"></div>
+                <div class="head_title">
+                    <p class="title">版式7</p>
+                    <div class="select">
+                        <input id="item7" type="radio" name="item" value="7">
+                        <label for="item7"></label>
+                    </div>
+                </div>
+                <ul class="img_box">
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                </ul>
+            </div>
+            <div class="part8 part">
+                <div class="white_box"></div>
+                <div class="head_title">
+                    <p class="title">版式8</p>
+                    <div class="select">
+                        <input id="item8" type="radio" name="item" value="8">
+                        <label for="item8"></label>
+                    </div>
+                </div>
+                <ul class="img_box">
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                </ul>
+            </div> -->
+
+            <div class="part9 part">
+                <div class="white_box"></div>
+                <div class="head_title">
+                    <p class="title">九宫格</p>
+                    <div class="select">
+                        <input id="item9" name="item" type="radio" value="9">
+                        <label for="item9"></label>
+                    </div>
+                </div>
+                <ul class="img_box">
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                    <li><img src="img/issue/bigbg.jpg"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="foot_botton">
+            <div class="affirmbt">确定</div>
+        </div>
+    </div>
+
+
+    <div id="circleSelect">
+        <div id="head">
+            <div class="search_box">
+                <div class="search_ico"></div>
+                <form action="">
+                    <input class="search_input" placeholder="请输入关键字" type="search"/>
+                </form>
+                <div class="delete"></div>
+            </div>
+            <p class="close">取消</p>
+        </div>
+        <div class="container">
+            <p class="txt">不同步到任何圈子</p>
+            <!--我的圈子-->
+
+
+            <div class="mescroll" id="mescroll">
+                <ul class="circleList myCircle " id="dataList">
+
+                </ul>
+            </div>
+            <!--<ul id="mineCircle" class="circleList myCircle circle2">
+
+
+                <li>
+                    <div class="img"><img src="img/index/img.png"></div>
+                    <div class="circleMsg">
+                        <p class="name">小圈子</p>
+                        <div class="detail">
+                            <p class="people"><span>999</span>人</p>
+                            <p class="number"><span>999</span>帖子</p>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>-->
+        </div>
+    </div>
+
+
+    <div id="themeSelect">
+        <div id="head">
+            <div class="search_box">
+                <div class="search_ico"></div>
+                <form action="">
+                    <input class="search_input" placeholder="请输入关键字" type="text"/>
+                    <input style="display:none;" type="text"/>
+                </form>
+                <div class="delete"></div>
+            </div>
+            <p class="close">取消</p>
+        </div>
+
+        <div id="content">
+            <div class="menu">
+                <div class="hot_search">
+                    <ul>
+                    </ul>
+                </div>
+
+                <div class="search_history">
+                    <ul class="submenu">
+
+                    </ul>
+
+                </div>
+            </div>
+            <p class="txt">无匹配话题，立即自建新话题：<span></span></p>
+        </div>
+    </div>
+
+
+    <!--确认发布提示框-->
+    <div class="hint_box2">
+        <div class="click"></div>
+        <div class="box">
+            <p class="title">发布成功</p>
+            <p class="text">提示文字</p>
+            <div class="bt">
+                <button onclick="closeHint()">返回</button>
+                <button class="affirm">查看帖子/藏品/拍品</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="js/common.js"></script>
+
+<!--上拉加载文件-->
+
+<script charset="utf-8" src="mescroll/mescroll.js"></script>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+<script src="js/updateimg.js"></script>
+<!--获取圈子列表-->
+<script charset="utf-8" src="js/getGroup.js"></script>
+
+<script type="text/javascript">
+    shareMsg(); //分享
+
+    var plate = 0;
+    $.cookie("plate", plate, {expires: 365});
+    $("#imgCompose .container").height($(window).height() - 185);
+
+    $(".part input").focus(function () {
+        console.log($(this).val())
+        // console.log($(".part input:radio:checked").val())
+    });
+    $(".composing_select").click(function () {
+        $("#imgCompose .part .white_box").show();
+        for (var i = 1; i <= $('#showui li').length; i++) {
+            console.log(i);
+            $("#imgCompose .part" + i + " .white_box").hide()
+        }
+        $("#imgCompose").show();
+    });
+    $("#imgCompose .affirmbt").click(function () {
+        var str = "";
+        plate = $(".part input:radio:checked").val();
+        $.cookie("plate", plate, {expires: 365});
+        console.log(plate);
+        $(".composing_select .lable span").text('版式' + plate);
+        $("#imgCompose").hide();
+        for (var i = 0; i < plate; i++) {
+            str += '<dd><img src="img/issue/bigbg.jpg"></dd>'
+        }
+        $("#bigimg").removeClass();
+        $("#bigimg").addClass("bigimg");
+        $("#bigimg").addClass("part" + plate);
+        $("#bigimg").html(str)
+    })
+    // console.log($(".part input:radio:checked").val())
+</script>
+<script>
+    var postId = getQueryStringByName("postId");
+    var type = getQueryStringByName("type");
+    if (postId) {
+        $.cookie("treasureId", postId, {expires: 365});
+        if (Istrue(type)) {
+            getOnePost(postId);
+            $("#bigimg").hide();
+            $(".mark_box").hide();
+            $(".composing").hide();
+            $(".bt_box").hide();
+            $(".publish").show();
+        } else {
+            compilePost();
+        }
+    } else {
+        $.cookie("treasureId", null)
+    }
+
+    function getOnePost() {
+        var paramObject = getParamObject();
+        paramObject.postId = getQueryStringByName("postId"); // 帖子ID
+        paramObject.timestamp = new Date().getTime(); // 请求时间戳
+        paramObject.requestId = md5($.param(paramObject)); // 请求ID
+        $.ajax({
+            url: link + "/social/posts/getOnePost?" + $.param(paramObject),
+            dataType: "Json",
+            success: function (res) {
+                console.log(res);
+                handler({
+                    res: res,
+                    fun1: function () {
+                        let pd = res.data;
+                        $(".msg .title").val(pd.title);
+                        $(".msg .textarea").val(delHtmlTag(pd.text));
+                        if (pd.themeName) {
+                            $(".lable_select .lable").attr("data-themeid", pd.themeId);
+                            // $(".lable_select .lable span").text('#'+pd.themeName+'  X')
+                            $(".lable_select .name").hide();
+                            $(".lable_select .lable").show();
+                            $(".lable_select .lable span").html('#' + pd.themeName + ' <i style="font-style: inherit;color:black">X</i>')
+                        }
+                        if (pd.groupName) {
+                            $(".addr_select .lable").attr("data-groupid", pd.groupId);
+                            // $(".addr_select .lable span").text(pd.groupName)
+                            $(".addr_select .name").hide();
+                            $(".addr_select .lable").show();
+                            $(".addr_select .lable span").html('#' + pd.groupName + ' <i style="font-style: inherit;color:black">X</i>')
+                        }
+                        pass = true;
+
+                    }
+                })
+            },
+            error: function (e) {
+
+            }
+        });
+    }
+
+
+    //  	编辑帖子
+    function compilePost() {
+        console.log('2222222222');
+        var paramObject = getParamObject();
+        paramObject.postId = postId; // 帖子ID
+        paramObject.timestamp = new Date().getTime(); // 请求时间戳
+        paramObject.requestId = md5($.param(paramObject)); // 请求ID
+        $.ajax({
+            url: link + "/social/posts/getOnePost?" + $.param(paramObject),
+            dataType: "Json",
+            success: function (res) {
+                console.log(res);
+                handler({
+                    res: res,
+                    fun1: function () {
+                        var pd = res.data;
+
+
+                        $(".msg .title").val(pd.title);
+                        $(".msg .textarea").val(delHtmlTag(pd.text));
+                        if (pd.themeName) {
+                            $(".lable_select .lable").attr("data-themeid", pd.themeId);
+                            $(".lable_select .lable span").text(pd.themeName)
+                        }
+                        if (pd.groupName) {
+                            $(".addr_select .lable").attr("data-groupid", pd.groupId);
+                            $(".addr_select .lable span").text(pd.groupName)
+                        }
+                        pass = true;
+                    }
+                })
+            },
+            error: function (e) {
+
+            }
+        });
+    }
+
+    function pass_yz(postStatus) {
+        pass = true;
+        if ($("#title").val() == "") {
+            text = "请填写标题";
+            hint(text);
+            return false;
+        }
+        if ($(".mark_detail").val() == "") {
+            text = "请输入商品介绍";
+            hint(text);
+            return false;
+        }
+        send_post(postStatus)
+    }
+
+    //  	$(".content .mescroll-downwarp").remove();
+    $(".content .mescroll-upwarp").remove();
+</script>
+
+<script type="text/javascript">
+
+
+    //  	圈子选择关闭
+    $(".addr_select .name").click(function () {
+        $("#circleSelect").show();
+    });
+
+    $("#circleSelect .txt").click(function () {
+        let tex = $(this).text();
+        $("#circleSelect").hide();
+        $(".addr_select .name").hide();
+        $(".addr_select .lable").show();
+        $(".addr_select .lable span").text(tex)
+    });
+
+
+    //  	主题选择关闭
+    $(".lable_select .name").click(function () {
+        $("#themeSelect").show();
+    });
+
+    $("#themeSelect .txt").click(function () {
+        let tex = $(this).find("span").text();
+        $("#themeSelect").hide();
+        $(".lable_select .lable span").text(tex)
+    });
+
+
+    /* $(".composing_select ").click(function(){
+        $("#themeSelect").show();
+    }) */
+
+
+    $(".close").click(function () {
+        $(this).parent().parent().hide();
+    })
+
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<div class="layui-form" lay-filter="LAY-content-horde-master-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        {{# if (d.params.FORM_TYPE === 'put') { }}
+        <input type="hidden" name="userId" value="{{ d.params.userId }}">
+        <input type="hidden" name="hordeId" value="{{ d.params.hordeId }}">
+        {{# } }}
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# if (d.params.FORM_TYPE === 'put') { }}
+                <p class="layui-form-mid">{{ d.params.username || '' }}</p>
+                {{# } else { }}
+                <select name="userId" lay-search>
+                    {{# let userList = d.params.userList; }}
+                    {{# for (let i = 0; i < userList.length; i++) { }}
+                    <option value="{{ userList[i].userId }}">{{ userList[i].username }}</option>
+                    {{# } }}
+                </select>
+                {{# } }}
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">部落</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# if (d.params.FORM_TYPE === 'put') { }}
+                <p class="layui-form-mid">{{ d.params.hordeName || '' }}</p>
+                {{# } else { }}
+                <select name="hordeId" lay-search>
+                    {{# let hordeList = d.params.hordeList; }}
+                    {{# for (let i = 0; i < hordeList.length; i++) { }}
+                    <option value="{{ hordeList[i].hordeId }}">{{ hordeList[i].hordeName }}</option>
+                    {{# } }}
+                </select>
+                {{# } }}
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否关注</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let isCollected = d.params.isCollected; }}
+                {{# let attribute0 = isCollected ? 'checked' : ''; }}
+                <input type="radio" name="isCollected" value="true" title="是" {{ attribute0 }}>
+                {{# let attribute1 = !isCollected ? 'checked' : ''; }}
+                <input type="radio" name="isCollected" value="false" title="否" {{ attribute1 }}>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">达人等级</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let masterLevel = d.params.masterLevel; }}
+                <select name="masterLevel">
+                    {{# let attribute0 = (masterLevel === 0) ? 'selected' : ''; }}
+                    <option value="0" {{ attribute0 }}>未加入</option>
+                    {{# let attribute1 = (masterLevel === 1) ? 'selected' : ''; }}
+                    <option value="1" {{ attribute1 }}>申请加入</option>
+                    {{# let attribute2 = (masterLevel === 2) ? 'selected' : ''; }}
+                    <option value="2" {{ attribute2 }}>成员</option>
+                    {{# let attribute3 = (masterLevel === 3) ? 'selected' : ''; }}
+                    <option value="3" {{ attribute3 }}>管理员</option>
+                    {{# let attribute4 = (masterLevel === 4) ? 'selected' : ''; }}
+                    <option value="4" {{ attribute4 }}>酋长</option>
+                </select>
+            </script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            <input type="button" value="保存" class="layui-btn" readonly lay-submit
+                   lay-filter="LAY-content-horde-master-save">
+            <input type="button" value="返回" class="layui-btn layui-btn-primary" readonly
+                   id="LAY-content-horde-master-return">
+        </script>
+    </div>
+</div>

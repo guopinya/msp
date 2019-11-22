@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.stat.mapper.BrowseRecordMapper">
+
+    <select id="selectByUserIdAndPostId" resultType="com.project.stat.entity.BrowseRecord">
+        <![CDATA[
+
+                SELECT
+                    *
+                FROM
+                    browse_record
+                WHERE
+                    user_id = #{userId}
+                    AND post_id = #{postId}
+
+        ]]>
+    </select>
+
+    <update id="updateByUserIdAndPostId">
+        UPDATE
+            browse_record
+        SET
+            browse_num = #{browseNum}, post_type = #{postType}
+        WHERE
+            user_id = #{userId}
+            AND post_id = #{postId}
+    </update>
+
+    <select id="selectBrowseRecord" resultType="com.project.stat.entity.BrowseRecord">
+        <![CDATA[
+
+                SELECT
+                    *
+                FROM
+                    browse_record
+                WHERE
+                    post_id = #{postId}
+
+        ]]>
+    </select>
+
+</mapper>

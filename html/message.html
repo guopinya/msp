@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>消息</title>
+    <meta content="width=device-width,target-densitydpi=device-dpi, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="true" name="HandheldFriendly"/>
+    <meta content="yes" name="apple-touch-fullscreen">
+    <link href="css/style.css" rel="stylesheet">
+
+    <meta content="模型APP内测招募" property="title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="image"/>
+
+    <meta content="模型APP内测招募" property="og:title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="og:image"/>
+    <script type="text/javascript">
+        if (/Android (\d+\.\d+)/.test(navigator.userAgent)) {
+            const version = parseFloat(RegExp.$1);
+            if (version > 2.3) {
+                const phoneScale = window.screen.width / 750;
+                document.write('<meta name="viewport" content="width=750, minimum-scale = ' + phoneScale + ', maximum-scale = ' + phoneScale + ', target-densitydpi=device-dpi">');
+            } else {
+                document.write('<meta name="viewport" content="width=, target-densitydpi=device-dpi">');
+            }
+        } else {
+            document.write('<meta name="viewport" content="width=750, user-scalable=no">');
+        }
+    </script>
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div id="msg">
+    <div class="head_menu">
+        <ul>
+            <li onclick="window.location.href='messageDetail.html?msgSort=SYSTEM'">
+                <img alt="" src="img/message/System_ico.png">
+                <p>系统消息</p>
+
+            </li>
+            <li onclick="window.location.href='messageDetail.html?msgSort=TRADE'">
+                <img alt="" src="img/message/Order_ico.png">
+                <p>订单消息</p>
+                <div class="dot"></div>
+            </li>
+            <li onclick="window.location.href='messageDetail.html?msgSort=SOCIAL'">
+                <img alt="" src="img/message/comment.png">
+                <p>点赞与评论</p>
+                <div class="dot"></div>
+            </li>
+            <li onclick="window.location.href='messageBean.html?msgSort=FANS'">
+                <img alt="" src="img/message/Fans.png">
+                <p>新粉丝</p>
+                <div class="dot"></div>
+            </li>
+            <li onclick="window.location.href='msgMail.html'">
+                <img alt="" src="img/message/Mail_ico.png">
+                <p>通讯录</p>
+                <div class="dot"></div>
+            </li>
+        </ul>
+    </div>
+
+
+    <div id="content">
+        <div class="list_box">
+            <ul>
+                <!--<li>
+                    <div class="head_img"><img src="img/detail/head_img.png" alt=""></div>
+                    <div class="msg_box">
+                        <div class="msg" onclick="window.location.href='messageChat.html'">
+                            <div class="name_box">
+                                <p class="name">用户昵称</p>
+                                <p class="text">文字内容文字内容文字内容文...</p>
+                            </div>
+                            <div class="time_box">
+                                <p class="time">19-05-26</p>
+                                <span class="number">1</span>
+                            </div>
+                        </div>
+                        <div class="morebt" onclick="openMsgManage(this);"></div>
+                    </div>
+                </li>-->
+            </ul>
+        </div>
+    </div>
+
+    <div id="foot_menu">
+        <ul>
+            <li onclick="location.href='index.html'">
+                <img alt="" src="img/index/ico_menu1_1.png">
+                <p>首页</p>
+            </li>
+            <li onclick="location.href='auction.html'">
+                <img alt="" src="img/index/ico_menu2_1.png">
+                <p>拍卖</p>
+            </li>
+            <li onclick="issue_show()">
+                <img alt="" src="img/index/ico_menu3_1.png">
+                <p>发布</p>
+            </li>
+            <li class="hover" onclick="location.href='message.html'">
+                <img alt="" src="img/index/ico_menu4_2.png">
+                <p>消息</p>
+                <div class="dot"></div>
+            </li>
+            <li onclick="location.href='myHome.html'">
+                <img alt="" src="img/index/ico_menu5_1.png">
+                <p>我的</p>
+            </li>
+        </ul>
+    </div>
+
+    <div class="msg_manage">
+        <div class="click" onclick="closeMsgManage();"></div>
+        <div class="manage">
+            <p class="delete_chat" onclick="deleteMsg()">删除聊天</p>
+            <p class="shield">屏蔽TA的消息</p>
+            <p class="report">举报</p>
+        </div>
+    </div>
+
+    <!--发布选项浮层-->
+    <div id="issue_select">
+        <div class="white"></div>
+        <div class="box">
+            <!-- <a href="issue_post.html" class="issue_post">
+                <img src="img/issue/ico1.png" alt="">
+                <span>发布帖子</span>
+            </a>
+            <a href="issue_object.html?id=1" class="issue_product">
+                <img src="img/issue/ico2.png" alt="">
+                <span>发布藏品</span>
+            </a>
+            <a href="issue_object.html?id=2" class="issue_product2">
+                <img src="img/issue/ico3.png" alt="">
+                <span>发布拍品</span>
+            </a> -->
+            <a class="issue_post" onclick="addRecord('POSTS','1')"><img src="img/issue/ico1.png"><span>发布帖子</span></a>
+            <!-- <a onclick="addRecord('TREASURE','2')"  class="issue_product"><img src="img/issue/ico2.png"><span>发布藏品</span></a> -->
+            <a class="issue_product2" onclick="addRecord('AUCTION','3')"><img src="img/issue/ico3.png"><span>发布商品</span></a>
+            <div class="delete" onclick="issue_close()"></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js" type="text/javascript"></script>
+<script src="https://cdn.ronghub.com/RongIMLib-2.5.0.min.js" type="text/javascript"></script>
+<script src="js/rongcloud.js" type="text/javascript"></script>
+<script src="js/common.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+
+    shareMsg(); //分享
+    getUnReadMsgNum('SORT');//获取未读消息
+
+    $("#content").css({'min-height': $(window).height() - 351});
+
+    function openMsgManage(that) {
+        $('.msg_manage').fadeIn(200);
+        $(that).parents('li').addClass('delete_msg');
+    }
+
+    function closeMsgManage() {
+        $('.msg_manage').fadeOut(200);
+        $(".list_box li").removeClass("delete_msg");
+    }
+
+    function deleteMsg() {
+        let targetId = $('.delete_msg').data('id');
+        let targetType = $('.delete_msg').data('type');
+
+        RongIMClient.getInstance().removeConversation(parseInt(targetType), targetId, {
+            onSuccess: function (bool) {
+                // 删除会话成功
+                $(".msg_manage").fadeOut(200);
+                $(".list_box .delete_msg").remove();
+            },
+            onError: function (error) {
+                // error => 删除会话的错误码
+            }
+        });
+    }
+
+    function onReceiveMessage() {
+        getConversationList();
+    }
+
+    function onConnectSuccess() {
+        getConversationList();
+    }
+
+    let conversationList = [];
+
+    /**
+     * 获取会话列表
+     */
+    function getConversationList() {
+        RongIMClient.getInstance().getConversationList({
+            onSuccess: function (list) {
+                // list => 会话列表集合
+                console.log(list);
+
+                $('.list_box ul').html('');
+                if (list.length > 0) {
+                    for (let i = 0; i < list.length; i++) {
+                        appendConversationInfo(list[i]);
+                    }
+                    conversationList = list;
+                } else {
+                    $('.list_box ul').html('<p style="width:100%;font-size:30px;color: #1C2027;text-align: center;marign-top:30px;">还没收到通讯电波</p>')
+                }
+
+            },
+            onError: function (error) {
+                // do something
+            }
+        }, null);
+    }
+
+    /**
+     * 追加会话信息
+     */
+    function appendConversationInfo(con) {
+        const requestData = {};
+        requestData.checkUserId = con.targetId; // 用户ID
+        requestData.requestId = md5(JSON.stringify(requestData)); // 请求ID
+        requestData.timestamp = new Date().getTime(); // 请求时间戳
+        $.ajax({
+            url: link + '/user/user/getOneSocial',
+            data: requestData
+        }).done(function (response) {
+            handler({
+                res: response,
+                fun1: function () {
+                    let data = response.data;
+                    console.log(data);
+                    if (undefined === data) {
+                        con.conversationInfo = {id: con.targetId, name: '错误', portrait: ''};
+                    } else {
+                        con.conversationInfo = {id: con.targetId, name: data.username, portrait: data.avatarPath};
+                    }
+
+                    updateConversationView(con);
+                }
+            })
+        });
+    }
+
+    /**
+     * 更新会话视图
+     * @param con 会话列表
+     */
+    function updateConversationView(con) {
+        let messageContent = getMessageContent(con.latestMessage);
+        let conversationInfo = con['conversationInfo'];
+
+        let html = '<li data-id="' + con.targetId + '" data-type="' + con.conversationType + '">' +
+            '                    <div class="head_img"><img src="' + link + conversationInfo.portrait + '" alt=""></div>' +
+            '                    <div class="msg_box">\n' +
+            '                        <div class="msg" onclick="f1(this, \'' + con.targetId + '\', ' + con.conversationType + ');">' +
+            '                            <div class="name_box">' +
+            '                                <p class="name">' + conversationInfo.name + '</p>' +
+            '                                <p class="text">' + messageContent + '</p>' +
+            '                            </div>\n' +
+            '                            <div class="time_box">' +
+            '                                <p class="time">' + new Date(con.sentTime).format('yy-MM-dd') + '</p>' +
+            '                                ' + (con.unreadMessageCount > 0 ? '<span class="number">' + con.unreadMessageCount + '</span>' : '') +
+            '                            </div>' +
+            '                        </div>' +
+            '                        <div class="morebt" onclick="openMsgManage(this);"></div>' +
+            '                    </div>' +
+            '                </li>';
+        $('.list_box ul').append(html);
+    }
+
+    function f1(that, p1, p2) {
+        for (let i = 0; i < conversationList.length; i++) {
+            let conversationInfo = conversationList[i].conversationInfo;
+            if (p1 === conversationInfo.id) {
+                localStorage.setItem('rong_target_name', conversationInfo.name);
+
+                $(that).find('.number').remove();
+                location.href = 'messageChat.html?targetId=' + p1 + '&targetType=' + p2;
+            }
+        }
+    }
+</script>
+</body>
+
+</html>

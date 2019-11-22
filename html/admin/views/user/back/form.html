@@ -1,0 +1,117 @@
+<div class="layui-form" lay-filter="LAY-user-back-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        <input type="hidden" name="id" value="{{ d.params.id || '' }}">
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">头像</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let imageURL = d.params.avatar || '/user/1141245074473861122.png'; }}
+                <img src="{{ '/api' + imageURL }}" alt="" width="88" height="88" id="LAY-user-back-avatar">
+
+                <button type="button" class="layui-btn layui-btn-normal" style="margin-top: 50px;"
+                        id="LAY-user-back-upload">选择图片
+                </button>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <select name="roleId">
+                    {{# let roleData = d.params.roleData; }}
+                    {{# for (let i = 0; i < roleData.length; i++) { }}
+                    {{# let current = roleData[i]; }}
+                    {{# let attribute = (current.id === d.params.roleId) ? 'selected' : ''; }}
+                    <option value="{{ current.id }}" {{ attribute }}>{{ current.name }}</option>
+                    {{# } }}
+                </select>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let attribute = (d.params.FORM_TYPE !== 'add') ? 'disabled' : ''; }}
+                <input type="text" name="username" value="{{ d.params.username || '' }}" lay-verify="required"
+                       placeholder="请输入用户名" autocomplete="off" class="layui-input" {{ attribute }}>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">明文密码</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="password" value="{{ d.params.password || '' }}" lay-verify="required"
+                       placeholder="请输入明文密码" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">昵称</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="nickname" value="{{ d.params.nickname || '' }}" lay-verify="required"
+                       placeholder="请输入昵称" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">手机号码</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="phoneNumber" value="{{ d.params.phoneNumber || '' }}" lay-verify="phone"
+                       placeholder="请输入手机号码" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+
+    <script template type="text/html">
+        {{# if (d.params.FORM_TYPE !== 'add') { }}
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+
+                {{# let status = d.params.status; }}
+                {{# if (status === 'normal') { }}
+                <p class="layui-form-mid">正常</p>
+                {{# } else if (status === 'freeze') { }}
+                <p class="layui-form-mid">封号</p>
+                {{# } else { }}
+                <p class="layui-form-mid"></p>
+                {{# } }}
+
+                <a href="#/error/404/" target="_blank" class="layui-btn layui-btn-xs layui-btn-normal"
+                   style="margin-top: 8px;">封号记录</a>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">创建时间</label>
+            <div class="layui-input-block">
+                <p class="layui-form-mid">{{ d.params.createTime || '' }}</p>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">最近登录</label>
+            <div class="layui-input-block">
+                <p class="layui-form-mid">{{ d.params.lastLoginTime || '' }}</p>
+
+                <a href="#/error/404/" target="_blank" class="layui-btn layui-btn-xs layui-btn-normal"
+                   style="margin-top: 8px;">登录日志</a>
+            </div>
+        </div>
+        {{# } }}
+    </script>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            {{# if (d.params.FORM_TYPE !== 'look') { }}
+            <input value="保存" class="layui-btn" readonly lay-submit lay-filter="LAY-user-back-save">
+            {{# } }}
+            <input value="返回" class="layui-btn layui-btn-primary" readonly id="LAY-user-back-return">
+        </script>
+    </div>
+</div>

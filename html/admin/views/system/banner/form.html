@@ -1,0 +1,91 @@
+<div class="layui-form" lay-filter="LAY-system-banner-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        <input type="hidden" name="id" value="{{ d.params.id || '' }}">
+    </script>
+
+    <div class="layui-form-item layui-col-md-offset2">
+        <label class="layui-form-label">图片</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <img src="{{ '/api' + d.params.image }}" alt="" width="340" height="160" id="LAY-system-banner-image">
+
+                <button type="button" class="layui-btn layui-btn-normal" style="margin-top: 84px;"
+                        id="LAY-system-banner-upload">选择图片
+                </button>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="title" value="{{ d.params.title || '' }}" lay-verify="required"
+                           placeholder="请输入标题" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">排序数字</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="sortNumber" value="{{ d.params.sortNumber || '' }}" lay-verify="number"
+                           placeholder="请输入排序数字" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let current = d.params.type; }}
+                {{# let attribute0 = (current === 'none' || !current) ? 'checked' : ''; }}
+                <input type="radio" name="type" value="none" title="无操作" lay-filter="LAY-system-banner-type" {{
+                       attribute0 }}>
+                {{# let attribute1 = (current === 'link') ? 'checked' : ''; }}
+                <input type="radio" name="type" value="link" title="跳转链接" lay-filter="LAY-system-banner-type" {{
+                       attribute1 }}>
+                {{# let attribute2 = (current === 'auction') ? 'checked' : ''; }}
+                <input type="radio" name="type" value="auction" title="跳转拍品" lay-filter="LAY-system-banner-type" {{
+                       attribute2 }}>
+                {{# let attribute3 = (current === 'rich_text') ? 'checked' : ''; }}
+                <input type="radio" name="type" value="rich_text" title="跳转富文本" lay-filter="LAY-system-banner-type" {{
+                       attribute3 }}>
+            </script>
+        </div>
+    </div>
+    <script template type="text/html">
+        {{# let current = d.params.type; }}
+        <div class="layui-form-item {{ (current === 'link') ? '' : 'layui-hide' }}" id="LAY-system-banner-linkDiv">
+            <label class="layui-form-label">链接地址</label>
+            <div class="layui-input-block">
+                {{# let attribute1 = (current === 'link') ? 'lay-verify="url"' : ''; }}
+                <input type="text" name="link" value="{{ d.params.link || '' }}" {{ attribute1 }} placeholder="请输入链接地址"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item {{ (current === 'auction') ? '' : 'layui-hide' }}"
+             id="LAY-system-banner-auctionDiv">
+            <label class="layui-form-label">拍品</label>
+            <div class="layui-input-block">
+                {{# let attribute2 = (current === 'auction') ? 'lay-verify="required"' : ''; }}
+                <input type="text" name="bannerName" value="{{ d.params.bannerName || '' }}" {{ attribute2 }}
+                       placeholder="请输入身份名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item {{ (current === 'rich_text') ? '' : 'layui-hide' }}"
+             id="LAY-system-banner-richTextDiv">
+            <label class="layui-form-label">富文本</label>
+            <div class="layui-input-block">
+                <textarea id="LAY-system-banner-richText" name="richText">{{ d.params.richText || '' }}</textarea>
+            </div>
+        </div>
+    </script>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <input class="layui-btn" lay-filter="LAY-system-banner-save" lay-submit readonly value="保存">
+        <input class="layui-btn layui-btn-primary" id="LAY-system-banner-return" readonly value="返回">
+    </div>
+</div>

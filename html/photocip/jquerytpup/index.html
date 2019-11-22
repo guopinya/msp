@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+          name="viewport">
+
+    <link href="./index/demo.css" rel="stylesheet">
+    <link href="./index/cropper.min.css" rel="stylesheet">
+    <title></title>
+</head>
+<body>
+
+<h1>移动端多图片上传demo</h1>
+<form action="" class="pure-form" method="post">
+    <!-- 上传图片的预览区域 -->
+    <section class="upload-box" id="J_upload_box">
+        <div class="upload" id="J_file_wrap">
+            <input accept="image/*" id="J_file" name="pic" type="file">
+        </div>
+    </section>
+    <a class="pure-button pure-button-primary">提交</a>
+</form>
+
+<!-- 图片裁剪工作区域 -->
+<section id="J_file_box">
+    <img alt="" id="J_file_box_img" src="#">
+</section>
+
+<!-- 选择裁剪比例 -->
+<section class="crop-group" id="J_crop_group">
+    <label>
+        <input name="scale" type="radio" value="1/1">
+        <span>1 : 1</span>
+    </label>
+    <label>
+        <input checked="checked" name="scale" type="radio" value="4/3">
+        <span>4 : 3</span>
+    </label>
+    <label>
+        <input name="scale" type="radio" value="9/16">
+        <span>9 : 16</span>
+    </label>
+</section>
+
+<!-- 裁剪或取消 -->
+<section class="btn-group" id="J_btn_group">
+    <span id="J_cancel">取消</span>
+    <span id="J_crop">裁剪</span>
+</section>
+
+<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+<script src="./index/upload.js"></script>
+<script src="./index/demo.js"></script>
+
+
+</body>
+</html>

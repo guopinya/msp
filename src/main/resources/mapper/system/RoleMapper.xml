@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.system.mapper.RoleMapper">
+
+    <select id="selectByUserId" resultType="com.project.system.entity.Role">
+        SELECT
+            sr.*
+        FROM
+            system_role sr
+        LEFT JOIN
+            system_user su on sr.id = su.role_id
+        WHERE
+            su.id = #{userId}
+    </select>
+</mapper>

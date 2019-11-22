@@ -1,0 +1,224 @@
+<title>轮播图</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a><cite>系统管理</cite></a>
+        <a><cite>轮播图</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-system-banner-form">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">标题</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="title" placeholder="请输入标题" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">类型</label>
+                    <div class="layui-input-inline">
+                        <select name="type">
+                            <option value="">不限</option>
+                            <option value="none">无操作</option>
+                            <option value="link">跳转链接</option>
+                            <option value="auction">跳转拍品</option>
+                            <option value="rich_text">跳转富文本</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-system-banner-search" lay-filter="LAY-system-banner-search"
+                            lay-submit>搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-system-banner-add">添加</button>
+            </div>
+
+            <table id="LAY-system-banner-table" lay-filter="LAY-system-banner-table"></table>
+
+            <script id="imageTpl" type="text/html">
+                <img style="height: 100%;" src="{{ '/api' + d.image }}" alt="" lay-event="img">
+            </script>
+            <script id="typeTpl" type="text/html">
+                {{# let type = d.type; }}
+                {{# if (type === 'none') { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">无操作</button>
+                {{# } else if (type === 'link') { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">跳转链接</button>
+                {{# } else if (type === 'auction') { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">跳转拍品</button>
+                {{# } else if (type === 'rich_text') { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">跳转富文本</button>
+                {{# } else { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
+                {{# } }}
+            </script>
+            <script id="LAY-system-banner-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'tree', 'table', 'upload', 'tinymce'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            table = layui.table;
+        let upload = layui.upload;
+        let tinymce = layui.tinymce;
+
+        // 表单渲染
+        form.render(null, 'LAY-system-banner-form');
+
+        // 表单监听 搜索按钮
+        form.on('submit(LAY-system-banner-search)', function (obj) {
+            // 执行重载
+            table.reload('LAY-system-banner-table', {
+                where: obj.field
+            });
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-system-banner-table',
+            url: '/api/admin/system/banners',
+            cols: [[
+                {title: '图片', templet: '#imageTpl'},
+                {title: '标题', field: 'title'},
+                {title: '类型', templet: '#typeTpl'},
+                {title: '排序数字', field: 'sortNumber'},
+                {title: '操作', align: 'center', toolbar: '#LAY-system-banner-toolbar'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 表格监听 工具条
+        table.on('tool(LAY-system-banner-table)', function (obj) {
+            let data = obj.data;
+            // 图片
+            if (obj.event === 'img') {
+                layer.photos({
+                    photos: {data: [{src: '/api' + data.image}]}
+                });
+            }
+            // 修改
+            if (obj.event === 'edit') {
+                data.FORM_TYPE = 'put';
+                // 打开身份详情
+                openUserRolePopup(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-system-banner-add').on('click', function () {
+            // 打开身份详情
+            openUserRolePopup({FORM_TYPE: 'post'});
+        });
+
+        // 打开身份详情
+        function openUserRolePopup(data) {
+            admin.popup({
+                title: '身份详情',
+                area: ['907px', ''],
+                offset: '5px',
+                id: 'LAY-system-banner-popup',
+                success: function (layero, index) {
+                    view(this.id).render('system/banner/form', data).done(function () {
+                        let formData = new FormData();
+                        // 上传渲染
+                        upload.render({
+                            elem: '#LAY-system-banner-upload',
+                            auto: false,
+                            accept: 'images',
+                            acceptMime: 'image/*',
+                            choose: function (obj) {
+                                // 预读本地文件示例，不支持ie8
+                                obj.preview(function (index, file, result) {
+                                    formData.set('imageFile', file);
+                                    // 图片链接（base64）
+                                    $('#LAY-system-banner-image').attr('src', result);
+                                });
+                            }
+                        });
+
+                        let edit = tinymce.render({
+                            elem: '#LAY-system-banner-richText',
+                            width: 700,
+                            height: 600
+                        });
+
+                        // 表单渲染
+                        form.render(null, 'LAY-system-banner-form2');
+
+                        // 监听 类型单选框
+                        form.on('radio(LAY-system-banner-type)', function (obj) {
+                            let value = obj.value;
+                            $('#LAY-system-banner-linkDiv').addClass('layui-hide');
+                            $('#LAY-system-banner-linkDiv input').removeAttr('lay-verify');
+                            $('#LAY-system-banner-auctionDiv').addClass('layui-hide');
+                            $('#LAY-system-banner-auctionDiv input').removeAttr('lay-verify');
+                            $('#LAY-system-banner-richTextDiv').addClass('layui-hide');
+
+                            if (value === 'link') {
+                                $('#LAY-system-banner-linkDiv').removeClass('layui-hide');
+                                $('#LAY-system-banner-linkDiv input').attr('lay-verify', 'url');
+                            } else if (value === 'auction') {
+                                $('#LAY-system-banner-auctionDiv').removeClass('layui-hide');
+                                $('#LAY-system-banner-auctionDiv input').attr('lay-verify', 'required');
+                            } else if (value === 'rich_text') {
+                                $('#LAY-system-banner-richTextDiv').removeClass('layui-hide');
+                            }
+                        });
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-system-banner-save)', function (obj) {
+                            let field = obj.field; //获取提交的字段
+
+                            let content = edit.getContent();
+                            if (field.type === 'rich_text' && !content) return layer.msg('富文本不能为空', {icon: 5});
+
+                            for (let name in field) {
+                                if (name === 'richText')
+                                    formData.set(name, content);
+                                else
+                                    formData.set(name, field[name]);
+                            }
+
+                            admin.req({
+                                url: '/api/admin/system/banners',
+                                type: data.FORM_TYPE,
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    $('#LAY-system-banner-search').click();
+                                }
+                            });
+                        });
+
+                        // 监听 返回按钮
+                        $('#LAY-system-banner-popup').on('click', '#LAY-system-banner-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+    });
+</script>

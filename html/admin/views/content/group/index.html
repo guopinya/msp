@@ -1,0 +1,198 @@
+<title>圈子管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a><cite>内容管理</cite></a>
+        <a><cite>圈子管理</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-content-group-form">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">圈子名称</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="groupName" placeholder="请输入圈子" type="text">
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-content-group-search" lay-filter="LAY-content-group-search"
+                            lay-submit>搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-content-group-add">添加</button>
+                <button class="layui-btn layui-btn-normal" id="LAY-content-group-master">圈子达人</button>
+            </div>
+
+            <table id="LAY-content-group-table" lay-filter="LAY-content-group-table"></table>
+
+            <script id="imageTpl" type="text/html">
+                <img style="height: 100%;" src="{{ '/api' + d.smallImage }}" alt="" lay-event="img">
+            </script>
+            <script id="image2Tpl" type="text/html">
+                <img style="height: 100%;" src="{{ '/api' + d.largeImage }}" alt="" lay-event="img2">
+            </script>
+            <script id="LAY-content-group-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'table', 'upload'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            table = layui.table,
+            upload = layui.upload;
+
+        // 表单渲染
+        form.render(null, 'LAY-content-group-form');
+
+        // 表单监听 搜索按钮
+        form.on('submit(LAY-content-group-search)', function (obj) {
+            // 执行重载
+            table.reload('LAY-content-group-table', {
+                where: obj.field
+            });
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-content-group-table',
+            url: '/api/admin/content/groups',
+            cols: [[
+                {title: '缩略图片', templet: '#imageTpl'},
+                {title: '详情图片', templet: '#image2Tpl'},
+                {title: '圈子名称', field: 'groupName'},
+                {title: '圈子介绍', field: 'groupText'},
+                {title: '操作', align: 'center', fixed: 'right', toolbar: '#LAY-content-group-toolbar'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 表格监听 工具条
+        table.on('tool(LAY-content-group-table)', function (obj) {
+            let data = obj.data;
+            data.FORM_TYPE = obj.event;
+
+            // 图片
+            if (obj.event === 'img') {
+                layer.photos({
+                    photos: {data: [{src: '/api' + data.smallImage}]},
+                    anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                });
+            }
+            // 图片2
+            if (obj.event === 'img2') {
+                layer.photos({
+                    photos: {data: [{src: '/api' + data.largeImage}]},
+                    anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                });
+            }
+            // 修改
+            if (obj.event === 'edit') {
+                openContentGroupPopup(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-content-group-add').on('click', function () {
+            // 打开圈子详情
+            openContentGroupPopup({});
+        });
+
+        // 监听 圈子达人按钮
+        $('#LAY-content-group-master').on('click', function () {
+            // 打开圈子达人
+            window.open('#/content/group/master', '_blank');
+        });
+
+        // 打开圈子详情
+        function openContentGroupPopup(data) {
+            admin.popup({
+                title: '圈子详情',
+                area: ['548px', ''],
+                offset: '100px',
+                id: 'LAY-content-group-popup',
+                success: function (layero, index) {
+                    view(this.id).render('content/group/form', data).done(function () {
+                        let formData = new FormData();
+                        // 上传渲染
+                        upload.render({
+                            elem: '#LAY-content-group-upload',
+                            auto: false,
+                            accept: 'images',
+                            acceptMime: 'image/*',
+                            choose: function (obj) {
+                                // 预读本地文件示例，不支持ie8
+                                obj.preview(function (index, file, result) {
+                                    formData.set('smallFile', file);
+                                    // 图片链接（base64）
+                                    $('#LAY-content-group-image').attr('src', result);
+                                });
+                            }
+                        });
+                        // 上传渲染2
+                        upload.render({
+                            elem: '#LAY-content-group-upload2',
+                            auto: false,
+                            accept: 'images',
+                            acceptMime: 'image/*',
+                            choose: function (obj) {
+                                // 预读本地文件示例，不支持ie8
+                                obj.preview(function (index, file, result) {
+                                    formData.set('largeFile', file);
+                                    // 图片链接（base64）
+                                    $('#LAY-content-group-image2').attr('src', result);
+                                });
+                            }
+                        });
+
+                        // 表单渲染
+                        form.render(null, 'LAY-content-group-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-content-group-save)', function (data) {
+                            let field = data.field; //获取提交的字段
+                            for (let name in field) {
+                                formData.set(name, field[name]);
+                            }
+
+                            admin.req({
+                                url: '/api/admin/content/groups',
+                                type: field.groupId ? 'put' : 'post',
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    $('#LAY-content-group-search').click();
+                                }
+                            });
+                        });
+
+                        // 监听 返回按钮
+                        $('#LAY-content-group-popup').on('click', '#LAY-content-group-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+
+    });
+</script>

@@ -1,0 +1,194 @@
+<title>圈子达人</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a><cite>内容管理</cite></a>
+        <a><cite>圈子管理</cite></a>
+        <a><cite>圈子达人</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto"
+             lay-filter="LAY-content-group-master-form">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">圈子名称</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="groupName" placeholder="请输入圈子名称"
+                               type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">用户名</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="username" placeholder="请输入用户名" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">达人等级</label>
+                    <div class="layui-input-inline">
+                        <select name="masterLevel">
+                            <option value="">不限</option>
+                            <option value="0">普通</option>
+                            <option value="1">达人</option>
+                            <option value="2">领主</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-content-group-master-search"
+                            lay-filter="LAY-content-group-master-search" lay-submit>搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-content-group-master-add">添加</button>
+            </div>
+
+            <table id="LAY-content-group-master-table" lay-filter="LAY-content-group-master-table"></table>
+
+            <script id="avatarTpl" type="text/html">
+                <img style="height: 100%;" src="{{ '/api' + d.avatarPath }}" alt="" lay-event="img">
+            </script>
+            <script id="levelTpl" type="text/html">
+                {{# let masterLevel = d.masterLevel; }}
+                {{# if (masterLevel === 0) { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">普通</button>
+                {{# } else if (masterLevel === 1) { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">达人</button>
+                {{# } else if (masterLevel === 2) { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">领主</button>
+                {{# } else { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
+                {{# } }}
+            </script>
+            <script id="LAY-content-group-master-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="put">修改</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'table'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            table = layui.table;
+
+        // 表单渲染
+        form.render(null, 'LAY-content-group-master-form');
+
+        // 表单监听 搜索按钮
+        form.on('submit(LAY-content-group-master-search)', function (obj) {
+            // 执行重载
+            table.reload('LAY-content-group-master-table', {
+                where: obj.field
+            });
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-content-group-master-table',
+            url: '/api/admin/content/groups/masters',
+            cols: [[
+                {title: '头像', templet: '#avatarTpl'},
+                {title: '用户名', field: 'username'},
+                {title: '圈子名称', field: 'groupName'},
+                {title: '圈子积分', field: 'groupScore'},
+                {title: '达人等级', templet: '#levelTpl'},
+                {title: '操作', align: 'center', fixed: 'right', toolbar: '#LAY-content-group-master-toolbar'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 表格监听 工具条
+        table.on('tool(LAY-content-group-master-table)', function (obj) {
+            let data = obj.data;
+            data.FORM_TYPE = obj.event;
+
+            // 图片
+            if (obj.event === 'img') {
+                layer.photos({
+                    photos: {data: [{src: '/api' + data.avatarPath}]},
+                    anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                });
+            }
+            // 修改
+            if (obj.event === 'put') {
+                openContentGroupMasterPopup(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-content-group-master-add').on('click', function () {
+            // 打开圈子达人详情
+            openContentGroupMasterPopup({FORM_TYPE: 'post', userList: userList, groupList: groupList});
+        });
+
+        // 获取用户列表
+        let userList;
+        admin.req({
+            url: '/api/admin/user/fronts',
+            data: {},
+            done: function (res) {
+                userList = res.data;
+            }
+        });
+
+        // 获取圈子列表
+        let groupList;
+        admin.req({
+            url: '/api/admin/content/groups',
+            data: {},
+            done: function (res) {
+                groupList = res.data;
+            }
+        });
+
+        // 打开圈子达人详情
+        function openContentGroupMasterPopup(data) {
+            admin.popup({
+                title: '圈子达人详情',
+                area: ['402px', ''],
+                offset: '100px',
+                id: 'LAY-content-group-master-popup',
+                success: function (layero, index) {
+                    view(this.id).render('content/group/form2', data).done(function () {
+                        // 表单渲染
+                        form.render(null, 'LAY-content-group-master-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-content-group-master-save)', function (obj) {
+                            admin.req({
+                                url: '/api/admin/content/groups/masters',
+                                type: data.FORM_TYPE,
+                                data: obj.field,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    $('#LAY-content-group-master-search').click();
+                                }
+                            });
+                        });
+
+                        // 监听 返回按钮
+                        $('#LAY-content-group-master-popup').on('click', '#LAY-content-group-master-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+
+    });
+</script>

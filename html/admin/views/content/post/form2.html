@@ -1,0 +1,79 @@
+<div class="layui-form" lay-filter="LAY-content-post-comment-form2" style="padding: 20px 40px 0 0;">
+    <style>
+        .layui-upload-img {
+            width: 89px;
+            height: 89px;
+            margin: 0 4px 4px 0;
+        }
+    </style>
+    <script template type="text/html">
+        <input type="hidden" name="floorNo" value="{{ d.params.floorNo || '0' }}">
+        <input type="hidden" name="layerNo" value="{{ d.params.layerNo || '0' }}">
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">发布人</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <select name="userId" lay-search>
+                    <option value="">请选择发布人</option>
+                    {{# let userList = d.params.userList; }}
+                    {{# for (let i = 0; i < userList.length; i++) { }}
+                    {{# let attribute = (d.params.userId === userList[i].userId) ? 'selected' : ''; }}
+                    <option value="{{ userList[i].userId }}" {{ attribute }}>{{ userList[i].username }}</option>
+                    {{# } }}
+                </select>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属帖子</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let attribute = d.params.postId ? 'disabled' : ''; }}
+                <select name="postId" lay-search {{ attribute }}>
+                    <option value="">请选择所属帖子</option>
+                    {{# let postList = d.params.postList; }}
+                    {{# for (let i = 0; i < postList.length; i++) { }}
+                    {{# let attribute = (d.params.postId === postList[i].postId) ? 'selected' : ''; }}
+                    <option value="{{ postList[i].postId }}" {{ attribute }}>{{ postList[i].title }}</option>
+                    {{# } }}
+                </select>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">评论图片</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let images = d.params.linkAddress || ''; }}
+                {{# let imageArray = images ? images.split(';') : []; }}
+                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                    <div class="layui-upload-list" style="margin-bottom: 0;">
+                        {{# for (let i = 0; i < imageArray.length; i++) { }}
+                        <img src="{{ '/api' + imageArray[i] }}" alt="" class="layui-upload-img">
+                        {{# } }}
+                    </div>
+                </blockquote>
+                <button type="button" class="layui-btn layui-btn-normal" id="LAY-content-post-comment-upload">选择图片
+                </button>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">评论内容</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <textarea type="text" name="content" lay-verify="required" placeholder="请输入评论内容" autocomplete="off"
+                          class="layui-textarea">{{ d.params.content || '' }}</textarea>
+            </script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            <input value="保存" class="layui-btn" readonly lay-submit lay-filter="LAY-content-post-comment-save">
+            <input value="返回" class="layui-btn layui-btn-primary" readonly id="LAY-content-post-comment-return">
+        </script>
+    </div>
+</div>

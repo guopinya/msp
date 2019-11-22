@@ -1,0 +1,366 @@
+<title>帖子管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a><cite>内容管理</cite></a>
+        <a><cite>帖子管理</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-content-post-form">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">发布人</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="username" placeholder="请输入发布人" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="postStatus">
+                            <option value="">不限</option>
+                            <option value="DRAFT">草稿</option>
+                            <option value="DELETED">删除</option>
+                            <option value="RELEASED0">发布未审核</option>
+                            <option value="RELEASED1">发布已审核</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">圈子</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="groupName" placeholder="请输入圈子" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">部落</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="hordeName" placeholder="请输入部落" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">话题</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="themeName" placeholder="请输入话题" type="text">
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-content-post-search" lay-filter="LAY-content-post-search"
+                            lay-submit>搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-content-post-add">添加</button>
+                <button class="layui-btn layui-btn-normal" id="LAY-content-post-comment">帖子评论</button>
+            </div>
+
+            <table id="LAY-content-post-table" lay-filter="LAY-content-post-table"></table>
+
+
+            <script id="imageTpl" type="text/html">
+                {{# let imageURL = d.images || '/post/1158251894431305730.jpg'; }}
+                <img style="height: 100%;" src="{{ '/api' + imageURL.split(';')[0] }}" alt="" lay-event="img">
+            </script>
+            <script id="statusTpl" type="text/html">
+                {{# let postStatus = d.postStatus; }}
+                {{# let reviewerId = d.reviewerId; }}
+                {{# if (postStatus === 'RELEASED' && reviewerId) { }}
+                <button class="layui-btn layui-btn-xs">发布已审核</button>
+                {{# } else if (postStatus === 'RELEASED' && !reviewerId) { }}
+                <button class="layui-btn layui-btn-xs">发布未审核</button>
+                {{# } else if (postStatus === 'DELETED') { }}
+                <button class="layui-btn layui-btn-xs layui-btn-danger">删除</button>
+                {{# } else if (postStatus === 'DRAFT') { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">草稿</button>
+                {{# } else { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
+                {{# } }}
+            </script>
+            <script id="LAY-content-post-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="look">查看</a>
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
+                {{# if (!d.reviewerId) { }}
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="review">审核</a>
+                {{# } }}
+
+                {{# let postStatus = d.postStatus; }}
+                {{# if (postStatus === 'RELEASED') { }}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="DELETED">删除</a>
+                {{# } else if (postStatus === 'DELETED') { }}
+                <a class="layui-btn layui-btn-xs" lay-event="RELEASED">恢复</a>
+                {{# } }}
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'table', 'upload'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            table = layui.table,
+            upload = layui.upload;
+
+        // 表单渲染
+        form.render(null, 'LAY-content-post-form');
+
+        // 表单监听 搜索按钮
+        form.on('submit(LAY-content-post-search)', function (obj) {
+            // 执行重载
+            table.reload('LAY-content-post-table', {
+                where: obj.field
+            });
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-content-post-table',
+            url: '/api/admin/content/posts',
+            cols: [[
+                {title: '图片', templet: '#imageTpl'},
+                {title: '标题', field: 'title'},
+                {title: '内容', field: 'text'},
+                {title: '发布人', field: 'username'},
+                {title: '发布时间', field: 'startTime'},
+                {title: '状态', templet: '#statusTpl'},
+                {title: '操作', align: 'center', fixed: 'right', toolbar: '#LAY-content-post-toolbar'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 表格监听 工具条
+        table.on('tool(LAY-content-post-table)', function (obj) {
+            let data = obj.data;
+            data.height = '907px';
+            data.FORM_TYPE = obj.event;
+
+            // 图片
+            if (obj.event === 'img') {
+                let srcArray = [];
+                let imageURL = (data.images || '/post/1158251894431305730.jpg').split(';');
+                for (let i = 0; i < imageURL.length; i++) {
+                    srcArray.push({src: '/api' + imageURL[i]});
+                }
+                layer.photos({
+                    photos: {data: srcArray},
+                    anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                });
+            }
+            // 查看
+            if (obj.event === 'look') {
+                openContentPostPopup(data);
+            }
+            // 修改
+            if (obj.event === 'edit') {
+                openContentPostPopup(data);
+            }
+            // 封号
+            if (obj.event === 'review') {
+                openContentPostPopup2(data);
+            }
+            // 封号
+            if (obj.event === 'DELETED') {
+                openContentPostPopup3(data);
+            }
+            // 恢复
+            if (obj.event === 'RELEASED') {
+                openContentPostPopup3(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-content-post-add').on('click', function () {
+            // 打开帖子详情
+            openContentPostPopup({FORM_TYPE: 'add', height: '658px'});
+        });
+
+        // 监听 帖子评论按钮
+        $('#LAY-content-post-comment').on('click', function () {
+            window.open('#/content/post/comment', '_blank');
+        });
+
+        // 获取用户列表
+        let userList;
+        admin.req({
+            url: '/api/admin/user/fronts',
+            data: {},
+            done: function (res) {
+                userList = res.data;
+            }
+        });
+
+        // 获取圈子列表
+        let groupList;
+        admin.req({
+            url: '/api/admin/content/groups',
+            data: {},
+            done: function (res) {
+                groupList = res.data;
+            }
+        });
+
+        // 获取部落列表
+        let hordeList;
+        admin.req({
+            url: '/api/admin/content/hordes',
+            data: {},
+            done: function (res) {
+                hordeList = res.data;
+            }
+        });
+
+        // 获取话题列表
+        let themeList;
+        admin.req({
+            url: '/api/admin/content/themes/tree',
+            data: {},
+            done: function (res) {
+                themeList = res.data;
+            }
+        });
+
+        // 打开帖子详情
+        function openContentPostPopup(data) {
+            data.userList = userList;
+            data.groupList = groupList;
+            data.hordeList = hordeList;
+            data.themeList = themeList;
+
+            admin.popup({
+                title: '帖子详情',
+                area: ['615px', ''],
+                offset: '5px',
+                id: 'LAY-content-post-popup',
+                success: function (layero, index) {
+                    view(this.id).render('content/post/form', data).done(function () {
+                        let formData = new FormData();
+                        // 上传渲染
+                        upload.render({
+                            elem: '#LAY-content-post-upload',
+                            auto: false,
+                            multiple: true,
+                            accept: 'images',
+                            acceptMime: 'image/*',
+                            choose: function (obj) {
+                                // 预读本地文件示例，不支持ie8
+                                obj.preview(function (index, file, result) {
+                                    formData.append('imageFiles', file);
+                                    // 图片链接（base64）
+                                    $('.layui-upload-list').append('<img src="' + result + '" alt="' + file.name + '" class="layui-upload-img">');
+                                });
+                            }
+                        });
+
+                        // 表单渲染
+                        form.render(null, 'LAY-content-post-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-content-post-save)', function (obj) {
+                            let field = obj.field; //获取提交的字段
+                            for (let name in field) {
+                                formData.set(name, field[name]);
+                            }
+
+                            admin.req({
+                                url: '/api/admin/content/posts',
+                                type: field.postId ? 'put' : 'post',
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    $('#LAY-content-post-search').click();
+                                }
+                            });
+                        });
+
+                        // 监听 返回按钮
+                        $('#LAY-content-post-popup').on('click', '#LAY-content-post-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+
+        // 打开审核帖子
+        function openContentPostPopup2(data) {
+            layer.confirm('确定要将该帖子通过审核吗?', {
+                icon: 3,
+                title: '审核帖子',
+                id: 'LAY-content-post-popup2',
+                skin: 'layui-layer-admin',
+                success: function (layero, index) {
+                    let elemClose = $('<i class="layui-icon" close>&#x1006;</i>');
+                    layero.append(elemClose);
+                    elemClose.on('click', function () {
+                        layer.close(index);
+                    });
+                    $('#LAY-content-post-popup2').css('padding', ' 20px 20px 20px 55px');
+                    $('.layui-layer-btn a').css({'height': '35px', 'line-height': '35px'});
+                    $('.layui-layer-btn0').css({'border-color': '#009688', 'background-color': '#009688'});
+                }
+            }, function (index) {
+
+                admin.req({
+                    url: '/api/admin/content/posts',
+                    type: 'put',
+                    data: {postId: data.postId, reviewerId: view.id()},
+                    done: function (res) {
+                        layer.close(index);
+                        layer.msg('审核帖子成功', {icon: 1});
+
+                        $('#LAY-content-post-search').click();
+                    }
+                });
+            });
+        }
+
+        // 打开删除/恢复帖子
+        function openContentPostPopup3(data) {
+            layer.confirm('确定要将该帖子删除/恢复吗?', {
+                icon: 3,
+                title: '删除/恢复帖子',
+                id: 'LAY-content-post-popup2',
+                skin: 'layui-layer-admin',
+                success: function (layero, index) {
+                    let elemClose = $('<i class="layui-icon" close>&#x1006;</i>');
+                    layero.append(elemClose);
+                    elemClose.on('click', function () {
+                        layer.close(index);
+                    });
+                    $('#LAY-content-post-popup2').css('padding', ' 20px 20px 20px 55px');
+                    $('.layui-layer-btn a').css({'height': '35px', 'line-height': '35px'});
+                    $('.layui-layer-btn0').css({'border-color': '#009688', 'background-color': '#009688'});
+                }
+            }, function (index) {
+
+                admin.req({
+                    url: '/api/admin/content/posts',
+                    type: 'put',
+                    data: {postId: data.postId, postStatus: data.FORM_TYPE},
+                    done: function (res) {
+                        layer.close(index);
+                        layer.msg('删除/恢复帖子成功', {icon: 1});
+
+                        $('#LAY-content-post-search').click();
+                    }
+                });
+            });
+        }
+
+    });
+</script>

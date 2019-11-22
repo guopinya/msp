@@ -1,0 +1,216 @@
+<div class="layui-form" lay-filter="LAY-user-front-form2" style="padding: 20px 40px 0 0;">
+    <div class="layui-form-item layui-col-md-offset3">
+        <label class="layui-form-label">头像</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let imageURL = d.params.avatarPath || '/user/1141245074473861122.png'; }}
+                <img src="{{ '/api' + imageURL }}" alt="" width="88" height="88" id="LAY-user-front-avatar">
+                {{# if (d.params.FORM_TYPE !== 'look') { }}
+                <button type="button" class="layui-btn layui-btn-normal" style="margin-top: 50px;"
+                        id="LAY-user-front-upload">选择图片
+                </button>
+                {{# } }}
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <p class="layui-form-mid">{{ d.params.userId || '' }}</p>
+                    <input type="hidden" name="userId" value="{{ d.params.userId || '' }}">
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">账号类型</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    {{# let userType = d.params.userType; }}
+                    {{# if (userType === '0') { }}
+                    <p class="layui-form-mid">普通账号</p>
+                    {{# } else if (userType === '1') { }}
+                    <p class="layui-form-mid">官方账号</p>
+                    {{# } else { }}
+                    <p class="layui-form-mid">未知</p>
+                    {{# } }}
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    {{# if (d.params.FORM_TYPE !== 'look') { }}
+                    <input type="text" name="username" value="{{ d.params.username || '' }}" lay-verify="required"
+                           placeholder="请输入昵称" autocomplete="off" class="layui-input">
+                    {{# } else { }}
+                    <p class="layui-form-mid">{{ d.params.username || '' }}</p>
+                    {{# } }}
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">手机号码</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    {{# if (d.params.FORM_TYPE !== 'look') { }}
+                    <input type="text" name="mobile" value="{{ d.params.mobile || '' }}" lay-verify="phone"
+                           placeholder="请输入手机号码" autocomplete="off" class="layui-input">
+                    {{# } else { }}
+                    <p class="layui-form-mid">{{ d.params.mobile || '' }}</p>
+                    {{# } }}
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">用户等级</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    {{# let userLevel = d.params.userLevel; }}
+                    {{# let levelArray = ['普通', '认证', '达人']; }}
+
+                    {{# if (d.params.FORM_TYPE !== 'look') { }}
+                    <select name="userLevel" class="form-control">
+                        {{# for (let i = 0; i < levelArray.length; i++) { }}
+                        {{# let attribute = userLevel === i ? 'selected' : ''; }}
+                        <option value="{{ i }}" {{ attribute }}>{{ levelArray[i] }}</option>
+                        {{# } }}
+                    </select>
+                    {{# } else { }}
+                    <p class="layui-form-mid">{{ userLevel ? levelArray[userLevel] : '' }}</p>
+                    {{# } }}
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">VIP等级</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    {{# if (d.params.FORM_TYPE !== 'look') { }}
+                    <input type="text" name="vipLevel" value="{{ d.params.vipLevel || '' }}" lay-verify="number"
+                           placeholder="请输入VIP等级" autocomplete="off" class="layui-input">
+                    {{# } else { }}
+                    <p class="layui-form-mid">{{ d.params.vipLevel || '' }}</p>
+                    {{# } }}
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    {{# let status = d.params.status; }}
+                    {{# if (status === 'normal') { }}
+                    <p class="layui-form-mid">正常</p>
+                    {{# } else if (status === 'freeze') { }}
+                    <p class="layui-form-mid">封号</p>
+                    {{# } else { }}
+                    <p class="layui-form-mid">未知</p>
+                    {{# } }}
+
+                    {{# if (d.params.FORM_TYPE !== 'add') { }}
+                    <a href="#/error/404/" target="_blank" class="layui-btn layui-btn-xs layui-btn-normal"
+                       style="margin-top: 8px;">封号记录</a>
+                    {{# } }}
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">个性签名</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    {{# if (d.params.FORM_TYPE !== 'look') { }}
+                    <input type="text" name="signature" value="{{ d.params.signature || '' }}" placeholder="请输入个性签名"
+                           autocomplete="off" class="layui-input">
+                    {{# } else { }}
+                    <p class="layui-form-mid">{{ d.params.signature || '' }}</p>
+                    {{# } }}
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">明文密码</label>
+            <div class="layui-input-block">
+                <script lay-url="/api/admin/user/fronts/userAuth?userId={{ d.params.userId }}" template
+                        type="text/html">
+                    {{# if (d.params.FORM_TYPE !== 'look') { }}
+                    <input type="text" name="password" value="{{ d.data ? d.data.authSecret : '' }}"
+                           placeholder="请输入明文密码" autocomplete="off" class="layui-input">
+                    {{# } else { }}
+                    <p class="layui-form-mid">{{ d.data ? d.data.authSecret : '' }}</p>
+                    {{# } }}
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">身份</label>
+            <div class="layui-input-block">
+                <script lay-url="/api/admin/user/fronts/userCareer?userId={{ d.params.userId }}" template
+                        type="text/html">
+                    {{# let careerIds = ''; }}
+                    {{# let careerNames = ''; }}
+                    {{# let userCareer = d.data; }}
+
+                    {{# if (userCareer) { }}
+
+                    {{# if (userCareer.careerFirstId) careerIds += userCareer.careerFirstId; }}
+                    {{# if (userCareer.careerSecondId) careerIds += ' | ' + userCareer.careerSecondId; }}
+                    {{# if (userCareer.careerThirdId) careerIds += ' | ' + userCareer.careerThirdId; }}
+
+                    {{# if (userCareer.careerFirstName) careerNames += userCareer.careerFirstName; }}
+                    {{# if (userCareer.careerSecondName) careerNames += ' | ' + userCareer.careerSecondName; }}
+                    {{# if (userCareer.careerThirdName) careerNames += ' | ' + userCareer.careerThirdName; }}
+                    <p class="layui-form-mid">{{ careerNames }}</p>
+                    {{# } }}
+
+                    {{# if (d.params.FORM_TYPE === 'edit') { }}
+                    <a id="LAY-user-front-career" data-value="{{ careerIds }}"
+                       class="layui-btn layui-btn-xs layui-btn-normal" style="margin-top: 8px;">选择身份</a>
+                    {{# } }}
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">创建时间</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <p class="layui-form-mid">{{ d.params.createTime || '' }}</p>
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">最近登录</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <p class="layui-form-mid">{{ d.params.recentLogin || '' }}</p>
+
+                    {{# if (d.params.FORM_TYPE !== 'add') { }}
+                    <a href="#/error/404/" target="_blank" class="layui-btn layui-btn-xs layui-btn-normal"
+                       style="margin-top: 8px;">登录日志</a>
+                    {{# } }}
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            {{# if (d.params.FORM_TYPE !== 'look') { }}
+            <input value="保存" class="layui-btn" readonly lay-submit lay-filter="LAY-user-front-save">
+            {{# } }}
+            <input value="返回" class="layui-btn layui-btn-primary" readonly id="LAY-user-front-return">
+        </script>
+    </div>
+</div>

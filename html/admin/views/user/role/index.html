@@ -1,0 +1,174 @@
+<title>角色管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a><cite>用户管理</cite></a>
+        <a><cite>角色管理</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-user-role-form">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">角色名称</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="name" placeholder="请输入角色名称" type="text">
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-user-role-search" lay-filter="LAY-user-role-search" lay-submit>
+                        搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-user-role-add">添加</button>
+            </div>
+
+            <table id="LAY-user-role-table" lay-filter="LAY-user-role-table"></table>
+
+            <script id="LAY-user-role-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'tree', 'table'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            tree = layui.tree,
+            table = layui.table;
+
+        // 表单渲染
+        form.render(null, 'LAY-user-role-form');
+
+        // 表单监听 搜索按钮
+        form.on('submit(LAY-user-role-search)', function (obj) {
+            // 执行重载
+            table.reload('LAY-user-role-table', {
+                where: obj.field
+            });
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-user-role-table',
+            url: '/api/admin/user/roles',
+            cols: [[
+                {title: '角色ID', field: 'id'},
+                {title: '角色名称', field: 'name'},
+                {title: '角色备注', field: 'remark'},
+                {title: '操作', align: 'center', fixed: 'right', toolbar: '#LAY-user-role-toolbar'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 表格监听 工具条
+        table.on('tool(LAY-user-role-table)', function (obj) {
+            let data = obj.data;
+            // 修改
+            if (obj.event === 'edit') {
+                // 打开角色详情
+                openUserRolePopup(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-user-role-add').on('click', function () {
+            // 打开角色详情
+            openUserRolePopup({});
+        });
+
+        // 获取菜单列表
+        let menuList;
+        admin.req({
+            url: '/api/admin/system/menus/tree',
+            data: {},
+            done: function (res) {
+                menuList = res.data;
+            }
+        });
+
+        // 打开角色详情
+        function openUserRolePopup(data) {
+            // 处理树数据
+            processingTreeData(menuList, data['holdMenuIds'] || '');
+
+            admin.popup({
+                title: '角色详情',
+                area: ['565px', ''],
+                offset: '5px',
+                id: 'LAY-user-role-popup',
+                success: function (layero, index) {
+                    view(this.id).render('user/role/form', data).done(function () {
+                        // 表单渲染
+                        form.render(null, 'LAY-user-role-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-user-role-save)', function (data) {
+                            let field = data.field; //获取提交的字段
+                            for (let name in field) {
+                                if (name.indexOf('menuIds') < 0) continue;
+
+                                field.holdMenuIds = (field.holdMenuIds || '') + field[name] + '|';
+                                delete field[name];
+                            }
+
+                            admin.req({
+                                url: '/api/admin/user/roles',
+                                type: field.id ? 'put' : 'post',
+                                data: data.field,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    $('#LAY-user-role-search').click();
+                                }
+                            });
+                        });
+
+                        // 树渲染
+                        tree.render({
+                            id: 'LAY-user-role-tree',
+                            elem: '#LAY-user-role-permit',
+                            data: menuList,
+                            showCheckbox: true,
+                            accordion: true
+                        });
+
+                        // 监听 返回按钮
+                        $('#LAY-user-role-popup').on('click', '#LAY-user-role-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+
+        // 处理树数据
+        function processingTreeData(treeData, selected) {
+            for (let i = 0; i < treeData.length; i++) {
+                let current = treeData[i];
+
+                current.field = 'menuIds[]';
+
+                let contains = selected.indexOf(current.id) >= 0;
+                current.spread = contains;
+                current.checked = contains;
+
+                if (!current['lastLevel']) processingTreeData(current.children, selected);
+            }
+        }
+    });
+</script>

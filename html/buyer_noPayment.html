@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>订单详情</title>
+    <meta content="true" name="HandheldFriendly">
+    <meta content="yes" name="apple-touch-fullscreen">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="width=device-width,target-densitydpi=device-dpi, user-scalable=0" name="viewport">
+    <link href="css/style.css" rel="stylesheet">
+
+    <meta content="模型APP内测招募" property="title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="image"/>
+
+    <meta content="模型APP内测招募" property="og:title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="og:image"/>
+
+    <script type="text/javascript">
+        if (/Android (\d+\.\d+)/.test(navigator.userAgent)) {
+            const version = parseFloat(RegExp.$1);
+            if (version > 2.3) {
+                const phoneScale = window.screen.width / 750;
+                document.write('<meta name="viewport" content="width=750, minimum-scale = ' + phoneScale + ', maximum-scale = ' + phoneScale + ', target-densitydpi=device-dpi">');
+            } else {
+                document.write('<meta name="viewport" content="width=, target-densitydpi=device-dpi">');
+            }
+        } else {
+            document.write('<meta name="viewport" content="width=750, user-scalable=no">');
+        }
+    </script>
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div id="order_noPay">
+
+    <div id="content">
+        <!--支付状态条形图-->
+        <div class="state">
+            <div class="step1 step">
+                <div class="img">
+                    <img alt="" src="img/order/ico.png">
+                    <p>已拍下</p>
+                </div>
+                <div class="line"></div>
+            </div>
+            <div class="step2 step">
+                <div class="img">
+                    <img alt="" src="img/order/ico2.png">
+                    <p>付款</p>
+                </div>
+                <div class="line"></div>
+            </div>
+            <div class="step3 step">
+                <div class="img">
+                    <img alt="" src="img/order/ico2.png">
+                    <p>发货</p>
+                </div>
+                <div class="line"></div>
+            </div>
+            <div class="step4 step">
+                <div class="img">
+                    <img alt="" src="img/order/ico2.png">
+                    <p>收货</p>
+                </div>
+                <div class="line"></div>
+            </div>
+            <div class="step5 step">
+                <div class="img">
+                    <img alt="" src="img/order/ico2.png">
+                    <p>评价</p>
+                </div>
+            </div>
+        </div>
+
+        <!--支付金额及状态-->
+        <div class="price_box">
+            <p class="orderTotal">￥<span></span></p>
+            <p class="status">等待付款</p>
+            <p class="slogan">支付说明支付说明支付说明支付说明支付说明支付说明</p>
+        </div>
+
+        <!--买家信息-->
+        <div class="buyerMsg">
+            <p class="name">联系人：<span></span></p>
+            <p class="mobile">电&nbsp;&nbsp;&nbsp;话：<span></span></p>
+            <p class="addr">地&nbsp;&nbsp;&nbsp;址：<span></span></p>
+        </div>
+
+        <div class="logisticsMsg">
+            <ul>
+                <div class="logistics_status">
+                    <div class="img" style="width: 100%;text-align: center;margin-top:30px;">
+                        <img alt="" src="img/order/logistics_status.png"></div>
+                    <p style="font-size: 26px;color:#afafaf;width: 100%;text-align: center;margin-top: 40px;">暂无物流信息</p>
+                </div>
+            </ul>
+        </div>
+
+        <div class="productMsg">
+            <div style="overflow: hidden;">
+                <div class="img"><img alt="" src="img/index/img.png"></div>
+                <p class="productTitle">产品标题产品标题产品标题产品标题产品标题</p>
+            </div>
+            <div class="relation_box">
+                <a class="dispute" href="">纠纷处理</a>
+                <a class="personage" href="">联系TA</a>
+            </div>
+        </div>
+
+        <div class="orderMsg">
+            <p class="name">买家昵称<span>买家昵称</span></p>
+            <p class="auctionNumber">拍卖编号<span>123456789</span></p>
+            <p class="orderNumber">订单编号<span>0212123123</span></p>
+            <p class="time">成交时间<span>2015-01-12 13:00:12</span></p>
+        </div>
+
+        <div class="bt_box seller" style="width: 686px;">
+        </div>
+
+        <!--确认支付框-->
+        <div class="payment_box">
+            <div class="click" onclick="hideBoxByClassName('payment_box');"></div>
+            <div class="box">
+                <div class="title_box">
+                    <p class="text">需要支付</p>
+                    <p class="money">￥<span>0</span></p>
+                </div>
+                <div class="payment">
+                    <p class="time">剩余支付时间：<span>14分52秒</span></p>
+                    <ul class="paymentSelect">
+                        <li class="hover"><p><img alt="" src="img/order/zfb.png"> 支付宝支付</p></li>
+                        <li><p><img alt="" src="img/order/wx.png"> 微信支付</p></li>
+                    </ul>
+                </div>
+                <div class="paymentbt">
+                    <button class="zfb submitbt" onclick="payment('Alipay')">确认支付￥99</button>
+                    <button class="wx submitbt" onclick="payment('WeChat')" style="display: none;">确认支付￥99</button>
+                </div>
+            </div>
+        </div>
+
+        <!--配送方式选择框-->
+        <div class="shipmentsMsg">
+            <div class="click" onclick="hideBoxByClassName('shipmentsMsg');"></div>
+            <div class="shipmentBox">
+                <div class="msgSelect">
+                    <div class="way selectBox">
+                        <p>发货形式</p>
+                        <select id="method" onchange="toggleDeliveryMethod();">
+                            <option value="EXPRESS">快递配送</option>
+                            <option value="FACE_TO_FACE">当面交付</option>
+                        </select>
+                    </div>
+                    <div class="company selectBox">
+                        <p>物流公司</p>
+                        <select id="company">
+                            <option value="顺丰快递">顺丰快递</option>
+                            <option value="圆通快递">圆通快递</option>
+                            <option value="韵达快递">韵达快递</option>
+                            <option value="百世汇通快递">百世汇通快递</option>
+                        </select>
+                    </div>
+                    <div class="number selectBox">
+                        <p>物流单号</p>
+                        <input class="trackingNumber" id="number" type="text">
+                    </div>
+                </div>
+                <button class="confirm" onclick="confirmShipment();">确认发货</button>
+            </div>
+        </div>
+
+        <div class="hint_box">
+            <p></p>
+        </div>
+
+        <!--确认收货提示框-->
+        <div class="hint_box2">
+            <div class="click" onclick="hideBoxByClassName('hint_box2');"></div>
+            <div class="box">
+                <p class="title">您是否已收到货品？</p>
+                <p class="text">确认收货后钱款将打入卖家账户，您将无法再发起售后申请。请谨慎操作，确保货品已收到且完好！</p>
+                <div class="bt">
+                    <button onclick="hideBoxByClassName('hint_box2');">还未收货</button>
+                    <button class="affirm" onclick="confirmReceipt();">确认收货</button>
+                </div>
+            </div>
+        </div>
+
+        <!--确认收货提示框-->
+        <div class="hint_box4">
+            <div class="click" onclick="hideBoxByClassName('hint_box4');"></div>
+            <div class="box">
+                <p class="text">您还没有收货<br/>是否立即添加收货地址</p>
+                <div class="bt">
+                    <button onclick="hideBoxByClassName('hint_box4');">返回</button>
+                    <button class="affirm" onclick="modifyReceivingInformation();">立即添加</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js" type="text/javascript"></script>
+<script src="js/common.js" type="text/javascript"></script>
+<script type="text/javascript">
+    shareMsg(); //分享
+
+    // 状态标语
+    const STATUS_SLOGAN = {
+        'PENDING_PAYMENT': {
+            'INFO': '等待付款',
+            'BUYER': {
+                'INFO': '恭喜您成功赢得拍卖，请在DAY天HOUR时MINUTE分内支付款项，保证金将在完成支付后退还。若逾期未完成支付，则会导致交易失败，您的保证金将被扣除且受到平台处罚。',
+                'BTN_BOX': '<button class="amendAddr" onclick="modifyReceivingInformation();" style="width: 343px;">修改收货信息</button>' +
+                    '<button class="payment" onclick="immediatePayment();" style="width: 343px;">立即付款</button>'
+            },
+            'SELLER': {
+                'INFO': '等待买家确认信息并完成支付',
+                'BTN_BOX': '<button class="await" style="width:686px" disabled>等待付款</button>'
+            }
+        },
+        'PENDING_DELIVERY': {
+            'INFO': '等待发货',
+            'BUYER': {
+                'INFO': '等待卖家发货',
+                'BTN_BOX': '<button class="deliverGoods" style="width:686px" disabled>等待发货</button>'
+            },
+            'SELLER': {
+                'INFO': '买家已付款，请在DAY天HOUR时MINUTE分内发货。若逾期未发货，则会导致交易失败，您将受到平台的处罚。',
+                'BTN_BOX': '<button class="deliverGoods" style="width:686px" onclick="showBoxByClassName(\'shipmentsMsg\');">去发货</button>'
+            }
+        },
+        'PENDING_RECEIPT': {
+            'INFO': '等待收货',
+            'BUYER': {
+                'INFO': '卖家已发货，请收货并当面验收无误',
+                'BTN_BOX': '<button class="deliverGoods" style="width:686px" onclick="showBoxByClassName(\'hint_box2\');">确认收货</button>'
+            },
+            'SELLER': {
+                'INFO': '等待买家确认收货',
+                'BTN_BOX': '<button class="deliverGoods" style="width:686px">提醒买家收货</button>'
+            }
+        },
+        'PENDING_EVALUATE': {
+            'INFO': '等待评价',
+            'BUYER': {
+                'INFO': '已确认收货，评价一下TA吧',
+                'BTN_BOX': '<button class="deliverGoods" style="width:686px" onclick="jumpToEvaluate();">评&nbsp;&nbsp;&nbsp;&nbsp;价</button>'
+            },
+            'SELLER': {
+                'INFO': '已确认收货，评价一下TA吧',
+                'BTN_BOX': '<button class="deliverGoods" style="width:686px" onclick="jumpToEvaluate();">评&nbsp;&nbsp;&nbsp;&nbsp;价</button>'
+            }
+        },
+        'PENDING_BUYER_EVALUATE': {
+            'INFO': '等待评价',
+            'BUYER': {
+                'INFO': '已确认收货，评价一下TA吧',
+                'BTN_BOX': '<button class="deliverGoods" style="width:686px" onclick="jumpToEvaluate();">评&nbsp;&nbsp;&nbsp;&nbsp;价</button>'
+            },
+            'SELLER': {
+                'INFO': '等待买家评价',
+                'BTN_BOX': ''
+            }
+        },
+        'PENDING_SELLER_EVALUATE': {
+            'INFO': '等待评价',
+            'BUYER': {
+                'INFO': '等待卖家评价',
+                'BTN_BOX': ''
+            },
+            'SELLER': {
+                'INFO': '已确认收货，评价一下TA吧',
+                'BTN_BOX': '<button class="deliverGoods" style="width:686px" onclick="jumpToEvaluate();">评&nbsp;&nbsp;&nbsp;&nbsp;价</button>'
+            }
+        },
+        'TRADE_COMPLETED': {
+            'INFO': '交易完成',
+            'BUYER': {
+                'INFO': '交易完成',
+                'BTN_BOX': ''
+            },
+            'SELLER': {
+                'INFO': '交易完成',
+                'BTN_BOX': ''
+            }
+        }
+    };
+    let orderId = getQueryStringByName("orderId");
+    let orderData;
+
+    // 获取订单详情
+    getOrderDetails();
+    // 获取快递公司
+    getExpressCompany();
+    // 获取物流信息
+    getLogisticsInfo();
+
+    /**
+     * 获取订单详情
+     */
+    function getOrderDetails() {
+        $.ajax({
+            url: link + '/order/orders/' + orderId,
+            type: 'GET',
+            data: {
+                requestId: md5(orderId),
+                timestamp: new Date().getTime(),
+            }
+        }).done(function (response) {
+            console.log(response);
+
+            handler({
+                res: response, fun1: function () {
+                    orderData = response.data;
+
+                    // 设置订单状态条形图
+                    setOrderStatusBar();
+                    // 设置订单状态信息
+                    setPriceBoxHTML();
+                    // 设置买家信息
+                    setBuyerMsgHTML();
+                    // 设置拍品信息
+                    setProductMsgHTML();
+                    // 设置订单信息
+                    setOrderMsgHTML();
+                }
+            })
+        });
+    }
+
+    /**
+     * 设置订单状态条形图
+     */
+    function setOrderStatusBar() {
+        let index = 1;
+        for (let status in STATUS_SLOGAN) {
+
+            // 当订单状态相同时结束
+            if (status === 'PENDING_BUYER_EVALUATE' && orderData['seller']) continue;
+            // 当订单状态相同时结束
+            if (status === 'PENDING_SELLER_EVALUATE' && !orderData['seller']) continue;
+            console.log(index);
+
+            $(".step" + index).addClass("hover");
+            $(".step" + index + ".hover img").attr("src", "img/order/ico.png");
+            index++;
+            // 当订单状态相同时结束
+            if (status === orderData['orderStatus']) break;
+
+        }
+    }
+
+    /**
+     * 设置订单状态信息
+     */
+    function setPriceBoxHTML() {
+        // 订单金额
+        let dealPrice = orderData['dealPrice'];
+        $(".payment_box .money span").text(dealPrice);
+        $(".payment_box .paymentbt button").text('确认支付￥' + dealPrice);
+
+        // 订单状态
+        let orderStatus = orderData['orderStatus'];
+        // 用户身份
+        let identity = orderData['seller'] ? 'SELLER' : 'BUYER';
+        // 状态信息
+        let statusHTML = STATUS_SLOGAN[orderStatus]['INFO'];
+        // 标语信息
+        let sloganHTML = STATUS_SLOGAN[orderStatus][identity]['INFO'];
+        // 时间特殊处理
+        residueTime(orderData['closeTimestamp']);
+        countDown(orderData['closeTimestamp'] - new Date().getTime());
+        sloganHTML = sloganHTML.replace('DAY', day + '').replace('HOUR', hour + '').replace('MINUTE', minute + '');
+
+        let priceBoxHTML = '';
+        priceBoxHTML += '<p class="orderTotal">￥<span>' + dealPrice + '</span></p>';
+        priceBoxHTML += '<p class="status">' + statusHTML + '</p>';
+        priceBoxHTML += '<p class="slogan">' + sloganHTML + '</p>';
+        $('.price_box').html(priceBoxHTML);
+
+        // 按钮
+        $(".bt_box").html(STATUS_SLOGAN[orderStatus][identity]['BTN_BOX']);
+    }
+
+    /**
+     * 设置买家信息
+     */
+    function setBuyerMsgHTML() {
+        let buyerMsgHTML = '';
+        buyerMsgHTML += '<p class="name">联系人：<span>' + (orderData.fullName || '') + '</span></p>';
+        buyerMsgHTML += '<p class="mobile">电&nbsp;&nbsp;&nbsp;&nbsp;话：<span>' + (orderData.mobile || '') + '</span></p>';
+        buyerMsgHTML += '<p class="addr">地&nbsp;&nbsp;&nbsp;&nbsp;址：<span>' + (orderData.fullName ? orderData['detailAddress'] : '') + '</span></p>';
+        $('.buyerMsg').html(buyerMsgHTML);
+    }
+
+    /**
+     * 设置拍品信息
+     */
+    function setProductMsgHTML() {
+        let imageURL = orderData.images ? link + orderData.images.split(';')[0] : 'img/img.png';
+
+        let productMsgHTML = '';
+        productMsgHTML += '<div style="overflow: hidden;">';
+        productMsgHTML += '    <div class="img"><img src="' + imageURL + '" alt=""></div>';
+        productMsgHTML += '    <p class="productTitle">' + orderData.title + '</p>';
+        productMsgHTML += '</div>';
+        productMsgHTML += '<div class="relation_box">';
+        productMsgHTML += '    <a class="dispute" onclick="jumpToMessageChat();">纠纷处理</a>';
+        productMsgHTML += '    <a class="personage" onclick="jumpToMessageChat();">联系TA</a>';
+        productMsgHTML += '</div>';
+        $('.productMsg').html(productMsgHTML);
+    }
+
+    /**
+     * 设置订单信息
+     */
+    function setOrderMsgHTML() {
+        let orderMsgHTML = '';
+        orderMsgHTML += '<p class="name">买家昵称<span>' + orderData['buyerName'] + '</span></p>';
+        orderMsgHTML += '<p class="auctionNumber">拍卖编号<span>' + orderData.itemId + '</span></p>';
+        orderMsgHTML += '<p class="orderNumber">订单编号<span>' + orderData['orderId'] + '</span></p>';
+        orderMsgHTML += '<p class="time">成交时间<span>' + orderData['dealTime'] + '</span></p>';
+        $('.orderMsg').html(orderMsgHTML);
+    }
+
+    /**
+     * 获取快递公司
+     */
+    function getExpressCompany() {
+        $.ajax({
+            url: link + '/system/companies',
+            type: 'GET',
+            data: {
+                requestId: md5(new Date().getTime()),
+                timestamp: new Date().getTime()
+            }
+        }).done(function (response) {
+            console.log(response);
+
+            handler({
+                res: response,
+                fun1: function () {
+                    let companyHTML = '';
+
+                    let list = response.data;
+                    for (let i = 0; i < list.length; i++) {
+                        companyHTML += '<option value="' + list[i].companyId + '">' + list[i].companyName + '</option>';
+                    }
+                    $('#company').html(companyHTML);
+                }
+            })
+        })
+    }
+
+    /**
+     * 获取物流信息
+     */
+    function getLogisticsInfo() {
+        $.ajax({
+            url: link + '/system/companies/' + orderId,
+            type: 'GET',
+            data: {
+                requestId: md5(orderId),
+                timestamp: new Date().getTime()
+            }
+        }).done(function (response) {
+            console.log(response);
+
+            handler({
+                res: response,
+                fun1: function () {
+                    let companyHTML = '';
+
+                    let list = response.data.list;
+                    for (let i = 0; i < list.length && i < 3; i++) {
+                        let imageName = i === 0 ? 'status1' : 'status2';
+
+                        companyHTML += '<li>';
+                        companyHTML += '    <div class="img"><img src="img/order/delivery-' + imageName + '.png" alt=""></div>';
+                        companyHTML += '    <div class="detail">';
+                        companyHTML += '        <p class="addr">' + list[i].context + '</p>';
+                        companyHTML += '        <p class="time">' + list[i].time + '</p>';
+                        companyHTML += '    </div>';
+                        companyHTML += '</li>';
+                    }
+                    $('.logisticsMsg ul').html(companyHTML);
+                    if (Istrue()) {
+                        $(".logisticsMsg").click(function () {
+                            jumpToLogisticsDetails();
+                        })
+                    }
+                }
+            })
+        })
+    }
+
+    /**
+     * 跳转到物流详情
+     */
+    function jumpToLogisticsDetails() {
+        location.href = 'logisticsDetails.html?orderId=' + orderId;
+    }
+
+    /**
+     * 跳转到聊天页面
+     */
+    function jumpToMessageChat() {
+        if (true === orderData['seller']) {
+            localStorage.setItem('rong_target_name', orderData['buyerName']);
+            location.href = 'messageChat.html?targetId=' + orderData['buyerId'] + '&targetType=1';
+        } else {
+            localStorage.setItem('rong_target_name', orderData['sellerName']);
+            location.href = 'messageChat.html?targetId=' + orderData['sellerId'] + '&targetType=1';
+        }
+    }
+
+    /**
+     * 修改收货信息
+     */
+    function modifyReceivingInformation() {
+        location.href = 'myAddr.html?orderId=' + orderId;
+    }
+
+    /**
+     * 立即付款
+     */
+    function immediatePayment() {
+        if (undefined === orderData.fullName) {
+            return hint('请先设置收货信息');
+        }
+
+        showBoxByClassName('payment_box');
+    }
+
+    /**
+     * 切换支付方式
+     */
+    $(".paymentSelect").on('click', 'li', function () {
+        $(".paymentSelect li").removeClass("hover");
+        $(this).addClass("hover");
+
+        if (0 === $(this).index()) {
+            $(".paymentbt .zfb").show();
+            $(".paymentbt .wx").hide();
+        } else {
+            $(".paymentbt .zfb").hide();
+            $(".paymentbt .wx").show();
+        }
+    });
+
+    /**
+     * 切换发货方式
+     */
+    function toggleDeliveryMethod() {
+        let deliveryMethod = $("#method").val();
+
+        if ('EXPRESS' === deliveryMethod) {
+            $(".shipmentsMsg .company").show();
+            $(".shipmentsMsg .number").show();
+        } else {
+            $(".shipmentsMsg .company").hide();
+            $(".shipmentsMsg .number").hide();
+        }
+    }
+
+    /**
+     * 确认发货
+     */
+    function confirmShipment() {
+        let ajaxData = {
+            deliveryMethod: $("#method").val(),
+            logisticsCompany: $("#company").val(),
+            logisticsNumber: $("#number").val()
+        };
+        if ('EXPRESS' === ajaxData.deliveryMethod) {
+            if ('' === ajaxData.logisticsNumber) return hint('请输入物流单号');
+        }
+
+        ajaxData.requestId = md5(JSON.stringify(ajaxData));
+        ajaxData.timestamp = new Date().getTime();
+        $.ajax({
+            url: link + '/order/orders/' + orderId + '/delivery',
+            type: 'PUT',
+            data: ajaxData
+        }).done(function (response) {
+            console.log(response);
+
+            handler({
+                res: response,
+                fun1: function () {
+                    location.reload();
+                }
+            })
+        })
+    }
+
+    /**
+     * 确认收货
+     */
+    function confirmReceipt() {
+        $.ajax({
+            url: link + '/order/orders/' + orderId + '/receipt',
+            type: 'PUT',
+            data: {
+                requestId: md5(orderId),
+                timestamp: new Date().getTime()
+            }
+        }).done(function (response) {
+            console.log(response);
+
+            handler({
+                res: response,
+                fun1: function () {
+                    location.reload();
+                }
+            })
+        })
+    }
+
+    /**
+     * 跳转到评价页面
+     */
+    function jumpToEvaluate() {
+        if (true === orderData['seller']) {
+            location.href = 'evaluate_buyer.html?orderId=' + orderId;
+        } else {
+            location.href = 'evaluate_seller.html?orderId=' + orderId;
+        }
+    }
+
+    function showBoxByClassName(className) {
+        toggleBody(1);
+        $('.' + className).fadeIn(100);
+    }
+
+    function hideBoxByClassName(className) {
+        toggleBody(0);
+        $('.' + className).fadeOut(200);
+    }
+</script>
+</body>
+
+</html>

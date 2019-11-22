@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>社群圈子</title>
+    <meta content="width=device-width,target-densitydpi=device-dpi, user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="true" name="HandheldFriendly"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta content="模型APP内测招募" property="title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="image"/>
+
+    <meta content="模型APP内测招募" property="og:title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="og:image"/>
+    <script type="text/javascript">
+        if (/Android (\d+\.\d+)/.test(navigator.userAgent)) {
+            var version = parseFloat(RegExp.$1);
+            if (version > 2.3) {
+                var phoneScale = parseInt(window.screen.width) / 750;
+                document.write('<meta name="viewport" content="width=750, minimum-scale = ' + phoneScale + ', maximum-scale = ' + phoneScale + ', target-densitydpi=device-dpi">');
+            } else {
+                document.write('<meta name="viewport" content="width=, target-densitydpi=device-dpi">');
+            }
+        } else {
+            document.write('<meta name="viewport" content="width=750, user-scalable=no">');
+        }
+    </script>
+    <link href="css/style.css" rel="stylesheet">
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="js/jquery.cookie.js" type="text/javascript"></script>
+
+
+    <style type="text/css">
+        #favoriteBg .file-box {
+            width: 100%;
+            height: 87px;
+            position: relative;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        #favoriteBg .file-box .text2 {
+            width: 100%;
+            font-size: 30px;
+            color: #1C2027;
+            line-height: 87px;
+            width: 100%;
+            text-indent: 1em;
+        }
+
+        /*.file-box {
+position: relative;
+display: inline-block;
+}*/
+        .file-box img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: absolute;
+            top: -30px;
+            left: 0;
+            display: inline-block;
+            border: none;
+        }
+
+        .file-box #input_file {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            text-align: center;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="favoriteBg">
+    <div class="content">
+        <div class="head_title">
+            <p class="text">背景专区</p>
+        </div>
+        <div class="file-box">
+            <p class="text2">从相册上传</p>
+
+            <!--<img id="preview" />-->
+            <input accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" id="input_file" name="file" type="file">
+            <!--<input type="file" accept="image/*"  class="img"  onchange="javascript:setImagePreview('addimg1','closeimg1');" id="input_file" />-->
+
+        </div>
+
+
+        <ul class="part1 part">
+            <li class="hover"><img src="http://192.168.18.204/api/file/resources/cabinet/bg/default1.jpg">
+                <div class="select"></div>
+            </li>
+            <li><img src="http://192.168.18.204/api/file/resources/cabinet/bg/default2.jpg">
+                <div class="select"></div>
+            </li>
+            <li><img src="http://192.168.18.204/api/file/resources/cabinet/bg/default3.jpg">
+                <div class="select"></div>
+            </li>
+            <li><img src="http://192.168.18.204/api/file/resources/cabinet/bg/default4.jpg">
+                <div class="select"></div>
+            </li>
+            <li id="preview"></li>
+        </ul>
+
+
+        <!--<div class="file-box">
+            <img id="preview" />
+            <input type="file" name="file" id = "input_file" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" >
+        </div>-->
+    </div>
+
+
+    <div class="bt_box">
+        <button onclick="linkbg()">确&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+    </div>
+
+
+</div>
+
+
+<script src="js/common.js" type="text/javascript"></script>
+<script>
+    shareMsg(); //分享
+
+    var defaultBg = $.cookie("selectBg");
+    if (Istrue(defaultBg)) {
+        console.log(defaultBg);
+        for (var i = 1; i <= $(".part li").length; i++) {
+            let imgsrc = "";
+            imgsrc = $(".part li:nth-child(" + i + ") img").attr('src');
+            /* if(imgsrc){
+                imgsrc = imgsrc.replace('/api3','');
+            } */
+            console.log(imgsrc);
+            if (defaultBg == imgsrc) {
+                console.log(i);
+                $(".part li").removeClass("hover");
+                $(".part li:nth-child(" + i + ")").addClass("hover")
+            }
+        }
+    }
+
+
+    var str = "";
+    $('#input_file').on('change', function () {
+        console.log(55555);
+//      		console.log(fileDom)
+        //判断是否支持FileReader
+        if (window.FileReader) {
+            var reader = new FileReader();
+            console.log(reader)
+        } else {
+            alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
+        }
+        //获取文件
+        var file = this.files[0];
+        var imageType = /^image\//;
+        //是否是图片
+        console.log(file.type);
+        if (!imageType.test(file.type)) {
+            alert("请选择图片！");
+            return false;
+        }
+
+        //读取完成
+        var img = document.getElementById("preview");
+        reader.onload = function (e) {
+            //获取图片dom
+//					if(!imageType.test(file.type)) {
+//						windowURL = window.URL || window.webkitURL;
+////					    videoURL = windowURL.createObjectURL(file);
+//						str ='<video src="'+e.target.result+'" width="218"></video><div class="select"></div>'
+//					}else{
+////					    $('#videoarea').html('<video src="' + videoURL + '" controls="controls"></video>');
+//					}
+            str = '<img src="' + e.target.result + '"><div class="select"></div>';
+//					<video src=""></video>
+            //图片路径设置为读取的图片
+            img.src = e.target.result;
+            console.log(img.src);
+            $("#preview").html(str);
+            selectBg()
+        };
+        reader.readAsDataURL(file);
+        console.log(file)
+//				sumitImageFile(img.src)
+//				upload()
+
+//			}
+    });
+
+
+    selectBg();
+
+    function selectBg() {
+        $(".part li").click(function () {
+            $(".part li").removeClass("hover");
+            $(this).addClass("hover")
+        })
+    }
+
+    function linkbg() {
+        var src = '';
+        src = $(".part .hover img").attr("src");
+        console.log(src);
+        src = src.replace('http://192.168.18.204/api', "");
+        $.cookie("selectBg", src, {expires: 365});
+
+
+        var formData = new FormData();
+        var index = $(".part .hover").index();
+        if (index == 4) {
+            formData.append('imageFile', $('#input_file')[0].files[0]);
+        } else {
+            formData.append('imagePath', src);
+        }
+
+
+        formData.append("timestamp", new Date().getTime());
+        formData.append("requestId", 'd79b9efa995f');
+        console.log(formData);
+        $.ajax({
+            url: link + '/social/cabinet/updateImage',
+            type: 'POST',
+            cache: false, //上传文件不需要缓存
+            data: formData,
+            processData: false, // 告诉jQuery不要去处理发送的数据
+            contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+            success: function (res) {
+                console.log(res);
+
+                handler({
+                    res: res,
+                    fun1: function () {
+                        window.location.href = "favoriteSelect.html"
+                    }
+                })
+
+            },
+            error: function (data) {
+                alert("上传失败");
+            }
+        })
+
+
+    }
+
+
+</script>
+</body>
+</html>

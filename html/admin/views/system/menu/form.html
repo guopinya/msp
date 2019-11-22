@@ -1,0 +1,71 @@
+<div class="layui-form" lay-filter="LAY-system-menu-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        <input type="hidden" name="id" value="{{ d.params.id || '' }}">
+        <input type="hidden" name="parentId" value="{{ d.params.parentId || '' }}">
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单标题</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="title" value="{{ d.params.title || '' }}" lay-verify="required"
+                       placeholder="请输入菜单标题" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单类型</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let current = d.params.type || ''; }}
+                {{# let attribute0 = (current === '0' || !current) ? 'checked' : ''; }}
+                <input type="radio" name="type" value="0" title="菜单" {{ attribute0 }}>
+                {{# let attribute1 = (current === '1') ? 'checked' : ''; }}
+                <input type="radio" name="type" value="1" title="按钮" {{ attribute1 }}>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单名称</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="name" value="{{ d.params.name || '' }}" lay-verify="required"
+                       placeholder="请输入菜单名称" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单图标</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="icon" value="{{ d.params.icon || '' }}" placeholder="请输入菜单图标"
+                       autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">路由地址</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="jump" value="{{ d.params.jump || '' }}" placeholder="请输入路由地址"
+                       autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序数字</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="sortNumber" value="{{ d.params.sortNumber || '' }}" lay-verify="number"
+                       placeholder="请输入排序数字" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            <input type="button" value="保存" class="layui-btn" readonly lay-submit lay-filter="LAY-system-menu-save">
+            <input type="button" value="返回" class="layui-btn layui-btn-primary" readonly id="LAY-system-menu-return">
+        </script>
+    </div>
+</div>

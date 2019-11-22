@@ -1,0 +1,116 @@
+<title>菜单管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a>
+            <cite>系统管理</cite>
+        </a>
+        <a>
+            <cite>菜单管理</cite>
+        </a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-system-menu-add">添加</button>
+            </div>
+
+            <table id="LAY-system-menu-table" lay-filter="LAY-system-menu-table"></table>
+
+            <script id="LAY-system-menu-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs " lay-event="post">添加下一级</a>
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="put">修改</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'treeTable'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            treeTable = layui.treeTable;
+
+        // 树表格渲染
+        treeTable.render({
+            elem: '#LAY-system-menu-table',
+            url: '/api/admin/system/menus',
+            treeId: 'id',// 树形id字段名称
+            treeUpId: 'parentId',// 树形父id字段名称
+            treeShowName: 'title',// 以树形式显示的字段
+            cols: [[
+                {title: '菜单标题', field: 'title'},
+                {title: '菜单类型', field: 'type'},
+                {title: '菜单名称', field: 'name'},
+                {title: '菜单图标', field: 'icon'},
+                {title: '路由地址', field: 'jump'},
+                {title: '排序数字', field: 'sortNumber'},
+                {title: '操作', align: 'center', toolbar: '#LAY-system-menu-toolbar'}
+            ]],
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 树表格监听 工具条
+        treeTable.on('tool(LAY-system-menu-table)', function (obj) {
+            let data = obj.data;
+            data.FORM_TYPE = obj.event;
+
+            // 添加下一级
+            if (obj.event === 'post') {
+                openContentThemePopup({FORM_TYPE: 'post', parentId: data.id});
+            }
+            // 修改
+            if (obj.event === 'put') {
+                openContentThemePopup(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-system-menu-add').on('click', function () {
+            // 打开菜单详情
+            openContentThemePopup({FORM_TYPE: 'post', parentId: '0'});
+        });
+
+        // 打开菜单详情
+        function openContentThemePopup(data) {
+            admin.popup({
+                title: '菜单详情',
+                area: ['390px', ''],
+                offset: '100px',
+                id: 'LAY-system-menu-popup',
+                success: function (layero, index) {
+                    view(this.id).render('system/menu/form', data).done(function () {
+                        // 表单渲染
+                        form.render(null, 'LAY-system-menu-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-system-menu-save)', function (obj) {
+                            admin.req({
+                                url: '/api/admin/system/menus',
+                                type: data.FORM_TYPE,
+                                data: obj.field,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    treeTable.reload('LAY-system-menu-table', {});
+                                }
+                            });
+                        });
+
+                        // 监听 返回按钮
+                        $('#LAY-system-menu-popup').on('click', '#LAY-system-menu-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+
+    });
+</script>

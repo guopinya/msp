@@ -1,0 +1,335 @@
+<div class="layui-form" lay-filter="LAY-content-auction-form2" style="padding: 20px 40px 0 0;">
+    <style>
+        .layui-upload-img {
+            width: 86px;
+            height: 86px;
+            margin: 0 4px 4px 0;
+        }
+    </style>
+    <script template type="text/html">
+        <input type="hidden" name="auctionId" value="{{ d.params.auctionId || '' }}">
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">图片</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let images = d.params.images || ''; }}
+                {{# let imageArray = images ? images.split(';') : []; }}
+                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                    <div class="layui-upload-list" style="margin-bottom: 0;">
+                        {{# for (let i = 0; i < imageArray.length; i++) { }}
+                        <img src="{{ '/api' + imageArray[i] }}" alt="" class="layui-upload-img">
+                        {{# } }}
+                    </div>
+                </blockquote>
+                <button type="button" class="layui-btn layui-btn-normal" id="LAY-content-auction-upload">选择图片</button>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="title" value="{{ d.params.title || '' }}" lay-verify="required"
+                       placeholder="请输入标题" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">内容</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <textarea type="text" name="introduce" lay-verify="required" placeholder="请输入内容" autocomplete="off"
+                          class="layui-textarea">{{ d.params.introduce || '' }}</textarea>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">发布人</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <select name="userId" lay-search>
+                        <option value="">请选择发布人</option>
+                        {{# let userList = d.params.userList; }}
+                        {{# for (let i = 0; i < userList.length; i++) { }}
+                        {{# let attribute = (d.params.sellerId === userList[i].userId) ? 'selected' : ''; }}
+                        <option value="{{ userList[i].userId }}" {{ attribute }}>{{ userList[i].username }}</option>
+                        {{# } }}
+                    </select>
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">保存情况</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <select name="preservation" lay-search>
+                        <option value="">请选择保存情况</option>
+                        {{# let attribute0 = (d.params.preservation === 'BRAND_NEW') ? 'selected' : ''; }}
+                        <option value="BRAND_NEW" {{ attribute0 }}>全新</option>
+                        {{# let attribute1 = (d.params.preservation === 'SECOND_HAND') ? 'selected' : ''; }}
+                        <option value="SECOND_HAND" {{ attribute1 }}>二手</option>
+                    </select>
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">所属分类</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <select name="cateId" lay-search>
+                        <option value="">请选择所属分类</option>
+                        {{# let cateList = d.params.cateList; }}
+                        {{# for (let i = 0; i < cateList.length; i++) { }}
+                        {{# let current = cateList[i]; }}
+                        {{# if (!current.allCate) { }}
+                        {{# let cateList2 = current.childList; }}
+                        <optgroup label="{{ current.cateName }}">
+                            {{# for (let j = 0; j < cateList2.length; j++) { }}
+                            {{# let current2 = cateList2[j]; }}
+                            {{# let attribute = (d.params.cateId === current2.cateId) ? 'selected' : ''; }}
+                            <option value="{{ current2.cateId }}" {{ attribute }}>{{ current2.cateName }}</option>
+                            {{# } }}
+                        </optgroup>
+                        {{# } }}
+                        {{# } }}
+                    </select>
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">所属圈子</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <select name="groupId" lay-search>
+                        <option value="">请选择所属圈子</option>
+                        {{# let groupList = d.params.groupList; }}
+                        {{# for (let i = 0; i < groupList.length; i++) { }}
+                        {{# let attribute = (d.params.groupId === groupList[i].groupId) ? 'selected' : ''; }}
+                        <option value="{{ groupList[i].groupId }}" {{ attribute }}>{{ groupList[i].groupName }}</option>
+                        {{# } }}
+                    </select>
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">所属部落</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <select name="hordeId" lay-search>
+                        <option value="">请选择所属部落</option>
+                        {{# let hordeList = d.params.hordeList; }}
+                        {{# for (let i = 0; i < hordeList.length; i++) { }}
+                        {{# let attribute = (d.params.hordeId === hordeList[i].hordeId) ? 'selected' : ''; }}
+                        <option value="{{ hordeList[i].hordeId }}" {{ attribute }}>{{ hordeList[i].hordeName }}</option>
+                        {{# } }}
+                    </select>
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">所属话题</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <select name="themeId" lay-search>
+                        <option value="">请选择所属话题</option>
+                        {{# let themeList = d.params.themeList; }}
+                        {{# for (let i = 0; i < themeList.length; i++) { }}
+                        {{# let current = themeList[i]; }}
+                        {{# let themeList2 = current.childList; }}
+                        <optgroup label="{{ current.themeName }}">
+                            {{# for (let j = 0; j < themeList2.length; j++) { }}
+                            {{# let current2 = themeList2[j]; }}
+                            {{# let attribute = (d.params.themeId === current2.themeId) ? 'selected' : ''; }}
+                            <option value="{{ current2.themeId }}" {{ attribute }}>{{ current2.themeName }}</option>
+                            {{# } }}
+                        </optgroup>
+                        {{# } }}
+                    </select>
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">起拍价格</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="startPrice" value="{{ d.params.startPrice || '' }}" lay-verify="number"
+                           placeholder="请输入起拍价格" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">加价幅度</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="markupRange" value="{{ d.params.markupRange || '' }}" lay-verify="number"
+                           placeholder="请输入加价幅度" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">保证金</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="earnestMoney" value="{{ d.params.earnestMoney || '' }}" lay-verify="number"
+                           placeholder="请输入保证金" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">保底价</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="bottomPrice" value="{{ d.params.bottomPrice || '' }}" lay-verify="number"
+                           placeholder="请输入保底价" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">一口价</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="buyoutPrice" value="{{ d.params.buyoutPrice || '' }}" lay-verify="number"
+                           placeholder="请输入一口价" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" id="LAY-content-auction-startTime" name="startTime" placeholder="请选择开始时间"
+                           class="layui-input">
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">拍卖时长</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <select name="auctionDuration" lay-search>
+                        <option value="">请选择拍卖时长</option>
+                        {{# let durations = [{name:'1 小时',value: 1},{name:'3 小时',value: 3},{name:'6 小时',value:
+                        6},{name:'12 小时',value: 12},
+                        {name:'1 天',value: 24},{name:'2 天',value: 48},{name:'3 天',value: 73},{name:'5 天',value:
+                        120},{name:'7 天',value: 168},{name:'10 天',value: 240}]; }}
+
+                        {{# for (let i = 0; i < durations.length; i++) { }}
+                        {{# let current = durations[i]; }}
+                        {{# let attribute = (d.params.auctionDuration === current.value) ? 'selected' : ''; }}
+                        <option value="{{ current.value }}" {{ attribute }}>{{ current.name }}</option>
+                        {{# } }}
+                    </select>
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">好评限制</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <select name="praiseLimit" lay-search>
+                        <option value="">请选择好评限制</option>
+                        {{# let limits = [{name:'允许所有用户出价',value: 'ALL'},{name:'仅允许高好评用户出价',value:
+                        'HIGH_PRAISE'},{name:'仅允许中高好评用户出价',value: 'MID_HIGH_PRAISE'}]; }}
+
+                        {{# for (let i = 0; i < limits.length; i++) { }}
+                        {{# let current = limits[i]; }}
+                        {{# let attribute = (d.params.praiseLimit === current.value) ? 'selected' : ''; }}
+                        <option value="{{ current.value }}" {{ attribute }}>{{ current.name }}</option>
+                        {{# } }}
+                    </select>
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">提前结束</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    {{# let current = d.params.endedPrematurely; }}
+                    {{# let attribute0 = (current === true || !current) ? 'checked' : ''; }}
+                    <input type="radio" name="endedPrematurely" value="true" title="是" {{ attribute0 }}>
+                    {{# let attribute1 = (current === false) ? 'checked' : ''; }}
+                    <input type="radio" name="endedPrematurely" value="false" title="否" {{ attribute1 }}>
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">自动延长</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    {{# let current = d.params.automaticDelay; }}
+                    {{# let attribute0 = (current === true || !current) ? 'checked' : ''; }}
+                    <input type="radio" name="automaticDelay" value="true" title="是" {{ attribute0 }}>
+                    {{# let attribute1 = (current === false) ? 'checked' : ''; }}
+                    <input type="radio" name="automaticDelay" value="false" title="否" {{ attribute1 }}>
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">交易模式</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let current = d.params.tradingMode || ''; }}
+                {{# let attribute0 = (current.indexOf('EXPRESS') >= 0) ? 'checked' : ''; }}
+                <input type="checkbox" name="tradingMode" value="EXPRESS" title="快递发货" lay-skin="primary" {{ attribute0
+                       }}>
+                {{# let attribute1 = (current.indexOf('FACE_TO_FACE') >= 0) ? 'checked' : ''; }}
+                <input type="checkbox" name="tradingMode" value="FACE_TO_FACE" title="当面交易" lay-skin="primary" {{
+                       attribute1 }}>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item" id="area-picker">
+        <div class="layui-form-label">发货地区</div>
+        <div class="layui-input-inline">
+            <select class="province-selector" data-value="" name="province">
+                <option value="">请选择省</option>
+            </select>
+        </div>
+        <div class="layui-input-inline">
+            <select class="city-selector" data-value="" name="city">
+                <option value="">请选择市</option>
+            </select>
+        </div>
+        <div class="layui-input-inline">
+            <select class="county-selector" data-value="" name="county">
+                <option value="">请选择区</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">快递说明</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="textRemark" value="{{ d.params.textRemark || '' }}" placeholder="请输入快递说明"
+                       autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            {{# if (d.params.FORM_TYPE !== 'look') { }}
+            <input value="保存" class="layui-btn" readonly lay-submit lay-filter="LAY-content-auction-save">
+            {{# } }}
+            <input value="返回" class="layui-btn layui-btn-primary" readonly id="LAY-content-auction-return">
+        </script>
+    </div>
+</div>

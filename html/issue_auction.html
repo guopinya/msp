@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>发布内容</title>
+    <meta content="width=device-width,target-densitydpi=device-dpi, user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="true" name="HandheldFriendly"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta content="模型APP内测招募" property="title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="image"/>
+
+    <meta content="模型APP内测招募" property="og:title"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:description"/>
+    <meta content="最强最走心的模型APP登场！去模型圈大佬面对面交流，晒单拍卖无缝连接。" property="og:keywords"/>
+    <meta content="https://www.2501p.com/img/share_logo.jpg" property="og:image"/>
+    <script type="text/javascript">
+        if (/Android (\d+\.\d+)/.test(navigator.userAgent)) {
+            var version = parseFloat(RegExp.$1);
+            if (version > 2.3) {
+                var phoneScale = parseInt(window.screen.width) / 750;
+                document.write('<meta name="viewport" content="width=750, minimum-scale = ' + phoneScale + ', maximum-scale = ' + phoneScale + ', target-densitydpi=device-dpi">');
+            } else {
+                document.write('<meta name="viewport" content="width=, target-densitydpi=device-dpi">');
+            }
+        } else {
+            document.write('<meta name="viewport" content="width=750, user-scalable=no">');
+        }
+    </script>
+    <link href="css/style.css" rel="stylesheet">
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="js/jquery.cookie.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+<div id="auction">
+    <div id="content">
+        <div class="auction_Msg">
+
+
+            <div class="input_box">
+                <p class="text" style="width: 155px;">起拍价格￥<span>*</span></p>
+                <input id="startPrice" maxlength="8" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                       placeholder="请输入整数价格" style="width:490px;" type="tel"/>
+            </div>
+            <div class="input_box">
+                <p class="text" style="width: 155px;">加价幅度￥<span>*</span></p>
+                <input id="markupRange" maxlength="8" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                       placeholder="请输入整数价格" style="width:490px;" type="tel"/>
+            </div>
+            <div class="input_box">
+                <p class="text">保证金￥<span>*</span></p>
+                <input id="earnestMoney" maxlength="8" onkeyup="value=value.replace(/^0(0+)|[^\d]+/g,'')"
+                       placeholder="请输入整数价格" type="tel"/>
+            </div>
+
+
+            <div class="input_box">
+                <p class="text">一口价￥</p>
+                <input id="buyoutPrice" maxlength="8" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                       placeholder="请输入整数价格" type="tel"/>
+            </div>
+
+            <div class="input_box">
+                <p class="text">保底价￥</p>
+                <input id="basePrice" maxlength="8" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                       placeholder="请输入整数价格" type="tel"/>
+            </div>
+
+            <div class="input_box">
+                <p class="text">拍卖时间</p>
+                <select id="timeSelect" name=""></select>
+            </div>
+            <ul class="beginTime">
+                <li class="hover" date-begin="IMMEDIATELY">
+                    <div class="img"></div>
+                    <p class="title">立即开始</p>
+                </li>
+                <li date-begin="RESERVATION">
+                    <div class="img"></div>
+                    <p class="title">预定开始</p>
+
+                    <input data-lcalendar="2019-07-17-15-30,2019-07-17-15-30" disabled="disabled" id="demo1"
+                           placeholder="日期选择" readonly="" type="text"/>
+                    <select disabled="disabled" id="hour" name=""></select>
+                    <select disabled="disabled" id="min" name="">
+                        <option value="00">00分</option>
+                        <option value="30">30分</option>
+                    </select>
+                </li>
+            </ul>
+
+            <div class="input_box">
+                <p class="text">提前结束</p>
+                <select id="aheadTime" name="">
+                    <option value="false">否</option>
+                    <option value="true">是</option>
+                </select>
+            </div>
+
+            <div class="input_box">
+                <p class="text">自动延长</p>
+                <select id="renewal" name="">
+                    <option value="false">否</option>
+                    <option value="true">是</option>
+                </select>
+            </div>
+
+
+            <div class="input_box" style="margin-bottom: 24px;">
+                <p class="text">好评限制</p>
+                <select id="user" name="">
+                    <option value="ALL">允许所有用户出价</option>
+                    <option value="HIGH_PRAISE">仅允许高好评用户出价</option>
+                    <option value="MID_HIGH_PRAISE">仅允许中高好评用户出价</option>
+                </select>
+            </div>
+
+            <!--<div class="input_box">
+                <p class="text">允许退货</p>
+                <select name="" id="salesReturn">
+                    <option value="false">否</option>
+                    <option value="true">是</option>
+                </select>
+            </div>-->
+
+            <div class="input_box">
+                <p class="text">交易模式</p>
+                <ul class="pattern">
+                    <li class="hover" data-title="EXPRESS">
+                        <div class="img"></div>
+                        <p class="title">快递发货</p>
+                    </li>
+                    <li data-title="FACE_TO_FACE">
+                        <div class="img"></div>
+                        <p class="title">当面交易</p>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="input_box">
+                <p class="left text">发货地区<span>*</span></p>
+                <div class="right">
+                    <input class="input" id="address" maxlength="30" placeholder="选择发货地" style="color:#1C2027"
+                           type="text">
+                </div>
+            </div>
+
+            <div class="input_box state">
+                <p class="left text">快递说明</p>
+                <!-- <input maxlength="30" type="text" class="input" id="address" placeholder="选择发货地"> -->
+                <input id="textRemark" placeholder="平台默认卖家包邮，若有不包邮地区请注明！" type="text"/>
+            </div>
+
+
+            <!-- <div class="state">
+                <input type="text" id="textRemark" placeholder="平台默认卖家包邮，若有不包邮地区请注明！"/>
+                <img src="img/issue/address.png">
+            </div> -->
+
+
+        </div>
+
+        <div class="auction_protocol hover">
+            <div class="img"></div>
+            <p class="title">本人同意并接受<a href="set_agreement.html">《拍卖协议》</a></p>
+        </div>
+
+
+    </div>
+
+
+    <div class="bt_box">
+        <button class="savebt" onclick="send_auction('DRAFT')">存草稿</button>
+        <button id="submit" onclick="send_auction('RELEASE')">发布</button>
+    </div>
+
+    <div class="publish">
+        <button class="next" onclick=" transition('RELEASE')">发布</button>
+    </div>
+
+
+    <div class="hint_box">
+        <p></p>
+    </div>
+
+    <section id="mymodal">
+        <div class="modal-main">
+            <p class="address-title">收货地址</p>
+            <!--<p class="close">x</p>-->
+            <ul class="optionwrapper">
+                <li class="option-menu option-menu-one active-option">请选择</li>
+                <li class="option-menu option-menu-two"></li>
+                <li class="option-menu option-menu-three"></li>
+            </ul>
+            <div class="option-content">
+                <ul class="option-group option-group-one" data-index="0" style="display: block">
+                </ul>
+                <ul class="option-group option-group-two" data-index="1">
+                </ul>
+                <ul class="option-group option-group-three" data-index="2">
+                </ul>
+            </div>
+        </div>
+    </section>
+
+</div>
+<script src="js/common.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<link href="city/city.css" rel="stylesheet">
+<script src="city/data.js" type="text/javascript"></script>
+
+
+<!--日期样式-->
+<link href="css/LCalendar.css" rel="stylesheet">
+<script src="js/LCalendar.js"></script>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+<!--<script src="js/updateimg.js"></script>-->
+<script type="text/javascript">
+    shareMsg(); //分享
+
+
+    $("#startPrice,#markupRange,#earnestMoney,#buyoutPrice,#basePrice").focus(function () {
+        $(this).css({'color': "#ff493b"})
+    });
+
+    var provinceName = "";
+    var cityName = '';
+    var areaName = '';
+    $(document).ready(function () {
+        var newData = [];//新数据
+        var citysArray = [];//城市
+        var areaArray = [];//地区
+        var chooseMenuStr = '请选择'; //添加选择title
+        function init() {
+            //模拟ajax
+            setTimeout(() = > {
+                newData = [...data;
+        ]
+            // 初始化省份
+            var optionGroupOne = "";
+            $.each(newData, function (index, el) {
+                optionGroupOne += `<li class="option-list option-list-one">
+									<span>${newData[index]["n"]}</span>
+									<div class="checked">
+									</div>
+								</li>`
+            });
+
+            $(".option-group-one").html(optionGroupOne)
+
+        },
+            100;
+        )
+        }
+
+        init();
+
+
+        $("#mymodal").on("click", ".option-menu", function () { //菜单激活
+            var i = $(this).index();
+            $(this).addClass('active-option').siblings().removeClass('active-option');
+            $(".option-group").eq(i).show().siblings().hide()
+        });
+
+        //1级 省份点击添加城市
+        $("#mymodal").on("click", ".option-list-one", function () {
+            var parentIndex = $(this).parent().attr("data-index");
+            provinceName = $(this).text().trim();
+            console.log(provinceName);
+            var provinceIndex = $(this).index();
+            $(this).find('.checked').show();
+            $(this).siblings().find('.checked').hide();
+            $(this).find('span').css({'color': '#ffac1c'});
+            $(this).siblings().find('span').css({'color': '#1c2027'});
+            // console.log(newData[provinceIndex])
+            citysArray = newData[provinceIndex]["c"];
+            $(".option-menu").eq(parentIndex).text(provinceName);
+            var cityStr = "";
+            // console.log(citysArray)
+            $.each(citysArray, function (index, el) {
+                cityStr += `<li class="option-list option-list-two">
+							<span>${citysArray[index]["n"]}</span>
+							<div class="checked">
+							</div>
+						</li>`
+            });
+            // console.log(cityStr)
+            $(".option-group").hide();
+            $(".optionwrapper").find(".option-menu").removeClass('active-option');
+            $(".option-menu-two").html(chooseMenuStr).addClass('active-option');
+            $(".option-group-two").html(cityStr).show();
+            $(".option-group-three").html("");
+            $(".option-menu-three").html("")
+        });
+
+
+        //2级 城市点击添加城镇
+        $("#mymodal").on("click", ".option-list-two", function () {
+            var parentIndex = $(this).parent().attr("data-index");
+            cityName = $(this).text().trim();
+            var cityIndex = $(this).index();
+            $(this).find('.checked').show();
+            $(this).siblings().find('.checked').hide();
+            $(this).find('span').css({'color': '#ffac1c'});
+            $(this).siblings().find('span').css({'color': '#1c2027'});
+            cityArray = citysArray[cityIndex]["a"];
+            $(".option-menu").eq(parentIndex).text(cityName);
+            var areaStr = "";
+            $.each(cityArray, function (index, el) {
+                areaStr += `<li class="option-list option-list-three">
+							<span>${cityArray[index]}</span>
+							<div class="checked">
+							</div>
+						</li>`
+            });
+            $(".option-group").hide();
+            $(".optionwrapper").find(".option-menu").removeClass('active-option');
+            $(".option-menu-three").html(chooseMenuStr).addClass('active-option');
+            $(".option-group-three").html(areaStr).show();
+        });
+        //3级 选择城镇
+        $("#mymodal").on("click", ".option-list-three", function () {
+            areaName = $(this).text().trim();
+            var parentIndex = $(this).parent().attr("data-index");
+            var menuOne = $(".option-menu").eq(0).text();
+            var menuTwo = $(".option-menu").eq(1).text();
+            var addressVal = menuOne + " " + menuTwo + " " + areaName;
+            $(this).find('.checked').show();
+            $(this).siblings().find('.checked').hide();
+            $(this).find('span').css({'color': '#ffac1c'});
+            $(this).siblings().find('span').css({'color': '#1c2027'});
+            $(".option-menu").eq(parentIndex).text(areaName);
+            $(".modal-main").animate({"bottom": "-900px"}, 200);
+            setTimeout(() = > {
+                $("#mymodal";
+        ).
+            fadeOut()
+        },
+            150;
+        )
+            $("#address").val(addressVal)
+        });
+
+        $(".right").on("click", function () {
+            $("#mymodal").show();
+            $(".modal-main").animate({"bottom": "0"}, 200)
+        });
+
+
+        $(".close").on("click", function () {
+            $(".modal-main").animate({"bottom": "-900px"}, 200);
+            setTimeout(() = > {
+                $("#mymodal";
+        ).
+            fadeOut();
+        },
+            150;
+        )
+        });
+
+        $("#mymodal").on("click", function (event) {
+            var modalMain = $(".modal-main");
+            if (!modalMain.is(event.target) && modalMain.has(event.target).length === 0) {
+                $(".modal-main").animate({"bottom": "-900px"}, 200);
+                setTimeout(() = > {
+                    $("#mymodal";
+            ).
+                fadeOut();
+            },
+                150;
+            )
+            }
+
+        })
+
+    });
+
+</script>
+
+<script type="text/javascript">var day2 = new Date();
+day2.setTime(day2.getTime());
+var s2 = day2.getFullYear() + "-" + (day2.getMonth() + 1) + "-" + (day2.getDate() + 1) + "-" + day2.getHours() + "-" + day2.getMinutes();
+var year = day2.getFullYear() + 50;
+var maxDate = year + "-" + (day2.getMonth() + 1) + "-" + day2.getDate();
+
+var calendar = new LCalendar();
+calendar.init({
+    'trigger': '#demo1', //标签id
+    'type': 'date', //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
+    'minDate': s2, //最小日期
+    'maxDate': maxDate //最大日期
+});
+
+var type = getQueryStringByName("type");
+if (Istrue(type)) {
+    $(".bt_box").hide();
+    $(".publish").show();
+}
+
+//		auction_protocol;
+$(".auction_protocol,.pattern li").click(function () {
+    if ($(this).hasClass("hover")) {
+        $(this).removeClass("hover")
+    } else {
+        $(this).addClass("hover")
+    }
+});
+
+var begin = 'IMMEDIATELY';
+$(".beginTime li .img,.beginTime li .title").click(function () {
+    $(".beginTime li").removeClass("hover");
+    $(this).parent().addClass("hover");
+    begin = $(this).parent().attr("date-begin");
+    console.log(begin);
+    if (begin == 'RESERVATION') {
+        $("#demo1").removeAttr("disabled");
+        $("#hour").removeAttr("disabled");
+        $("#min").removeAttr("disabled")
+    } else {
+        $("#demo1").attr("disabled", "disabled");
+        $("#hour").attr("disabled", "disabled");
+        $("#min").attr("disabled", "disabled")
+    }
+});
+
+
+timeSelect();
+hour();
+
+function timeSelect() {
+    var result;
+    var time = ["1小时", "3小时", "6小时", "12小时", "24", "2天", "3天", "5天", "7天", "10天"];
+    var time = [['1小时', '1'], ['3小时', '3'], ['6小时', '6'], ['12小时', '12'], ['1天', '24'], ['2天', '48'], ['3天', '72'], ['5天', '120'], ['7天', '168'], ['10天', '240']];
+    for (var i = 0; i < time.length; i++) {
+        result += '<option value="' + time[i][1] + '">' + time[i][0] + '</option>'
+    }
+    $("#timeSelect").append(result)
+}
+
+function hour() {
+    var result;
+    var hour = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
+    for (var i = 0; i < hour.length; i++) {
+        result += '<option value="' + hour[i] + '">' + hour[i] + '时</option>'
+    }
+    $("#hour").append(result)
+}
+
+
+</script>
+</body>
+
+</html>

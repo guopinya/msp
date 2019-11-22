@@ -1,0 +1,177 @@
+<title>认证管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a><cite>用户管理</cite></a>
+        <a><cite>认证管理</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-user-verify-form">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">真实姓名</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="actualName" placeholder="请输入真实姓名"
+                               type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">身份证号</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="idCardNumber" placeholder="请输入身份证号"
+                               type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">联系地址</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="contactAddr" placeholder="请输入联系地址"
+                               type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">详细地址</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="detailedAddr" placeholder="请输入详细地址"
+                               type="text">
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-user-verify-search" lay-filter="LAY-user-verify-search"
+                            lay-submit>搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <table id="LAY-user-verify-table" lay-filter="LAY-user-verify-table"></table>
+
+            <script id="imageTpl" type="text/html">
+                <img style="height: 100%;" src="{{ '/api' + d.idCardFrontImage }}" alt="" lay-event="img">
+            </script>
+            <script id="imageTpl2" type="text/html">
+                <img style="height: 100%;" src="{{ '/api' + d.idCardBackImage }}" alt="" lay-event="img2">
+            </script>
+            <script id="statusTpl" type="text/html">
+                {{# let status = d.approvalStatus; }}
+                {{# if (status === 1) { }}
+                <button class="layui-btn layui-btn-xs">通过</button>
+                {{# } else if (status === 2) { }}
+                <button class="layui-btn layui-btn-xs layui-btn-danger">失败</button>
+                {{# } else { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">未审核</button>
+                {{# } }}
+            </script>
+            <script id="LAY-user-verify-toolbar" type="text/html">
+                {{# if (d.approvalStatus === 0) { }}
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="ok">通过</a>
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="fail">失败</a>
+                {{# } }}
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'table'], function () {
+        let $ = layui.$,
+            admin = layui.admin,
+            form = layui.form,
+            table = layui.table;
+
+        // 表单渲染
+        form.render(null, 'LAY-user-verify-form');
+
+        // 表单监听 搜索按钮
+        form.on('submit(LAY-user-verify-search)', function (obj) {
+            // 执行重载
+            table.reload('LAY-user-verify-table', {
+                where: obj.field
+            });
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-user-verify-table',
+            url: '/api/admin/user/verifies',
+            cols: [[
+                {title: '真实姓名', field: 'actualName'},
+                {title: '身份证号', field: 'idCardNumber'},
+                {title: '联系地址', field: 'contactAddr'},
+                {title: '详细地址', field: 'detailedAddr'},
+                {title: '身份证正面照', templet: '#imageTpl'},
+                {title: '身份证反面照', templet: '#imageTpl2'},
+                {title: '审核状态', templet: '#statusTpl'},
+                {title: '操作', align: 'center', fixed: 'right', toolbar: '#LAY-user-verify-toolbar'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 表格监听 工具条
+        table.on('tool(LAY-user-verify-table)', function (obj) {
+            let data = obj.data;
+            // 图片
+            if (obj.event === 'img') {
+                layer.photos({
+                    photos: {data: [{src: '/api' + data.idCardFrontImage}]}
+                });
+            }
+            // 图片
+            if (obj.event === 'img2') {
+                layer.photos({
+                    photos: {data: [{src: '/api' + data.idCardBackImage}]}
+                });
+            }
+            // 修改
+            if (obj.event === 'ok') {
+                data.approvalStatus = 1;
+                openUserVerifyPopup(data);
+            }
+            // 修改
+            if (obj.event === 'fail') {
+                data.approvalStatus = 2;
+                openUserVerifyPopup(data);
+            }
+        });
+
+        // 打开认证
+        function openUserVerifyPopup(data) {
+            layer.confirm('确定要将审核状态设为通过/失败吗?', {
+                icon: 3,
+                title: '通过/失败认证',
+                id: 'LAY-user-verify-popup',
+                skin: 'layui-layer-admin',
+                success: function (layero, index) {
+                    let elemClose = $('<i class="layui-icon" close>&#x1006;</i>');
+                    layero.append(elemClose);
+                    elemClose.on('click', function () {
+                        layer.close(index);
+                    });
+                    $('#LAY-user-verify-popup').css('padding', ' 20px 20px 20px 55px');
+                    $('.layui-layer-btn a').css({'height': '35px', 'line-height': '35px'});
+                    $('.layui-layer-btn0').css({'border-color': '#009688', 'background-color': '#009688'});
+                }
+            }, function (index) {
+
+                admin.req({
+                    url: '/api/admin/user/verifies',
+                    type: 'put',
+                    data: {userId: data.userId, approvalStatus: data.approvalStatus},
+                    done: function () {
+                        layer.close(index);
+                        layer.msg('通过/失败成功', {icon: 1});
+
+                        $('#LAY-user-verify-search').click();
+                    }
+                });
+            });
+        }
+
+    });
+</script>

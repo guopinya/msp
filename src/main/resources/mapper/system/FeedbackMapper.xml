@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.system.mapper.FeedbackMapper">
+
+    <select id="selectPageByCondition" resultType="com.project.system.entity.Feedback">
+        SELECT
+        sf.*,
+        u.username, u.avatar_path
+        FROM
+        system_feedback sf
+        LEFT JOIN
+        user u on sf.user_id = u.user_id
+        <where>
+            <if test="feedback.username != null and feedback.username != ''">
+                AND u.username LIKE CONCAT('%', #{feedback.username}, '%')
+            </if>
+            <if test="feedback.content != null and feedback.content != ''">
+                AND sf.content LIKE CONCAT('%', #{feedback.content}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

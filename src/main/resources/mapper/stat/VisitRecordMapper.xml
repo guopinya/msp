@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.stat.mapper.VisitRecordMapper">
+
+    <select id="selectByUserIdAndVisitType" resultType="com.project.stat.entity.VisitRecord">
+        <![CDATA[
+
+                SELECT
+                    *
+                FROM
+                    visit_record
+                WHERE
+                    user_id = #{userId}
+                    AND visit_type = #{visitType}
+
+        ]]>
+    </select>
+
+    <update id="updateByUserIdAndVisitType">
+        UPDATE
+            visit_record
+        SET
+            visit_num = #{visitNum}
+        WHERE
+            user_id = #{userId}
+            AND visit_type = #{visitType}
+    </update>
+
+</mapper>

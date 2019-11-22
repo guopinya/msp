@@ -1,0 +1,77 @@
+<div class="layui-form" lay-filter="LAY-content-group-master-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        {{# if (d.params.FORM_TYPE === 'put') { }}
+        <input type="hidden" name="userId" value="{{ d.params.userId }}">
+        <input type="hidden" name="groupId" value="{{ d.params.groupId }}">
+        {{# } }}
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# if (d.params.FORM_TYPE === 'put') { }}
+                <p class="layui-form-mid">{{ d.params.username || '' }}</p>
+                {{# } else { }}
+                <select name="userId" lay-search>
+                    {{# let userList = d.params.userList; }}
+                    {{# for (let i = 0; i < userList.length; i++) { }}
+                    <option value="{{ userList[i].userId }}">{{ userList[i].username }}</option>
+                    {{# } }}
+                </select>
+                {{# } }}
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">圈子</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# if (d.params.FORM_TYPE === 'put') { }}
+                <p class="layui-form-mid">{{ d.params.groupName || '' }}</p>
+                {{# } else { }}
+                <select name="groupId" lay-search>
+                    {{# let groupList = d.params.groupList; }}
+                    {{# for (let i = 0; i < groupList.length; i++) { }}
+                    <option value="{{ groupList[i].groupId }}">{{ groupList[i].groupName }}</option>
+                    {{# } }}
+                </select>
+                {{# } }}
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">圈子积分</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="groupScore" value="{{ d.params.groupScore || '' }}" lay-verify="number"
+                       placeholder="请输入圈子积分" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">达人等级</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let masterLevel = d.params.masterLevel; }}
+                <select name="masterLevel">
+                    {{# let attribute0 = (masterLevel === 0) ? 'selected' : ''; }}
+                    <option value="0" {{ attribute0 }}>普通</option>
+                    {{# let attribute1 = (masterLevel === 1) ? 'selected' : ''; }}
+                    <option value="1" {{ attribute1 }}>达人</option>
+                    {{# let attribute2 = (masterLevel === 2) ? 'selected' : ''; }}
+                    <option value="2" {{ attribute2 }}>领主</option>
+                </select>
+            </script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            <input type="button" value="保存" class="layui-btn" readonly lay-submit
+                   lay-filter="LAY-content-group-master-save">
+            <input type="button" value="返回" class="layui-btn layui-btn-primary" readonly
+                   id="LAY-content-group-master-return">
+        </script>
+    </div>
+</div>

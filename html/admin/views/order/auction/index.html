@@ -1,0 +1,343 @@
+<title>拍卖订单</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a><cite>订单管理</cite></a>
+        <a><cite>拍卖订单</cite></a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-order-auction-form">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">发布人</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="username" placeholder="请输入发布人" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="auctionStatus">
+                            <option value="">不限</option>
+                            <option value="DRAFT">草稿</option>
+                            <option value="DELETE">删除</option>
+                            <option value="RELEASE0">发布未审核</option>
+                            <option value="RELEASE1">发布已审核</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">圈子</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="groupName" placeholder="请输入圈子" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">部落</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="hordeName" placeholder="请输入部落" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">话题</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="themeName" placeholder="请输入话题" type="text">
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-order-auction-search" lay-filter="LAY-order-auction-search"
+                            lay-submit>搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-order-auction-add">添加</button>
+            </div>
+
+            <table id="LAY-order-auction-table" lay-filter="LAY-order-auction-table"></table>
+
+
+            <script id="imageTpl" type="text/html">
+                {{# let imageURL = d.images || '/auction/1158251894431305730.jpg'; }}
+                <img style="height: 100%;" src="{{ '/api' + imageURL.split(';')[0] }}" alt="" lay-event="img">
+            </script>
+            <script id="statusTpl" type="text/html">
+                {{# let status = d.orderStatus; }}
+                {{# let reviewerId = d.reviewerId; }}
+                {{# if (status === 'PENDING_PAYMENT') { }}
+                <button class="layui-btn layui-btn-xs">待付款</button>
+                {{# } else if (status === 'PENDING_DELIVERY') { }}
+                <button class="layui-btn layui-btn-xs">待发货</button>
+                {{# } else if (status === 'PENDING_RECEIPT') { }}
+                <button class="layui-btn layui-btn-xs">待收货</button>
+                {{# } else if (status === 'PENDING_EVALUATE') { }}
+                <button class="layui-btn layui-btn-xs">待评价</button>
+                {{# } else if (status === 'PENDING_BUYER_EVALUATE') { }}
+                <button class="layui-btn layui-btn-xs">待买家评价</button>
+                {{# } else if (status === 'PENDING_SELLER_EVALUATE') { }}
+                <button class="layui-btn layui-btn-xs">待卖家评价</button>
+                {{# } else if (status === 'TRADE_COMPLETED') { }}
+                <button class="layui-btn layui-btn-xs">交易完成</button>
+                {{# } else { }}
+                <button class="layui-btn layui-btn-xs">未知</button>
+                {{# } }}
+            </script>
+            <script id="LAY-order-auction-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="look">查看</a>
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
+                {{# if (!d.reviewerId) { }}
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="review">审核</a>
+                {{# } }}
+
+                {{# let status = d.orderStatus; }}
+                {{# if (status === 'RELEASE') { }}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="DELETE">删除</a>
+                {{# } else if (status === 'DELETE') { }}
+                <a class="layui-btn layui-btn-xs" lay-event="RELEASE">恢复</a>
+                {{# } }}
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'table', 'upload', 'layarea', 'laydate'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            table = layui.table,
+            upload = layui.upload,
+            layarea = layui.layarea,
+            laydate = layui.laydate;
+
+        // 表单渲染
+        form.render(null, 'LAY-order-auction-form');
+
+        // 表单监听 搜索按钮
+        form.on('submit(LAY-order-auction-search)', function (obj) {
+            // 执行重载
+            table.reload('LAY-order-auction-table', {
+                where: obj.field
+            });
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-order-auction-table',
+            url: '/api/admin/order/auctions',
+            cols: [[
+                {title: '图片', templet: '#imageTpl'},
+                {title: '标题', field: 'title'},
+                {title: '买家', field: 'buyerName'},
+                {title: '卖家', field: 'sellerName'},
+                {title: '成交时间', field: 'dealTime'},
+                {title: '成交价格', field: 'dealPrice'},
+                {title: '状态', templet: '#statusTpl'},
+                {title: '操作', align: 'center', fixed: 'right', toolbar: '#LAY-order-auction-toolbar'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 表格监听 工具条
+        table.on('tool(LAY-order-auction-table)', function (obj) {
+            let data = obj.data;
+            data.FORM_TYPE = obj.event;
+
+            // 图片
+            if (obj.event === 'img') {
+                let srcArray = [];
+                let imageURL = (data.images || '/auction/1158251894431305730.jpg').split(';');
+                for (let i = 0; i < imageURL.length; i++) {
+                    srcArray.push({src: '/api' + imageURL[i]});
+                }
+                layer.photos({
+                    photos: {data: srcArray},
+                    anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                });
+            }
+            // 查看
+            if (obj.event === 'look') {
+                openContentAuctionPopup(data);
+            }
+            // 修改
+            if (obj.event === 'edit') {
+                openContentAuctionPopup(data);
+            }
+            // 封号
+            if (obj.event === 'review') {
+                openContentAuctionPopup2(data);
+            }
+            // 封号
+            if (obj.event === 'DELETE') {
+                openContentAuctionPopup3(data);
+            }
+            // 恢复
+            if (obj.event === 'RELEASE') {
+                openContentAuctionPopup3(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-order-auction-add').on('click', function () {
+            // 打开拍品详情
+            openContentAuctionPopup({FORM_TYPE: 'add'});
+        });
+
+        // 打开拍品详情
+        function openContentAuctionPopup(data) {
+            data.userList = userList;
+            data.cateList = cateList;
+            data.groupList = groupList;
+            data.hordeList = hordeList;
+            data.themeList = themeList;
+
+            admin.popup({
+                title: '拍品详情',
+                area: ['873px', ''],
+                offset: '5px',
+                id: 'LAY-order-auction-popup',
+                success: function (layero, index) {
+                    view(this.id).render('order/auction/form', data).done(function () {
+                        let formData = new FormData();
+                        // 上传渲染
+                        upload.render({
+                            elem: '#LAY-order-auction-upload',
+                            auto: false,
+                            multiple: true,
+                            accept: 'images',
+                            acceptMime: 'image/*',
+                            choose: function (obj) {
+                                // 预读本地文件示例，不支持ie8
+                                obj.preview(function (index, file, result) {
+                                    formData.append('imageFiles', file);
+                                    // 图片链接（base64）
+                                    $('.layui-upload-list').append('<img src="' + result + '" alt="' + file.name + '" class="layui-upload-img">');
+                                });
+                            }
+                        });
+
+                        layarea.render({
+                            elem: '#area-picker',
+                            change: function (res) {
+                                //选择结果
+                                console.log(res);
+                            }
+                        });
+
+                        laydate.render({
+                            elem: '#LAY-order-auction-startTime',
+                            type: 'datetime',
+                            value: data.startTime
+                        });
+
+                        // 表单渲染
+                        form.render(null, 'LAY-order-auction-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-order-auction-save)', function (data) {
+                            let field = data.field; //获取提交的字段
+                            for (let name in field) {
+                                formData.set(name, field[name]);
+                            }
+
+                            admin.req({
+                                url: '/api/admin/order/auctions',
+                                type: field.auctionId ? 'put' : 'post',
+                                data: formData,
+                                orderType: false,
+                                processData: false,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    $('#LAY-order-auction-search').click();
+                                }
+                            });
+                        });
+
+                        // 监听 返回按钮
+                        $('#LAY-order-auction-popup').on('click', '#LAY-order-auction-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+
+        // 打开审核拍品
+        function openContentAuctionPopup2(data) {
+            layer.confirm('确定要将该拍品通过审核吗?', {
+                icon: 3,
+                title: '审核拍品',
+                id: 'LAY-order-auction-popup2',
+                skin: 'layui-layer-admin',
+                success: function (layero, index) {
+                    let elemClose = $('<i class="layui-icon" close>&#x1006;</i>');
+                    layero.append(elemClose);
+                    elemClose.on('click', function () {
+                        layer.close(index);
+                    });
+                    $('#LAY-order-auction-popup2').css('padding', ' 20px 20px 20px 55px');
+                    $('.layui-layer-btn a').css({'height': '35px', 'line-height': '35px'});
+                    $('.layui-layer-btn0').css({'border-color': '#009688', 'background-color': '#009688'});
+                }
+            }, function (index) {
+
+                admin.req({
+                    url: '/api/admin/order/auctions',
+                    type: 'put',
+                    data: {auctionId: data.auctionId, reviewerId: view.id()},
+                    done: function (res) {
+                        layer.close(index);
+                        layer.msg('审核拍品成功', {icon: 1});
+
+                        $('#LAY-order-auction-search').click();
+                    }
+                });
+            });
+        }
+
+        // 打开删除/恢复拍品
+        function openContentAuctionPopup3(data) {
+            layer.confirm('确定要将该拍品删除/恢复吗?', {
+                icon: 3,
+                title: '删除/恢复拍品',
+                id: 'LAY-order-auction-popup2',
+                skin: 'layui-layer-admin',
+                success: function (layero, index) {
+                    let elemClose = $('<i class="layui-icon" close>&#x1006;</i>');
+                    layero.append(elemClose);
+                    elemClose.on('click', function () {
+                        layer.close(index);
+                    });
+                    $('#LAY-order-auction-popup2').css('padding', ' 20px 20px 20px 55px');
+                    $('.layui-layer-btn a').css({'height': '35px', 'line-height': '35px'});
+                    $('.layui-layer-btn0').css({'border-color': '#009688', 'background-color': '#009688'});
+                }
+            }, function (index) {
+
+                admin.req({
+                    url: '/api/admin/order/auctions',
+                    type: 'put',
+                    data: {auctionId: data.auctionId, auctionStatus: data.FORM_TYPE},
+                    done: function (res) {
+                        layer.close(index);
+                        layer.msg('删除/恢复拍品成功', {icon: 1});
+
+                        $('#LAY-order-auction-search').click();
+                    }
+                });
+            });
+        }
+
+    });
+</script>
