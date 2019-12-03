@@ -70,7 +70,7 @@
 </div>
 
 <script type="text/javascript">
-    layui.use(['form', 'tree', 'table', 'upload', 'tinymce'], function () {
+    layui.use(['form', 'tree', 'table', 'upload', 'tinymce', 'element'], function () {
         let $ = layui.$,
             view = layui.view,
             admin = layui.admin,
@@ -78,6 +78,7 @@
             table = layui.table;
         let upload = layui.upload;
         let tinymce = layui.tinymce;
+        var element = layui.element;
 
         // 表单渲染
         form.render(null, 'LAY-system-banner-form');
@@ -97,6 +98,7 @@
             cols: [[
                 {title: '图片', templet: '#imageTpl'},
                 {title: '标题', field: 'title'},
+                {title: '地区', field: 'areaName'},
                 {title: '类型', templet: '#typeTpl'},
                 {title: '排序数字', field: 'sortNumber'},
                 {title: '操作', align: 'center', toolbar: '#LAY-system-banner-toolbar'}
@@ -128,14 +130,42 @@
             openUserRolePopup({FORM_TYPE: 'post'});
         });
 
+        function filterArray(data, parent) {
+            var tree = [];
+            var temp;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].parentId == parent) {
+                    var obj = data[i];
+                    temp = filterArray(data, data[i].id);
+                    if (temp.length > 0) {
+                        obj.subs = temp;
+                    }
+                    tree.push(obj);
+                }
+            }
+            return tree;
+        }
+
+        // 获取用户列表
+        let areaList;
+        admin.req({
+            url: '/api/admin/system/area',
+            data: {},
+            done: function (res) {
+                areaList = filterArray(res.data, 0);
+            }
+        });
+
         // 打开身份详情
         function openUserRolePopup(data) {
+            data.areaList = areaList;
             admin.popup({
                 title: '身份详情',
                 area: ['907px', ''],
                 offset: '5px',
                 id: 'LAY-system-banner-popup',
                 success: function (layero, index) {
+                    console.log(data);
                     view(this.id).render('system/banner/form', data).done(function () {
                         let formData = new FormData();
                         // 上传渲染

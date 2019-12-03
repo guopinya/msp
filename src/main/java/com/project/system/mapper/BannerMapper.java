@@ -1,6 +1,8 @@
 package com.project.system.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.project.system.entity.Banner;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +14,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface BannerMapper extends BaseMapper<Banner> {
-
+    /**
+     * 通过拍品条件查询分页
+     *
+     * @param page   分页条件
+     * @param banner 轮播条件
+     * @return 拍品分页
+     */
+    IPage<Banner> pageByBannerCond(IPage<Banner> page, Wrapper<Banner> banner);
 }

@@ -34,7 +34,7 @@ public class EntranceController extends BaseController {
         String code = String.valueOf(obj != null ? obj : "");
         WebUtils.setSessionAttribute(request, Constants.KAPTCHA_SESSION_KEY, null);
         if (StringUtils.isEmpty(vercode) || !vercode.equalsIgnoreCase(code)) {
-            return JsonResult.fail(4001, "验证码错误");
+            //return JsonResult.fail(4001, "验证码错误");
         }
 
         UserLoginToken token = new UserLoginToken(username, password);

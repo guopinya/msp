@@ -1,0 +1,97 @@
+<div class="layui-form" lay-filter="LAY-msp-project-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        <input type="hidden" name="id" value="{{ d.params.id || '' }}">
+        <input type="hidden" name="parentId" value="{{ d.params.parentId || '' }}">
+    </script>
+
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">项目</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="projectName" value="{{ d.params.projectName || '' }}" lay-verify="required"
+                           placeholder="请输入项目" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">编号</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="no" value="{{ d.params.no || '' }}" lay-verify="required"
+                           placeholder="请输入编号" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+
+        <div class="layui-col-md6">
+            <label class="layui-form-label">售价</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="price" value="{{ d.params.price || '' }}" lay-verify="required"
+                           placeholder="请输入售价" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+
+        <div class="layui-col-md6">
+            <label class="layui-form-label">原价</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="basePrice" value="{{ d.params.basePrice || '' }}" placeholder="请输入原价"
+                           autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+
+        <div class="layui-col-md6">
+            <label class="layui-form-label">标签</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="tag" value="{{ d.params.tag || '' }}" placeholder="请输入标签"
+                           autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+
+        <div class="layui-col-md6">
+            <label class="layui-form-label">排序数字</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="sortNumber" value="{{ d.params.sortNumber || '' }}" lay-verify="number"
+                           placeholder="请输入排序数字" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图片</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <img src="{{ '/api' + d.params.image }}" alt="" width="340" height="160" id="LAY-msp-project-image">
+
+                <button type="button" class="layui-btn layui-btn-normal" style="margin-top: 84px;"
+                        id="LAY-msp-project-upload">选择图片
+                </button>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-item rich_text"
+             id="LAY-msp-project-richTextDiv">
+            <label class="layui-form-label">富文本</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <textarea id="LAY-msp-project-richText" name="detail">{{ d.params.detail || '' }}</textarea>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            <input type="button" value="保存" class="layui-btn" readonly lay-submit lay-filter="LAY-msp-project-save">
+            <input type="button" value="返回" class="layui-btn layui-btn-primary" readonly id="LAY-msp-project-return">
+        </script>
+    </div>
+</div>

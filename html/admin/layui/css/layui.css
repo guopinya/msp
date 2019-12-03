@@ -5600,3 +5600,6 @@ body .layui-util-face .layui-layer-content {
 
 
 
+.layui-form-item .layui-col-md6 {
+    margin-bottom: 10px;
+}

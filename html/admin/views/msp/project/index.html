@@ -1,0 +1,194 @@
+<title>项目管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a>
+            <cite>系统管理</cite>
+        </a>
+        <a>
+            <cite>项目管理</cite>
+        </a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-msp-project-form">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">编号</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="no" placeholder="请输入编号" type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">项目</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="projectName" placeholder="请输入项目"
+                               type="text">
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-msp-project-search" lay-filter="LAY-msp-project-search"
+                            lay-submit>搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-msp-project-add">添加</button>
+            </div>
+
+            <table id="LAY-msp-project-table" lay-filter="LAY-msp-project-table"></table>
+
+            <script id="imageTpl" type="text/html">
+                <img style="height: 100%;" src="{{ '/api' + d.image }}" alt="" lay-event="img">
+            </script>
+            <script id="LAY-msp-project-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'table', 'upload', 'tinymce'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            table = layui.table;
+        let upload = layui.upload;
+        let tinymce = layui.tinymce;
+
+        // 表单渲染
+        form.render(null, 'LAY-msp-project-form');
+
+        // 表单监听 搜索按钮
+        form.on('submit(LAY-msp-project-search)', function (obj) {
+            // 执行重载
+            table.reload('LAY-msp-project-table', {
+                where: obj.field
+            });
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-msp-project-table',
+            url: '/api/admin/msp/project',
+            cols: [[
+                {title: '图片', templet: '#imageTpl'},
+                {title: '编号', field: 'no'},
+                {title: '项目', field: 'projectName'},
+                {title: '售价', field: 'price'},
+                {title: '排序数字', field: 'sortNumber'},
+                {title: '操作', align: 'center', toolbar: '#LAY-msp-project-toolbar'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 表格监听 工具条
+        table.on('tool(LAY-msp-project-table)', function (obj) {
+            let data = obj.data;
+            // 图片
+            if (obj.event === 'img') {
+                layer.photos({
+                    photos: {data: [{src: '/api' + data.image}]}
+                });
+            }
+            // 修改
+            if (obj.event === 'edit') {
+                data.FORM_TYPE = 'put';
+                // 打开身份详情
+                openMspShopPopup(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-msp-project-add').on('click', function () {
+            // 打开项目详情
+            openMspShopPopup({FORM_TYPE: 'post', parentId: '0'});
+        });
+
+        // 打开项目详情
+        function openMspShopPopup(data) {
+            admin.popup({
+                title: '项目详情',
+                area: ['907px', ''],
+                offset: '100px',
+                id: 'LAY-msp-project-popup',
+                success: function (layero, index) {
+                    console.log(data);
+                    view(this.id).render('msp/project/form', data).done(function () {
+                        let formData = new FormData();
+                        // 上传渲染
+                        upload.render({
+                            elem: '#LAY-msp-project-upload',
+                            auto: false,
+                            accept: 'images',
+                            acceptMime: 'image/*',
+                            choose: function (obj) {
+                                // 预读本地文件示例，不支持ie8
+                                obj.preview(function (index, file, result) {
+                                    formData.set('imageFile', file);
+                                    // 图片链接（base64）
+                                    $('#LAY-msp-project-image').attr('src', result);
+                                });
+                            }
+                        });
+
+                        //富文本
+                        let edit = tinymce.render({
+                            elem: '#LAY-msp-project-richText',
+                            width: 700,
+                            height: 600
+                        });
+
+                        // 表单渲染
+                        form.render(null, 'LAY-msp-project-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-msp-project-save)', function (obj) {
+                            let field = obj.field; //获取提交的字段
+
+                            let content = edit.getContent();
+                            if (field.type === 'rich_text' && !content) return layer.msg('富文本不能为空', {icon: 5});
+
+                            for (let name in field) {
+                                if (name === 'detail')
+                                    formData.set(name, content);
+                                else
+                                    formData.set(name, field[name]);
+                            }
+
+                            admin.req({
+                                url: '/api/admin/msp/project',
+                                type: data.FORM_TYPE,
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    $('#LAY-msp-project-search').click();
+                                }
+                            });
+                        });
+
+
+                        // 监听 返回按钮
+                        $('#LAY-msp-project-popup').on('click', '#LAY-msp-project-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+
+    });
+</script>

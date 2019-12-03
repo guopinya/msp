@@ -1,6 +1,9 @@
 package com.project.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.project.common.entity.BaseEnity;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -10,7 +13,9 @@ import java.io.Serializable;
  * @author zhuyifa
  * @since 2019-08-08
  */
-public class Banner implements Serializable {
+@Data
+@TableName(value = "system_banner")
+public class Banner extends BaseEnity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -19,6 +24,8 @@ public class Banner implements Serializable {
      */
     @TableId
     private String id;
+    private String areaId;
+    private String areaName;
 
     /**
      * 图片
@@ -54,68 +61,4 @@ public class Banner implements Serializable {
      * 显示顺序
      */
     private Integer sortNumber;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getObjId() {
-        return objId;
-    }
-
-    public void setObjId(String objId) {
-        this.objId = objId;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public String getRichText() {
-        return richText;
-    }
-
-    public void setRichText(String richText) {
-        this.richText = richText;
-    }
-
-    public Integer getSortNumber() {
-        return sortNumber;
-    }
-
-    public void setSortNumber(Integer sortNumber) {
-        this.sortNumber = sortNumber;
-    }
 }

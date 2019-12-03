@@ -35,6 +35,7 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function (exports) {
             , statusCode: {
                 ok: 200 //数据状态一切正常的状态码
                 , logout: 1001 //登录状态失效的状态码
+                , logKaptcha: 4001 //登录验证码的状态码
             }
             , msgName: 'msg' //状态信息的字段名称
             , dataName: 'data' //数据详情的字段名称

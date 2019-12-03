@@ -2,8 +2,10 @@ package com.project.user.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,8 @@ import java.time.LocalDateTime;
  * @author zhuyifa
  * @since 2019-06-12
  */
+@Data
+@TableName(value = "user")//指定表名
 public class User implements Serializable {
 
     /**
@@ -49,6 +53,18 @@ public class User implements Serializable {
      */
     @TableId
     private String userId;
+    /**
+     * 上级id
+     */
+    private String userPid0;
+    /**
+     * 上级id
+     */
+    private String userPid1;
+    /**
+     * 上级id
+     */
+    private String userPid2;
 
     /**
      * 用户类型
@@ -208,171 +224,4 @@ public class User implements Serializable {
         return null;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public Boolean getSex() {
-        return sex;
-    }
-
-    public void setSex(Boolean sex) {
-        this.sex = sex;
-    }
-
-    public String getSignature() {
-        return signature;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
-    public String getDomain() {
-        return domain;
-    }
-
-    public void setDomain(String domain) {
-        this.domain = domain;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getRecentLogin() {
-        return recentLogin;
-    }
-
-    public void setRecentLogin(LocalDateTime recentLogin) {
-        this.recentLogin = recentLogin;
-    }
-
-    public String getAvatarPath() {
-        return avatarPath;
-    }
-
-    public void setAvatarPath(String avatarPath) {
-        this.avatarPath = avatarPath;
-    }
-
-    public String getBackGroundPath() {
-        return backGroundPath;
-    }
-
-    public void setBackGroundPath(String backGroundPath) {
-        this.backGroundPath = backGroundPath;
-    }
-
-    public Integer getUserLevel() {
-        return userLevel;
-    }
-
-    public void setUserLevel(Integer userLevel) {
-        this.userLevel = userLevel;
-    }
-
-    public Integer getVipLevel() {
-        return vipLevel;
-    }
-
-    public void setVipLevel(Integer vipLevel) {
-        this.vipLevel = vipLevel;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getRyToken() {
-        return ryToken;
-    }
-
-    public void setRyToken(String ryToken) {
-        this.ryToken = ryToken;
-    }
-
-    public Long getGoodSum() {
-        return goodSum;
-    }
-
-    public void setGoodSum(Long goodSum) {
-        this.goodSum = goodSum;
-    }
-
-    public Integer getFansSum() {
-        return fansSum;
-    }
-
-    public void setFansSum(Integer fansSum) {
-        this.fansSum = fansSum;
-    }
-
-    public Integer getFollowSum() {
-        return followSum;
-    }
-
-    public void setFollowSum(Integer followSum) {
-        this.followSum = followSum;
-    }
-
-    public MultipartFile getAvatarFile() {
-        return avatarFile;
-    }
-
-    public void setAvatarFile(MultipartFile avatarFile) {
-        this.avatarFile = avatarFile;
-    }
-
-    public MultipartFile getBackGroundFile() {
-        return backGroundFile;
-    }
-
-    public void setBackGroundFile(MultipartFile backGroundFile) {
-        this.backGroundFile = backGroundFile;
-    }
-
-    public Boolean getIsFollow() {
-        return isFollow;
-    }
-
-    public void setIsFollow(Boolean follow) {
-        isFollow = follow;
-    }
 }

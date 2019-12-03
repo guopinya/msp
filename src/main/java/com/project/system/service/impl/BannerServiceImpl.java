@@ -40,6 +40,6 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
         Wrapper<Banner> wrapper = new QueryWrapper<Banner>().lambda()
                 .eq(StringUtils.isNotBlank(type), Banner::getType, type)
                 .like(StringUtils.isNotBlank(title), Banner::getTitle, title);
-        return bannerMapper.selectPage(page, wrapper);
+        return bannerMapper.pageByBannerCond(page, wrapper);
     }
 }

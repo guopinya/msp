@@ -1,0 +1,113 @@
+<title>地区管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a>
+            <cite>系统管理</cite>
+        </a>
+        <a>
+            <cite>地区管理</cite>
+        </a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn" id="LAY-system-area-add">添加</button>
+            </div>
+
+            <table id="LAY-system-area-table" lay-filter="LAY-system-area-table"></table>
+
+            <script id="LAY-system-area-toolbar" type="text/html">
+                <a class="layui-btn layui-btn-xs " lay-event="post">添加下一级</a>
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="put">修改</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'treeTable'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            treeTable = layui.treeTable;
+
+        // 树表格渲染
+        treeTable.render({
+            elem: '#LAY-system-area-table',
+            url: '/api/admin/system/area',
+            treeId: 'id',// 树形id字段名称
+            treeUpId: 'parentId',// 树形父id字段名称
+            treeShowName: 'areaName',// 以树形式显示的字段
+            cols: [[
+                {title: '地区名', field: 'areaName'},
+                {title: '简称', field: 'areaCode'},
+                /*{title: '排序数字', field: 'sortNumber'},*/
+                {title: '操作', align: 'center', toolbar: '#LAY-system-area-toolbar'}
+            ]],
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 树表格监听 工具条
+        treeTable.on('tool(LAY-system-area-table)', function (obj) {
+            let data = obj.data;
+            data.FORM_TYPE = obj.event;
+
+            // 添加下一级
+            if (obj.event === 'post') {
+                openContentThemePopup({FORM_TYPE: 'post', parentId: data.id});
+            }
+            // 修改
+            if (obj.event === 'put') {
+                openContentThemePopup(data);
+            }
+        });
+
+        // 监听 添加按钮
+        $('#LAY-system-area-add').on('click', function () {
+            // 打开地区详情
+            openContentThemePopup({FORM_TYPE: 'post', parentId: '0'});
+        });
+
+        // 打开地区详情
+        function openContentThemePopup(data) {
+            admin.popup({
+                title: '地区详情',
+                area: ['390px', ''],
+                offset: '100px',
+                id: 'LAY-system-area-popup',
+                success: function (layero, index) {
+                    view(this.id).render('system/area/form', data).done(function () {
+                        // 表单渲染
+                        form.render(null, 'LAY-system-area-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-system-area-save)', function (obj) {
+                            admin.req({
+                                url: '/api/admin/system/area',
+                                type: data.FORM_TYPE,
+                                data: obj.field,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    treeTable.reload('LAY-system-area-table', {});
+                                }
+                            });
+                        });
+
+                        // 监听 返回按钮
+                        $('#LAY-system-area-popup').on('click', '#LAY-system-area-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+
+    });
+</script>

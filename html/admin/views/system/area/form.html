@@ -1,0 +1,41 @@
+<div class="layui-form" lay-filter="LAY-system-area-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        <input type="hidden" name="id" value="{{ d.params.id || '' }}">
+        <input type="hidden" name="parentId" value="{{ d.params.parentId || '' }}">
+    </script>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">地区名</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="areaName" value="{{ d.params.areaName || '' }}" lay-verify="required"
+                       placeholder="请输入地区名" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">简称</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="areaCode" value="{{ d.params.areaCode || '' }}" lay-verify="required"
+                       placeholder="请输入简称" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>
+    <!--<div class="layui-form-item">
+        <label class="layui-form-label">排序数字</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                <input type="text" name="sortNumber" value="{{ d.params.sortNumber || '' }}" lay-verify="number"
+                       placeholder="请输入排序数字" autocomplete="off" class="layui-input">
+            </script>
+        </div>
+    </div>-->
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            <input type="button" value="保存" class="layui-btn" readonly lay-submit lay-filter="LAY-system-area-save">
+            <input type="button" value="返回" class="layui-btn layui-btn-primary" readonly id="LAY-system-area-return">
+        </script>
+    </div>
+</div>

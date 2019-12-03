@@ -112,7 +112,7 @@
                     });
                 },
                 faile:function (res) {
-                    if(res.code == '4001')
+                    if(res.code == layui.setter.response.statusCode.logKaptcha)
                         $('#LAY-user-get-vercode').attr("src",'/api/kaptcha?t='+new Date());
                 }
             });

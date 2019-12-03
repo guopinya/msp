@@ -34,55 +34,86 @@
                 </script>
             </div>
         </div>
+        <div class="layui-col-md6">
+            <label class="layui-form-label">地区</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <select name="areaId" lay-search>
+                        <option value="">请选择所属地</option>
+                        {{# let areaList0 = d.params.areaList; }}
+                        {{# for (let i0 = 0; i0 < areaList0.length; i0++) { }}
+                        <optgroup label="{{ areaList0[i0].areaName }}">
+
+                            {{# let areaList1 = areaList0[i0].subs; }}
+                            {{# for (let i1 = 0; i1 < areaList1.length; i1++) { }}
+                            <optgroup label="{{ areaList1[i1].areaName }}">
+
+                                {{# let areaList2 = areaList1[i1].subs; }}
+                                {{# for (let i2 = 0; i2 < areaList2.length; i2++) { }}
+                                <optgroup label="{{ areaList2[i2].areaName }}">
+
+                                    {{# let areaList3 = areaList2[i2].subs; }}
+                                    {{# if(!!areaList3){ }}
+                                    {{# for (let i3 = 0; i3 < areaList3.length; i3++) { }}
+                                    {{# let attribute = (d.params.areaId === areaList3[i3].id) ? 'selected' : ''; }}
+                                    <option value="{{ areaList3[i3].id }}" {{ attribute }}>{{ areaList3[i3].areaName }}
+                                    </option>
+                                    {{# } }}
+                                    {{# } }}
+
+                                </optgroup>
+                                {{# } }}
+
+                            </optgroup>
+                            {{# } }}
+
+                        </optgroup>
+                        {{# } }}
+                    </select>
+                </script>
+            </div>
+        </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">类型</label>
-        <div class="layui-input-block">
-            <script template type="text/html">
-                {{# let current = d.params.type; }}
-                {{# let attribute0 = (current === 'none' || !current) ? 'checked' : ''; }}
-                <input type="radio" name="type" value="none" title="无操作" lay-filter="LAY-system-banner-type" {{
-                       attribute0 }}>
-                {{# let attribute1 = (current === 'link') ? 'checked' : ''; }}
-                <input type="radio" name="type" value="link" title="跳转链接" lay-filter="LAY-system-banner-type" {{
-                       attribute1 }}>
-                {{# let attribute2 = (current === 'auction') ? 'checked' : ''; }}
-                <input type="radio" name="type" value="auction" title="跳转拍品" lay-filter="LAY-system-banner-type" {{
-                       attribute2 }}>
-                {{# let attribute3 = (current === 'rich_text') ? 'checked' : ''; }}
-                <input type="radio" name="type" value="rich_text" title="跳转富文本" lay-filter="LAY-system-banner-type" {{
-                       attribute3 }}>
-            </script>
-        </div>
-    </div>
-    <script template type="text/html">
-        {{# let current = d.params.type; }}
-        <div class="layui-form-item {{ (current === 'link') ? '' : 'layui-hide' }}" id="LAY-system-banner-linkDiv">
-            <label class="layui-form-label">链接地址</label>
+        <div class="">
+            <label class="layui-form-label">类型</label>
             <div class="layui-input-block">
-                {{# let attribute1 = (current === 'link') ? 'lay-verify="url"' : ''; }}
-                <input type="text" name="link" value="{{ d.params.link || '' }}" {{ attribute1 }} placeholder="请输入链接地址"
-                       autocomplete="off" class="layui-input">
+                <script template type="text/html">
+                    {{# let current = d.params.type; }}
+                    {{# let attribute0 = (current === 'none' || !current) ? 'checked' : ''; }}
+                    <input type="radio" name="type" value="none" title="无操作" lay-filter="LAY-system-banner-type" {{
+                           attribute0 }}>
+                    {{# let attribute1 = (current === 'link') ? 'checked' : ''; }}
+                    <input type="radio" name="type" value="link" title="跳转链接" lay-filter="LAY-system-banner-type" {{
+                           attribute1 }}>
+                    {{# let attribute3 = (current === 'rich_text') ? 'checked' : ''; }}
+                    <input type="radio" name="type" value="rich_text" title="跳转富文本" lay-filter="LAY-system-banner-type"
+                           {{
+                           attribute3 }}>
+                </script>
             </div>
         </div>
-        <div class="layui-form-item {{ (current === 'auction') ? '' : 'layui-hide' }}"
-             id="LAY-system-banner-auctionDiv">
-            <label class="layui-form-label">拍品</label>
-            <div class="layui-input-block">
-                {{# let attribute2 = (current === 'auction') ? 'lay-verify="required"' : ''; }}
-                <input type="text" name="bannerName" value="{{ d.params.bannerName || '' }}" {{ attribute2 }}
-                       placeholder="请输入身份名称" autocomplete="off" class="layui-input">
+        <script template type="text/html">
+            {{# let current = d.params.type; }}
+            <div class="layui-form-item {{ (current === 'link') ? '' : 'layui-hide' }}" id="LAY-system-banner-linkDiv">
+                <label class="layui-form-label">链接地址</label>
+                <div class="layui-input-block">
+                    {{# let attribute1 = (current === 'link') ? 'lay-verify="url"' : ''; }}
+                    <input type="text" name="link" value="{{ d.params.link || '' }}" {{ attribute1 }}
+                           placeholder="请输入链接地址"
+                           autocomplete="off" class="layui-input">
+                </div>
             </div>
-        </div>
 
-        <div class="layui-form-item {{ (current === 'rich_text') ? '' : 'layui-hide' }}"
-             id="LAY-system-banner-richTextDiv">
-            <label class="layui-form-label">富文本</label>
-            <div class="layui-input-block">
-                <textarea id="LAY-system-banner-richText" name="richText">{{ d.params.richText || '' }}</textarea>
+            <div class="layui-form-item {{ (current === 'rich_text') ? '' : 'layui-hide' }}"
+                 id="LAY-system-banner-richTextDiv">
+                <label class="layui-form-label">富文本</label>
+                <div class="layui-input-block">
+                    <textarea id="LAY-system-banner-richText" name="richText">{{ d.params.richText || '' }}</textarea>
+                </div>
             </div>
-        </div>
-    </script>
+        </script>
+    </div>
 
     <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
         <input class="layui-btn" lay-filter="LAY-system-banner-save" lay-submit readonly value="保存">

@@ -1,0 +1,29 @@
+package com.project.msp.entity;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.project.common.entity.BaseEnity;
+import lombok.Data;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+/**
+ * 项目-gpy
+ */
+@Data
+@TableName(value = "msp_project")
+public class Project extends BaseEnity implements Serializable {
+    @TableId
+    private String id;
+    private String areaId;
+    private String attrId;
+    private String projectName;
+    private String no;
+    private String image;
+    private String banner;
+    private String tag;
+    private BigDecimal basePrice;
+    private BigDecimal price;
+    private String detail;
+}
