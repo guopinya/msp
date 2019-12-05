@@ -2,7 +2,7 @@
 logging:
   level:
     web: debug
-    com.project2501: debug
+    com.project: debug
 
 mybatis-plus:
   global-config:
