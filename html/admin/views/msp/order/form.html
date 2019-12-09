@@ -148,7 +148,8 @@
         </div>
         <div class="layui-col-md6">
             <label class="layui-form-label-second" style="color:red;">(后台手动预约时间，请自行合理安排)</label>
-            <input type="button" value="更新预约时间" class="layui-btn" readonly lay-submit lay-filter="LAY-msp-order-savePreTime">
+            <input type="button" value="更新预约时间" class="layui-btn" readonly
+                   lay-filter="LAY-msp-order-savePreTime">
         </div>
     </div>
     <div class="layui-form-item">
@@ -156,7 +157,7 @@
             <label class="layui-form-label">艺人</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    <select name="servicerId" lay-filter="servicerIdFilter">
+                    <select name="servicerId" id="servicerId" lay-filter="servicerIdFilter">
                         <option>请选择</option>
                         {{# let userPidData = d.params.userPidData; }}
                         {{# for (let i = 0; i < userPidData.length; i++) { }}
@@ -170,7 +171,8 @@
         </div>
         <div class="layui-col-md6">
             <label class="layui-form-label-second" style="color:red;">(选择艺人即服务完成)</label>
-            <input type="button" value="完成服务" class="layui-btn" readonly lay-submit lay-filter="LAY-msp-order-saveServicer">
+            <input type="button" value="完成服务" class="layui-btn" readonly
+                   lay-filter="LAY-msp-order-saveServicer">
         </div>
     </div>
     <div class="layui-form-item">
@@ -179,7 +181,7 @@
             <div class="layui-input-block">
                 <script template type="text/html">
                     <input type="text" name="remark" value="{{ d.params.remark || '' }}" lay-verify="required"
-                           placeholder="请输入编号" autocomplete="off" class="layui-input">
+                           placeholder="请输入备注" autocomplete="off" class="layui-input">
                 </script>
             </div>
         </div>

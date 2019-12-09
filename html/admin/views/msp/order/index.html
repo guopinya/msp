@@ -181,14 +181,9 @@
                         form.render(null, 'LAY-msp-order-form2');
 
                         // 表单监听 预约时间按钮
-                        form.on('submit(LAY-msp-order-savePreTime)', function (obj) {
-                            let field = obj.field; //获取提交的字段
-
-                            for (let name in field) {
-                                if (name == 'id' || name == 'preTime')
-                                    formData.set(name, field[name]);
-                            }
-
+                        $('[lay-filter=LAY-msp-order-savePreTime]').on('click', function () {
+                            formData.set("id", $('[name="id"]').val());
+                            formData.set("preTime", $('#preTime').val());
                             admin.req({
                                 url: '/api/admin/msp/order/preTime',
                                 type: data.FORM_TYPE,
@@ -204,14 +199,9 @@
                         });
 
                         // 表单监听 保存艺人按钮
-                        form.on('submit(LAY-msp-order-saveServicer)', function (obj) {
-                            let field = obj.field; //获取提交的字段
-
-                            for (let name in field) {
-                                if (name == 'id' || name == 'servicerId')
-                                    formData.set(name, field[name]);
-                            }
-
+                        $('[lay-filter=LAY-msp-order-saveServicer]').on('click', function () {
+                            formData.set("id", $('[name="id"]').val());
+                            formData.set("servicerId", $('#servicerId').val());
                             admin.req({
                                 url: '/api/admin/msp/order/servicer',
                                 type: data.FORM_TYPE,
