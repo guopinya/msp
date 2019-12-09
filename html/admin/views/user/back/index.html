@@ -21,6 +21,22 @@
                     </div>
                 </div>
                 <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">用户</label>
+                    <div class="layui-input-inline">
+                        <select id="LAY-user-back-userPid" name="userPid0">
+                            <option value="">不限</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">店铺</label>
+                    <div class="layui-input-inline">
+                        <select id="LAY-user-back-shop" name="shopId">
+                            <option value="">不限</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
                     <label class="layui-form-label" style="width: auto">用户名</label>
                     <div class="layui-input-inline">
                         <input autocomplete="off" class="layui-input" name="username" placeholder="请输入用户名" type="text">
@@ -31,6 +47,16 @@
                     <div class="layui-input-inline">
                         <input autocomplete="off" class="layui-input" name="phoneNumber" placeholder="请输入手机号码"
                                type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status">
+                            <option value="">不限</option>
+                            <option value="normal">正常</option>
+                            <option value="freeze">封号</option>
+                        </select>
                     </div>
                 </div>
 
@@ -101,6 +127,40 @@
                 form.render('select', 'LAY-user-back-form');
             }
         });
+        // 获取用户数据
+        let userPidData;
+        admin.req({
+            url: '/api/admin/user/backs',
+            data: {},
+            done: function (res) {
+                userPidData = res.data;
+
+                for (let i = 0; i < userPidData.length; i++) {
+                    let current = userPidData[i];
+                    $('#LAY-user-back-userPid').append('<option value="' + current.id + '">' + current.username + '</option>')
+                }
+
+                // 表单渲染
+                form.render('select', 'LAY-user-back-form');
+            }
+        });
+        // 获取店铺数据
+        let shopData;
+        admin.req({
+            url: '/api/admin/msp/shop',
+            data: {},
+            done: function (res) {
+                shopData = res.data;
+
+                for (let i = 0; i < shopData.length; i++) {
+                    let current = shopData[i];
+                    $('#LAY-user-back-shop').append('<option value="' + current.id + '">' + current.shopName + '</option>')
+                }
+
+                // 表单渲染
+                form.render('select', 'LAY-user-back-form');
+            }
+        });
 
         // 表单渲染
         form.render(null, 'LAY-user-back-form');
@@ -163,6 +223,8 @@
         // 打开用户详情
         function openUserBackPopup(data) {
             data.roleData = roleData;
+            data.userPidData = userPidData;
+            data.shopData = shopData;
 
             admin.popup({
                 title: '用户详情',
@@ -190,6 +252,24 @@
 
                         // 表单渲染
                         form.render(null, 'LAY-user-back-form2');
+
+                        // 监听 类型单选框
+                        form.on('select(roleIdFilter)', function (obj) {
+                            let value = obj.value;
+                            $('#userPid0Div').addClass('layui-hide');
+                            $('#userPid1Div').addClass('layui-hide');
+                            $('#userPid2Div').addClass('layui-hide');
+                            $('#shopIdDiv').addClass('layui-hide');
+
+                            if (value === '1187637908193771521') {
+                            } else if (value === '1187637908193771522') {
+                                $('#userPid0Div').removeClass('layui-hide');
+                            } else if (value === '1187637908193771523') {
+                                $('#userPid1Div').removeClass('layui-hide');
+                            } else if (value === '1187637908193771524') {
+                                $('#shopIdDiv').removeClass('layui-hide');
+                            }
+                        });
 
                         // 表单监听 提交按钮
                         form.on('submit(LAY-user-back-save)', function (data) {

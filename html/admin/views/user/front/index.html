@@ -12,16 +12,6 @@
         <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-user-front-form">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label" style="width: auto;">账号类型</label>
-                    <div class="layui-input-inline">
-                        <select name="userType">
-                            <option value="">不限</option>
-                            <option value="0">普通账号</option>
-                            <option value="1">官方账号</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-inline">
                     <label class="layui-form-label" style="width: auto;">昵称</label>
                     <div class="layui-input-inline">
                         <input autocomplete="off" class="layui-input" name="username" placeholder="请输入昵称" type="text">
@@ -58,15 +48,6 @@
 
             <table id="LAY-user-front-table" lay-filter="LAY-user-front-table"></table>
 
-            <script id="typeTpl" type="text/html">
-                {{# if (d.userType === '0') { }}
-                <button class="layui-btn layui-btn-xs layui-btn-primary">普通账号</button>
-                {{# } else if (d.userType === '1') { }}
-                <button class="layui-btn layui-btn-xs layui-btn-primary">官方账号</button>
-                {{# } else { }}
-                <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
-                {{# } }}
-            </script>
             <script id="statusTpl" type="text/html">
                 {{# if (d.status === 'normal') { }}
                 <button class="layui-btn layui-btn-xs">正常</button>
@@ -79,7 +60,6 @@
             <script id="LAY-user-front-toolbar" type="text/html">
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="look">查看</a>
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="wallet">钱包</a>
                 {{# if (d.status === 'normal') { }}
                 <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="freeze">封号</a>
                 {{# } else { }}
@@ -98,16 +78,6 @@
             form = layui.form,
             table = layui.table,
             upload = layui.upload;
-
-        // 获取身份列表
-        let careerList;
-        admin.req({
-            url: '/api/manager/career/getCareerList',
-            data: {},
-            done: function (res) {
-                careerList = res.data;
-            }
-        });
 
         // 表单渲染
         form.render(null, 'LAY-user-front-form');
@@ -133,6 +103,8 @@
             url: '/api/admin/user/fronts',
             cols: [[
                 {title: '账号', field: 'userId'},
+                {title: '推荐人', field: 'userPname0'},
+                {title: '推荐人上级', field: 'userPname1'},
                 {title: '账号类型', field: 'userType', templet: '#typeTpl'},
                 {title: '昵称', field: 'username'},
                 {title: '手机号码', field: 'mobile'},
@@ -158,10 +130,6 @@
             if (obj.event === 'edit') {
                 openUserFrontPopup(data);
             }
-            // 钱包
-            if (obj.event === 'wallet') {
-                location.hash = '/error/404/';
-            }
             // 封号
             if (obj.event === 'freeze') {
                 openUserFrontPopup2(data);
@@ -172,8 +140,46 @@
             }
         });
 
+        // 获取用户数据
+        let userPidData;
+        admin.req({
+            url: '/api/admin/user/fronts',
+            data: {},
+            done: function (res) {
+                userPidData = res.data;
+
+                for (let i = 0; i < userPidData.length; i++) {
+                    let current = userPidData[i];
+                    $('#LAY-user-back-userPid').append('<option value="' + current.id + '">' + current.username + '</option>')
+                }
+
+                // 表单渲染
+                form.render('select', 'LAY-user-back-form');
+            }
+        });
+        // 获取店铺数据
+        let shopData;
+        admin.req({
+            url: '/api/admin/msp/shop',
+            data: {},
+            done: function (res) {
+                shopData = res.data;
+
+                for (let i = 0; i < shopData.length; i++) {
+                    let current = shopData[i];
+                    $('#LAY-user-back-shop').append('<option value="' + current.id + '">' + current.shopName + '</option>')
+                }
+
+                // 表单渲染
+                form.render('select', 'LAY-user-back-form');
+            }
+        });
+
         // 打开用户详情
         function openUserFrontPopup(data) {
+            data.userPidData = userPidData;
+            data.shopData = shopData;
+
             admin.popup({
                 title: '用户详情',
                 area: ['800px', '584px'],
@@ -203,6 +209,7 @@
 
                         // 监听保存
                         form.on('submit(LAY-user-front-save)', function (obj) {
+                            console.log(obj);
                             let field = obj.field;
                             for (let name in field) {
                                 if (name !== 'avatarFile') formData.set(name, field[name]);
@@ -219,16 +226,6 @@
                                     layer.msg(res.msg, {icon: 1});
                                     $('#LAY-user-front-search').click();
                                 }
-                            });
-                        });
-
-                        // 监听身份
-                        $('#LAY-user-front-popup').on('click', '#LAY-user-front-career', function () {
-                            // 打开用户职业详情
-                            openUserFrontPopup3({
-                                userId: data.userId,
-                                selected: $(this).data('value'),
-                                careerList: careerList
                             });
                         });
 
@@ -273,84 +270,6 @@
                         $('#LAY-user-front-search').click();
                     }
                 });
-            });
-        }
-
-        // 打开选择用户职业
-        function openUserFrontPopup3(data) {
-            admin.popup({
-                title: '选择用户职业',
-                area: ['350px', ''],
-                offset: '100px',
-                id: 'LAY-user-front-popup3',
-                success: function (layero, index) {
-                    view(this.id).render('user/front/form2', data).done(function () {
-                        // 监听选择
-                        $('#LAY-user-front-popup3').on('click', '.layui-btn-xs', function () {
-                            // 检查是否已选3个
-                            let length = 0;
-                            let current = this;
-                            $('#LAY-user-front-popup3 .layui-btn-warm').each(function (index, element) {
-                                if (current !== element) length++;
-                            });
-
-                            if (length === 3) return layer.msg('最多选择三个身份！');
-
-                            $(this).toggleClass('layui-btn-warm');
-                            $(this).toggleClass('layui-btn-primary');
-                        });
-
-                        // 监听保存
-                        $('#LAY-user-front-popup3').on('click', '#LAY-user-front-save2', function () {
-                            let reqData = {
-                                userId: data.userId,
-                                careerFirstId: null,
-                                careerSecondId: null,
-                                careerThirdId: null
-                            };
-                            let careerIds = '';
-                            let careerNames = '';
-
-                            $('#LAY-user-front-popup3 .layui-btn-warm').each(function (index, element) {
-                                if (index === 0) {
-                                    reqData.careerFirstId = $(element).data('value');
-                                    careerIds += reqData.careerFirstId;
-                                    careerNames += $(element).text();
-                                }
-                                if (index === 1) {
-                                    reqData.careerSecondId = $(element).data('value');
-                                    careerIds += ' | ' + reqData.careerSecondId;
-                                    careerNames += ' | ' + $(element).text();
-                                }
-                                if (index === 2) {
-                                    reqData.careerThirdId = $(element).data('value');
-                                    careerIds += ' | ' + reqData.careerThirdId;
-                                    careerNames += ' | ' + $(element).text();
-                                }
-                            });
-
-                            admin.req({
-                                url: '/api/admin/user/fronts/userCareer',
-                                type: 'put',
-                                data: reqData,
-                                done: function (res) {
-                                    layer.close(index);
-                                    layer.msg(res.msg, {icon: 1});
-
-                                    $('#LAY-user-front-career').data('value', careerIds);
-                                    $('#LAY-user-front-career').prev().html(careerNames);
-                                }
-                            });
-                        });
-
-                        // 监听返回
-                        $('#LAY-user-front-popup3').on('click', '#LAY-user-front-return2', function () {
-                            // 执行关闭
-                            layer.close(index);
-                        });
-
-                    });
-                }
             });
         }
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.msp.mapper.EvaluateMapper">
+
+    <select id="list" resultType="com.project.msp.entity.Evaluate">
+        SELECT
+            e.*,a0.*,o.*,s.*,p.*, su.username servicername
+        FROM
+              msp_evaluate e
+        LEFT JOIN USER a0 ON e.user_id = a0.user_id
+        LEFT JOIN system_user su ON e.servicer_id = su.id
+        LEFT JOIN msp_order o ON e.order_id = o.id
+        LEFT JOIN msp_shop s ON e.shop_id = s.id
+        LEFT JOIN msp_project p ON e.project_id = p.id
+    </select>
+
+    <select id="pageByEvaluateCond" resultType="com.project.msp.entity.Evaluate">
+        SELECT
+            e.*,a0.*,o.*,s.*,p.*, su.username servicername
+        FROM
+              msp_evaluate e
+        LEFT JOIN USER a0 ON e.user_id = a0.user_id
+        LEFT JOIN system_user su ON e.servicer_id = su.id
+        LEFT JOIN msp_order o ON e.order_id = o.id
+        LEFT JOIN msp_shop s ON e.shop_id = s.id
+        LEFT JOIN msp_project p ON e.project_id = p.id
+    </select>
+
+</mapper>

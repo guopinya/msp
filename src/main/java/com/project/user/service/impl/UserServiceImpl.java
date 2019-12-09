@@ -4,14 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.project.common.exception.BusinessException;
 import com.project.common.utils.HttpUtils;
 import com.project.user.entity.User;
 import com.project.user.entity.UserAuth;
-import com.project.user.entity.UserCareer;
 import com.project.user.mapper.UserAuthMapper;
-import com.project.user.mapper.UserCareerMapper;
 import com.project.user.mapper.UserMapper;
 import com.project.user.service.IUserService;
 import io.rong.RongCloud;
@@ -39,16 +38,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private String serverDomain;
     @Autowired
     private UserMapper userMapper;
-    //    @Autowired
-//    private BuyerMapper buyerMapper;
-//    @Autowired
-//    private SellerMapper sellerMapper;
-//    @Autowired
-//    private CabinetMapper cabinetMapper;
     @Autowired
     private UserAuthMapper userAuthMapper;
-    @Autowired
-    private UserCareerMapper userCareerMapper;
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -65,6 +56,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         u.setMobile(mobile);
 
         return userMapper.selectOne(new QueryWrapper<>(u));
+    }
+
+    /**
+     * 查询所有
+     *
+     * @see Wrappers#emptyWrapper()
+     */
+    @Override
+    public List<User> list(Wrapper<User> user) {
+        return userMapper.list(user);
     }
 
     /**
@@ -90,7 +91,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 .like(StringUtils.isNotBlank(username), User::getUsername, username)
                 .like(StringUtils.isNotBlank(mobile), User::getMobile, mobile)
                 .eq(StringUtils.isNotBlank(status), User::getStatus, status);
-        return userMapper.selectPage(page, wrapper);
+        //return userMapper.selectPage(page, wrapper);
+        return userMapper.pageByUserCond(page, wrapper);
     }
 
     /**
@@ -111,25 +113,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             user.setRyToken(getRyToken(user));
             user.setCreateTime(LocalDateTime.now());
             userMapper.insert(user);
-
-            // 新增职业
-            UserCareer userCareer = new UserCareer();
-            userCareer.setUserId(userId);
-            userCareerMapper.insert(userCareer);
-
-            // 新增用户授权
-            UserAuth ua = new UserAuth();
-            ua.setUserId(userId);
-            ua.setAuthType(UserAuth.TYPE_PLAINTEXT);
-            ua.setAuthSecret(password);
-            userAuthMapper.insert(ua);
-
-            // 新增用户授权
-            ua = new UserAuth();
-            ua.setUserId(userId);
-            ua.setAuthType(UserAuth.TYPE_PASSWORD);
-            ua.setAuthSecret(UserAuth.getPassword(password));
-            userAuthMapper.insert(ua);
 
             return null;
         });

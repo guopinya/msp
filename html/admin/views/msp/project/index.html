@@ -114,8 +114,35 @@
             openMspShopPopup({FORM_TYPE: 'post', parentId: '0'});
         });
 
+        function filterArray(data, parent) {
+            var tree = [];
+            var temp;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].parentId == parent) {
+                    var obj = data[i];
+                    temp = filterArray(data, data[i].id);
+                    if (temp.length > 0) {
+                        obj.subs = temp;
+                    }
+                    tree.push(obj);
+                }
+            }
+            return tree;
+        }
+
+        // 获取分类列表
+        let attrList;
+        admin.req({
+            url: '/api/admin/msp/attr/type/project',
+            data: {},
+            done: function (res) {
+                attrList = filterArray(res.data, 0);
+            }
+        });
+
         // 打开项目详情
         function openMspShopPopup(data) {
+            data.attrList = attrList;
             admin.popup({
                 title: '项目详情',
                 area: ['907px', ''],

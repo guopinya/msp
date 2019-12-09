@@ -55,8 +55,6 @@ public class BackController extends BaseController {
             user.setAvatar(User.VAL_USER_AVATAR_DEFAULT);
         }
 
-        user.setStatus("normal");
-        user.setCreateTime(LocalDateTime.now());
         // 添加用户
         sysUserService.save(user);
         return JsonResult.ok("添加后端用户成功", null);
@@ -74,6 +72,10 @@ public class BackController extends BaseController {
         // 检查头像文件
         if (avatarFile != null) {
             user.setAvatar(upload(avatarFile));
+        }
+        //超级管理员账号不能封掉
+        if (SysUser.DEFAULT_ID_SUPERADMIN.equals(user.getId())) {
+            user.setStatus("normal");
         }
 
         // 更新用户

@@ -14,6 +14,24 @@
                 </script>
             </div>
         </div>
+        <script template type="text/html">
+            <div class="layui-form-item">
+                <label class="layui-form-label">加盟商</label>
+                <div class="layui-input-block">
+                    <select name="parentId2">
+                        <option>请选择</option>
+                        {{# let userPidData = d.params.userPidData; }}
+                        {{# for (let i = 0; i < userPidData.length; i++) { }}
+                        {{# let current = userPidData[i]; }}
+                        {{# if (current.roleId == '1187637908193771523') { }}
+                        {{# let attribute = (current.id === d.params.parentId2) ? 'selected' : ''; }}
+                        <option value="{{ current.id }}" {{ attribute }}>{{ current.username }}</option>
+                        {{# } }}
+                        {{# } }}
+                    </select>
+                </div>
+            </div>
+        </script>
         <div class="layui-col-md6">
             <label class="layui-form-label">编号</label>
             <div class="layui-input-block">
@@ -27,28 +45,13 @@
             <label class="layui-form-label">营业时间</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    <input type="text" name="stime" id="timeRangeSelect" value="{{ d.params.stime || '' }} - {{ d.params.etime || '' }}"
+                    <input type="text" name="stime" id="timeRangeSelect"
+                           value="{{ d.params.stime || '' }} - {{ d.params.etime || '' }}"
                            lay-verify="required"
                            placeholder="请选择营业时间" autocomplete="off" class="layui-input">
                 </script>
             </div>
         </div>
-        <!--<div class="layui-col-md6 layui-inline">
-            <label class="layui-form-label">营业时间</label>
-            <div class="layui-input-block">
-                <script template type="text/html">
-                    <div class="layui-input-inline" style="width: 40%;">
-                        <input type="text" name="stime" id="test" value="{{ d.params.stime || '' }}" lay-verify="required"
-                               placeholder="请选择开始营业时间" autocomplete="off" class="layui-input">
-                    </div>
-                    <div class="layui-form-mid">-</div>
-                    <div class="layui-input-inline" style="width: 40%;">
-                        <input type="text" name="etime" value="{{ d.params.etime || '' }}" lay-verify="required"
-                               placeholder="请选择结束营业时间" autocomplete="off" class="layui-input">
-                    </div>
-                </script>
-            </div>
-        </div>-->
 
         <div class="layui-col-md6">
             <label class="layui-form-label">营业状态</label>
@@ -56,9 +59,55 @@
                 <script template type="text/html">
                     {{# let current = d.params.state || ''; }}
                     {{# let attribute0 = (current === 'open' || !current) ? 'checked' : ''; }}
-                    <input type="radio" name="state" value="open" title="营业" {{ attribute0 }}>
+                    <input type="radio" name="state" value="open" title="营业中" disabled {{ attribute0 }}>
                     {{# let attribute1 = (current === 'off') ? 'checked' : ''; }}
-                    <input type="radio" name="state" value="off" title="歇息" {{ attribute1 }}>
+                    <input type="radio" name="state" value="off" title="歇息中" disabled {{ attribute1 }}>
+                </script>
+            </div>
+        </div>
+
+        <div class="layui-col-md6">
+            <label class="layui-form-label">地区</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <select name="areaId" lay-search>
+                        <option value="">请选择所属地</option>
+                        {{# let areaList0 = d.params.areaList; }}
+                        {{# if(!!areaList0){ }}
+                        {{# for (let i0 = 0; i0 < areaList0.length; i0++) { }}
+                        <optgroup label="{{ areaList0[i0].areaName }}">
+
+                            {{# let areaList1 = areaList0[i0].subs; }}
+                            {{# if(!!areaList1){ }}
+                            {{# for (let i1 = 0; i1 < areaList1.length; i1++) { }}
+                            <optgroup label="{{ areaList1[i1].areaName }}">
+
+                                {{# let areaList2 = areaList1[i1].subs; }}
+                                {{# if(!!areaList2){ }}
+                                {{# for (let i2 = 0; i2 < areaList2.length; i2++) { }}
+                                <optgroup label="{{ areaList2[i2].areaName }}">
+
+                                    {{# let areaList3 = areaList2[i2].subs; }}
+                                    {{# if(!!areaList3){ }}
+                                    {{# for (let i3 = 0; i3 < areaList3.length; i3++) { }}
+                                    {{# let attribute = (d.params.areaId === areaList3[i3].id) ? 'selected' : ''; }}
+                                    <option value="{{ areaList3[i3].id }}" {{ attribute }}>{{ areaList3[i3].areaName }}
+                                    </option>
+                                    {{# } }}
+                                    {{# } }}
+
+                                </optgroup>
+                                {{# } }}
+                                {{# } }}
+
+                            </optgroup>
+                            {{# } }}
+                            {{# } }}
+
+                        </optgroup>
+                        {{# } }}
+                        {{# } }}
+                    </select>
                 </script>
             </div>
         </div>

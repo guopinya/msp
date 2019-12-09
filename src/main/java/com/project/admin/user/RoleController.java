@@ -47,7 +47,7 @@ public class RoleController extends BaseController {
      */
     @PostMapping
     public JsonResult addToRole(Role role) {
-        // 添加角色
+        role.setIsSet("no");
         roleService.save(role);
         return JsonResult.ok("添加用户角色成功", null);
     }
@@ -60,7 +60,11 @@ public class RoleController extends BaseController {
      */
     @PutMapping
     public JsonResult modifyRole(Role role) {
-        // 更新角色
+        if (Role.DEFAULT_ID_DISTRICT.equals(role.getId()) || Role.DEFAULT_ID_AGENT.equals(role.getId())
+                || Role.DEFAULT_ID_SUPERVISION.equals(role.getId()) || Role.DEFAULT_ID_FRANCHISEE.equals(role.getId())) {
+            return JsonResult.fail("固定身份角色不能修改哟", null);
+        }
+        role.setIsSet("no");
         roleService.updateById(role);
         return JsonResult.ok("修改用户角色成功", null);
     }

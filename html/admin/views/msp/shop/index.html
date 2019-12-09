@@ -68,19 +68,21 @@
             </script>
             <script id="stateTpl" type="text/html">
                 {{# let state = d.state; }}
+                {{# let stateFlag = d.stateFlag; }}
                 {{# if (state === 'open') { }}
-                <button class="layui-btn layui-btn-xs layui-btn-primary">营业</button>
+                <button class="layui-btn layui-btn-xs layui-btn-primary">营业中</button>
                 {{# } else if (state === 'off') { }}
-                <button class="layui-btn layui-btn-xs layui-btn-primary">歇息</button>
+                <button class="layui-btn layui-btn-xs layui-btn-primary">歇息中</button>
+                {{# if (stateFlag === 'manual') { }}<em style="font-size: 1px;color: #5FB878;">手动</em>{{# } }}
                 {{# } else { }}
                 <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
                 {{# } }}
             </script>
             <script id="isHotTpl" type="text/html">
-                {{# let state = d.isHot; }}
-                {{# if (state === 'yes') { }}
+                {{# let isHot = d.isHot; }}
+                {{# if (isHot === 'yes') { }}
                 <button class="layui-btn layui-btn-xs layui-btn-primary">是</button>
-                {{# } else if (state === 'no') { }}
+                {{# } else if (isHot === 'no') { }}
                 <button class="layui-btn layui-btn-xs layui-btn-primary">否</button>
                 {{# } else { }}
                 <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
@@ -88,13 +90,19 @@
             </script>
             <script id="LAY-msp-shop-toolbar" type="text/html">
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
+                {{# let state = d.state; }}
+                {{# if (state === 'open') { }}
+                <a class="layui-btn layui-btn-xs layui-btn-checked" lay-event="off">进入歇息</a>
+                {{# } else  { }}
+                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="open">开始营业</a>
+                {{# } }}
             </script>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    layui.use(['form', 'table', 'upload', 'laydate', 'tinymce'], function () {
+    layui.use(['form', 'table', 'upload', 'laydate', 'tinymce', 'layer'], function () {
         let $ = layui.$,
             view = layui.view,
             admin = layui.admin,
@@ -103,6 +111,7 @@
             laydate = layui.laydate;
         let upload = layui.upload;
         let tinymce = layui.tinymce;
+        var layer = layui.layer;
 
         // 表单渲染
         form.render(null, 'LAY-msp-shop-form');
@@ -125,9 +134,9 @@
                 {title: '店名', field: 'shopName'},
                 {title: '地址', field: 'addr'},
                 {title: '联系电话', field: 'phone'},
-                /* {title: '营业状态', field: 'state'},*/
                 {title: '营业状态', templet: '#stateTpl'},
                 {title: '是否热门', templet: '#isHotTpl'},
+                {title: '开店时间', field: 'initTime'},
                 {title: '排序数字', field: 'sortNumber'},
                 {title: '操作', align: 'center', toolbar: '#LAY-msp-shop-toolbar'}
             ]],
@@ -138,6 +147,7 @@
         // 表格监听 工具条
         table.on('tool(LAY-msp-shop-table)', function (obj) {
             let data = obj.data;
+            console.log(data);
             // 图片
             if (obj.event === 'img') {
                 layer.photos({
@@ -150,7 +160,59 @@
                 // 打开身份详情
                 openMspShopPopup(data);
             }
+            // 修改状态
+            if (obj.event === 'open') {
+                changeShopState({id: data.id, state: 'open'});
+            }
+            if (obj.event === 'off') {
+                changeShopState({id: data.id, state: 'off'});
+            }
         });
+
+        // 获取用户数据
+        let userPidData;
+        admin.req({
+            url: '/api/admin/user/backs',
+            data: {},
+            done: function (res) {
+                userPidData = res.data;
+
+                for (let i = 0; i < userPidData.length; i++) {
+                    let current = userPidData[i];
+                    $('#LAY-user-back-userPid').append('<option value="' + current.id + '">' + current.username + '</option>')
+                }
+
+                // 表单渲染
+                form.render('select', 'LAY-user-back-form');
+            }
+        });
+
+        // 打开店铺详情
+        function changeShopState(data) {
+            var content = '确认更开始营业？';
+            if (data.state === 'off')
+                content = '确认要停止营业（手动歇业需要手动改回营业状态）？';
+            layer.open({
+                title: '更改营业状态？',
+                content: content,
+                btn: ['确定', '取消'],
+                yes: function (index, layero) {
+                    admin.req({
+                        url: '/api/admin/msp/shop/state',
+                        type: 'put',
+                        data: {
+                            id: data.id,
+                        },
+                        done: function (res) {
+                            layer.close(index);
+                            layer.msg(res.msg, {icon: 1});
+                            $('#LAY-msp-shop-search').click();
+                        }
+                    })
+                    ;
+                }
+            });
+        }
 
         // 监听 添加按钮
         $('#LAY-msp-shop-add').on('click', function () {
@@ -158,8 +220,36 @@
             openMspShopPopup({FORM_TYPE: 'post', parentId: '0'});
         });
 
+        function filterArray(data, parent) {
+            var tree = [];
+            var temp;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].parentId == parent) {
+                    var obj = data[i];
+                    temp = filterArray(data, data[i].id);
+                    if (temp.length > 0) {
+                        obj.subs = temp;
+                    }
+                    tree.push(obj);
+                }
+            }
+            return tree;
+        }
+
+        // 获取地区列表
+        let areaList;
+        admin.req({
+            url: '/api/admin/system/area',
+            data: {},
+            done: function (res) {
+                areaList = filterArray(res.data, 0);
+            }
+        });
+
         // 打开店铺详情
         function openMspShopPopup(data) {
+            data.areaList = areaList;
+            data.userPidData = userPidData;
             admin.popup({
                 title: '店铺详情',
                 area: ['907px', ''],

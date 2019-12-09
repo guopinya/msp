@@ -41,14 +41,17 @@
                     <select name="areaId" lay-search>
                         <option value="">请选择所属地</option>
                         {{# let areaList0 = d.params.areaList; }}
+                        {{# if(!!areaList0){ }}
                         {{# for (let i0 = 0; i0 < areaList0.length; i0++) { }}
                         <optgroup label="{{ areaList0[i0].areaName }}">
 
                             {{# let areaList1 = areaList0[i0].subs; }}
+                            {{# if(!!areaList1){ }}
                             {{# for (let i1 = 0; i1 < areaList1.length; i1++) { }}
                             <optgroup label="{{ areaList1[i1].areaName }}">
 
                                 {{# let areaList2 = areaList1[i1].subs; }}
+                                {{# if(!!areaList2){ }}
                                 {{# for (let i2 = 0; i2 < areaList2.length; i2++) { }}
                                 <optgroup label="{{ areaList2[i2].areaName }}">
 
@@ -63,11 +66,14 @@
 
                                 </optgroup>
                                 {{# } }}
+                                {{# } }}
 
                             </optgroup>
                             {{# } }}
+                            {{# } }}
 
                         </optgroup>
+                        {{# } }}
                         {{# } }}
                     </select>
                 </script>

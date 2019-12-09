@@ -1,8 +1,12 @@
 package com.project.user.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.project.user.entity.User;
+
+import java.util.List;
 
 /**
  * 用户表 服务类
@@ -12,6 +16,7 @@ import com.project.user.entity.User;
  */
 public interface IUserService extends IService<User> {
 
+
     /**
      * 通过手机号获取
      *
@@ -19,6 +24,13 @@ public interface IUserService extends IService<User> {
      * @return 用户
      */
     User getByMobile(String mobile);
+
+    /**
+     * 查询所有
+     *
+     * @see Wrappers#emptyWrapper()
+     */
+    List<User> list(Wrapper<User> user);
 
     /**
      * 按用户条件分页
@@ -61,15 +73,6 @@ public interface IUserService extends IService<User> {
      * @param password 密码
      */
     void modifyPassword(String userId, String password);
-
-    /**
-     * 翻页查询
-     *
-     * @param page 分页条件
-     * @param word 关键字
-     * @return 用户分页
-     */
-    //IPage searchUserByWord(IPage page, String word);
 
     /**
      * 判断能否发布

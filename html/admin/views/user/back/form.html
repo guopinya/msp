@@ -20,7 +20,8 @@
         <label class="layui-form-label">角色</label>
         <div class="layui-input-block">
             <script template type="text/html">
-                <select name="roleId">
+                <select name="roleId" lay-filter="roleIdFilter">
+                    <option>请选择</option>
                     {{# let roleData = d.params.roleData; }}
                     {{# for (let i = 0; i < roleData.length; i++) { }}
                     {{# let current = roleData[i]; }}
@@ -31,6 +32,63 @@
             </script>
         </div>
     </div>
+    <script template type="text/html">
+        {{# let isHide = ('1187637908193771522' === d.params.roleId) ? '' : 'layui-hide'; }}
+        <div class="layui-form-item  {{ isHide }}" id="userPid0Div">
+            <label class="layui-form-label">区代理</label>
+            <div class="layui-input-block">
+                <select name="userPid0">
+                    <option>请选择</option>
+                    {{# let userPidData = d.params.userPidData; }}
+                    {{# for (let i = 0; i < userPidData.length; i++) { }}
+                    {{# let current = userPidData[i]; }}
+                    {{# if (current.roleId == '1187637908193771521') { }}
+                    {{# let attribute = (current.id === d.params.userPid0) ? 'selected' : ''; }}
+                    <option value="{{ current.id }}" {{ attribute }}>{{ current.username }}</option>
+                    {{# } }}
+                    {{# } }}
+                </select>
+            </div>
+        </div>
+    </script>
+    <script template type="text/html">
+        {{# let isHide = ('1187637908193771523' === d.params.roleId) ? '' : 'layui-hide'; }}
+        <div class="layui-form-item {{ isHide }}" id="userPid1Div">
+            <label class="layui-form-label">督导</label>
+            <div class="layui-input-block">
+                <select name="userPid1">
+                    <option>请选择</option>
+                    {{# let userPidData = d.params.userPidData; }}
+                    {{# for (let i = 0; i < userPidData.length; i++) { }}
+                    {{# let current = userPidData[i]; }}
+                    {{# if (current.roleId == '1187637908193771522') { }}
+                    {{# let attribute = (current.id === d.params.userPid0) ? 'selected' : ''; }}
+                    <option value="{{ current.id }}" {{ attribute }}>{{ current.username }}</option>
+                    {{# } }}
+                    {{# } }}
+                </select>
+            </div>
+        </div>
+    </script>
+
+    <script template type="text/html">
+        {{# let isHide = ('1187637908193771524' === d.params.roleId) ? '' : 'layui-hide'; }}
+        <div class="layui-form-item {{ isHide }}" id="shopIdDiv">
+            <label class="layui-form-label">店铺</label>
+            <div class="layui-input-block">
+                <select name="shopId">
+                    <option>请选择</option>
+                    {{# let shopData = d.params.shopData; }}
+                    {{# for (let i = 0; i < shopData.length; i++) { }}
+                    {{# let current = shopData[i]; }}
+                    {{# let attribute = (current.id === d.params.shopId) ? 'selected' : ''; }}
+                    <option value="{{ current.id }}" {{ attribute }}>{{ current.shopName }}</option>
+                    {{# } }}
+                </select>
+            </div>
+        </div>
+    </script>
+
     <div class="layui-form-item">
         <label class="layui-form-label">用户名</label>
         <div class="layui-input-block">

@@ -19,12 +19,32 @@ import java.time.LocalDateTime;
 public class SysUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    /**
+     * 区代理
+     */
+    public static final String DEFAULT_ID_SUPERADMIN = "1157124509135577090";
 
     /**
      * 用户ID
      */
     @TableId
     private String id;
+    /**
+     * 上级id
+     */
+    private String userPid0;
+    /**
+     * 上级id
+     */
+    private String userPid1;
+    /**
+     * 上级id
+     */
+    private String userPid2;
+    /**
+     * 店铺id
+     */
+    private String shopId;
 
     /**
      * 角色ID

@@ -13,6 +13,13 @@ import com.project.system.entity.SysUser;
 public interface ISysUserService extends IService<SysUser> {
 
     /**
+     * 保存
+     *
+     * @param sysUser 实体对象
+     */
+    boolean save(SysUser sysUser);
+
+    /**
      * 通过用户名获得
      *
      * @param username 用户名

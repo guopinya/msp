@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.msp.entity.Shop;
 import lombok.Data;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -54,18 +55,29 @@ public class User implements Serializable {
     @TableId
     private String userId;
     /**
+     * 所属店铺id
+     */
+    private String shopId;
+    /**
      * 上级id
      */
     private String userPid0;
     /**
-     * 上级id
+     * 直接推荐人id
      */
     private String userPid1;
     /**
+     * 所属店铺id
+     */
+    private String shopName;
+    /**
      * 上级id
      */
-    private String userPid2;
-
+    private String userPname0;
+    /**
+     * 直接推荐人id
+     */
+    private String userPname1;
     /**
      * 用户类型
      */

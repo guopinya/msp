@@ -26,9 +26,13 @@
             <div id="LAY-user-role-permit"></div>
         </div>
     </div>
-
-    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
-        <input class="layui-btn" lay-filter="LAY-user-role-save" lay-submit readonly value="保存">
-        <input class="layui-btn layui-btn-primary" id="LAY-user-role-return" readonly value="返回">
-    </div>
+    <script template type="text/html">
+        <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+            {{# let isSet = d.params.isSet; }}
+            {{# if (isSet != 'yes') { }}
+            <input class="layui-btn" lay-filter="LAY-user-role-save" lay-submit readonly value="保存">
+            {{# } }}
+            <input class="layui-btn layui-btn-primary" id="LAY-user-role-return" readonly value="返回">
+        </div>
+    </script>
 </div>

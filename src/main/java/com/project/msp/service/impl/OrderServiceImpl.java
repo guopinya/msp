@@ -27,9 +27,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public IPage<Order> pageByOrderCond(IPage<Order> page, Order order) {
         String orderNo = order.getOrderNo();
+        String projectName = order.getOrderProjectName();
+        String shopName = order.getOrderShopName();
 
         Wrapper<Order> wrapper = new QueryWrapper<Order>().lambda()
-                .eq(StringUtils.isNotBlank(orderNo), Order::getOrderNo, orderNo);
+                .like(StringUtils.isNotBlank(orderNo), Order::getOrderNo, orderNo)
+                .like(StringUtils.isNotBlank(projectName), Order::getOrderProjectName, projectName)
+                .like(StringUtils.isNotBlank(shopName), Order::getOrderShopName, shopName);
         return attrMapper.selectPage(page, wrapper);
     }
 

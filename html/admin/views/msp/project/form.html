@@ -45,6 +45,34 @@
         </div>
 
         <div class="layui-col-md6">
+            <label class="layui-form-label">分类</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <select name="attrId" lay-search>
+                        <option value="">请选择分类</option>
+                        {{# let attrList2 = d.params.attrList; }}
+                        {{# if(!!attrList2){ }}
+                        {{# for (let i2 = 0; i2 < attrList2.length; i2++) { }}
+                        <optgroup label="{{ attrList2[i2].attrName }}">
+
+                            {{# let attrList3 = attrList2[i2].subs; }}
+                            {{# if(!!attrList3){ }}
+                            {{# for (let i3 = 0; i3 < attrList3.length; i3++) { }}
+                            {{# let attribute = (d.params.attrId === attrList3[i3].id) ? 'selected' : ''; }}
+                            <option value="{{ attrList3[i3].id }}" {{ attribute }}>{{ attrList3[i3].attrName }}
+                            </option>
+                            {{# } }}
+                            {{# } }}
+
+                        </optgroup>
+                        {{# } }}
+                        {{# } }}
+                    </select>
+                </script>
+            </div>
+        </div>
+
+        <div class="layui-col-md6">
             <label class="layui-form-label">标签</label>
             <div class="layui-input-block">
                 <script template type="text/html">
@@ -82,7 +110,7 @@
             <label class="layui-form-label">富文本</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    <textarea id="LAY-msp-project-richText" name="detail">{{ d.params.detail || '' }}</textarea>
+                    <textattr id="LAY-msp-project-richText" name="detail">{{ d.params.detail || '' }}</textattr>
                 </script>
             </div>
         </div>

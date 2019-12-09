@@ -34,9 +34,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     public IPage<Role> pageByRoleCond(IPage<Role> page, Role role) {
         // 角色名称
         String name = role.getName();
+        String isSet = role.getIsSet();
 
         Wrapper<Role> wrapper = new QueryWrapper<Role>().lambda()
-                .like(StringUtils.isNotBlank(name), Role::getName, name);
+                .like(StringUtils.isNotBlank(name), Role::getName, name)
+                .eq(StringUtils.isNotBlank(isSet), Role::getIsSet, isSet);
         return roleMapper.selectPage(page, wrapper);
     }
 }

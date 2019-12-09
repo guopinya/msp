@@ -9,6 +9,9 @@ import com.project.msp.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @RestController("orderController")
 @RequestMapping("/admin/msp/order")
 public class OrderController extends BaseController {
@@ -49,6 +52,38 @@ public class OrderController extends BaseController {
      */
     @PutMapping
     public JsonResult modifyOrder(Order order) {
+        orderService.updateById(order);
+        return JsonResult.ok("修改订单成功", order);
+    }
+
+    /**
+     * 修改订单
+     *
+     * @param order 订单
+     * @return 操作结果
+     */
+    @PutMapping("preTime")
+    public JsonResult modifyOrder_preTime(Order order) {
+        Date preTime = order.getPreTime();
+        order = orderService.getById(order.getId());
+        order.setPreTime(preTime);
+        orderService.updateById(order);
+        return JsonResult.ok("修改订单成功", order);
+    }
+
+    /**
+     * 修改订单
+     *
+     * @param order 订单
+     * @return 操作结果
+     */
+    @PutMapping("servicer")
+    public JsonResult modifyOrder_servicer(Order order) {
+        String servicerId = order.getServicerId();
+        order = orderService.getById(order.getId());
+        order.setSuccTime(new Date());
+        order.setState("30");
+        order.setServicerId(servicerId);
         orderService.updateById(order);
         return JsonResult.ok("修改订单成功", order);
     }

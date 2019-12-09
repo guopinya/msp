@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
-
 @RestController("shopController")
 @RequestMapping("/admin/msp/shop")
 public class ShopController extends BaseController {
@@ -45,8 +43,6 @@ public class ShopController extends BaseController {
         shop.setImage(upload(imageFile));
         String sTime = shop.getStime();
         if (StringUtils.isNotBlank(sTime)) {
-            System.out.println(sTime);
-            System.out.println(sTime.split(" - "));
             shop.setStime(sTime.split(" - ")[0]);
             shop.setEtime(sTime.split(" - ")[1]);
         }
@@ -66,10 +62,28 @@ public class ShopController extends BaseController {
         shop.setImage(upload(imageFile));
         String sTime = shop.getStime();
         if (StringUtils.isNotBlank(sTime)) {
-            System.out.println(sTime);
-            System.out.println(sTime.split(" - "));
             shop.setStime(sTime.split(" - ")[0]);
             shop.setEtime(sTime.split(" - ")[1]);
+        }
+        shopService.updateById(shop);
+        return JsonResult.ok("修改店铺成功", shop);
+    }
+
+    /**
+     * 修改店铺
+     *
+     * @param shop 店铺
+     * @return 操作结果
+     */
+    @PutMapping("/state")
+    public JsonResult modifyShopState(Shop shop) {
+        shop = shopService.getById(shop.getId());
+        if ("open".equals(shop.getState())) {
+            shop.setState("off");
+            shop.setStateFlag("manual");
+        } else {
+            shop.setState("open");
+            shop.setStateFlag("auto");
         }
         shopService.updateById(shop);
         return JsonResult.ok("修改店铺成功", shop);

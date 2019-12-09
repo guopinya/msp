@@ -13,13 +13,20 @@
 
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-msp-order-form">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-msp-evaluate-form">
             <div class="layui-form-item">
 
                 <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">用户信息</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="evaluateNo" placeholder="请输入用户信息"
+                               type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
                     <label class="layui-form-label" style="width: auto">单号</label>
                     <div class="layui-input-inline">
-                        <input autocomplete="off" class="layui-input" name="orderNo" placeholder="请输入单号" type="text">
+                        <input autocomplete="off" class="layui-input" name="evaluateNo" placeholder="请输入单号" type="text">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -36,9 +43,16 @@
                                type="text">
                     </div>
                 </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">艺人信息</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="evaluateNo" placeholder="请输入艺人信息"
+                               type="text">
+                    </div>
+                </div>
 
                 <div class="layui-inline" style="vertical-align: bottom;">
-                    <button class="layui-btn" id="LAY-msp-order-search" lay-filter="LAY-msp-order-search"
+                    <button class="layui-btn" id="LAY-msp-evaluate-search" lay-filter="LAY-msp-evaluate-search"
                             lay-submit>搜索
                     </button>
                 </div>
@@ -46,10 +60,10 @@
         </div>
         <div class="layui-card-body">
             <div style="padding-bottom: 10px;">
-                <button class="layui-btn" id="LAY-msp-order-add">添加</button>
+                <button class="layui-btn" id="LAY-msp-evaluate-add">添加</button>
             </div>
 
-            <table id="LAY-msp-order-table" lay-filter="LAY-msp-order-table"></table>
+            <table id="LAY-msp-evaluate-table" lay-filter="LAY-msp-evaluate-table"></table>
 
             <script id="imageTpl" type="text/html">
                 <img style="height: 100%;" src="{{ '/api' + d.projectImage }}" alt="" lay-event="img">
@@ -68,7 +82,7 @@
                 <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
                 {{# } }}
             </script>
-            <script id="LAY-msp-order-toolbar" type="text/html">
+            <script id="LAY-msp-evaluate-toolbar" type="text/html">
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
             </script>
         </div>
@@ -85,53 +99,37 @@
         var element = layui.element;
         var laydate = layui.laydate;
 
-        // 获取用户数据
-        let userPidData;
-        admin.req({
-            url: '/api/admin/user/backs',
-            data: {},
-            done: function (res) {
-                userPidData = res.data;
-
-                for (let i = 0; i < userPidData.length; i++) {
-                    let current = userPidData[i];
-                    $('#LAY-user-back-userPid').append('<option value="' + current.id + '">' + current.username + '</option>')
-                }
-
-                // 表单渲染
-                form.render('select', 'LAY-user-back-form');
-            }
-        });
-
         // 表单渲染
-        form.render(null, 'LAY-msp-order-form');
+        form.render(null, 'LAY-msp-evaluate-form');
 
         // 表单监听 搜索按钮
-        form.on('submit(LAY-msp-order-search)', function (obj) {
+        form.on('submit(LAY-msp-evaluate-search)', function (obj) {
             // 执行重载
-            table.reload('LAY-msp-order-table', {
+            table.reload('LAY-msp-evaluate-table', {
                 where: obj.field
             });
         });
 
         // 表格渲染
         table.render({
-            elem: '#LAY-msp-order-table',
-            url: '/api/admin/msp/order',
+            elem: '#LAY-msp-evaluate-table',
+            url: '/api/admin/msp/evaluate',
             cols: [[
+                {title: '用户', field: 'username'},
                 {title: '单号', field: 'orderNo'},
+                {title: '项目', field: 'projectName'},
+                {title: '店铺', field: 'shopName'},
+                {title: '艺人', field: 'servicername'},
                 {title: '状态', templet: '#stateTpl'},
-                {title: '项目', templet: '#imageTpl'},
-                {title: '项目名', field: 'projectName'},
-                {title: '下单时间', field: 'initTime'},
-                {title: '操作', align: 'center', toolbar: '#LAY-msp-order-toolbar'}
+                {title: '评价时间', field: 'initTime'},
+                {title: '操作', align: 'center', toolbar: '#LAY-msp-evaluate-toolbar'}
             ]],
             page: true,
             text: {none: '暂无相关数据！'}
         });
 
         // 表格监听 工具条
-        table.on('tool(LAY-msp-order-table)', function (obj) {
+        table.on('tool(LAY-msp-evaluate-table)', function (obj) {
             let data = obj.data;
             // 图片
             if (obj.event === 'img') {
@@ -148,23 +146,21 @@
         });
 
         // 监听 添加按钮
-        $('#LAY-msp-order-add').on('click', function () {
+        $('#LAY-msp-evaluate-add').on('click', function () {
             // 打开订单详情
             openMspShopPopup({FORM_TYPE: 'post', parentId: '0'});
         });
 
         // 打开订单详情
         function openMspShopPopup(data) {
-            data.userPidData = userPidData;
-
             admin.popup({
                 title: '订单详情',
                 area: ['907px', ''],
                 offset: '100px',
-                id: 'LAY-msp-order-popup',
+                id: 'LAY-msp-evaluate-popup',
                 success: function (layero, index) {
                     console.log(data);
-                    view(this.id).render('msp/order/form', data).done(function () {
+                    view(this.id).render('msp/evaluate/form', data).done(function () {
                         let formData = new FormData();
 
                         //折叠面板
@@ -172,73 +168,27 @@
 
                         //时间选择器
                         laydate.render({
-                            elem: '#preTime',
+                            elem: '#initTime',
                             type: 'datetime',
                             format: 'yyyy-MM-dd HH:mm:ss'
                         });
 
                         // 表单渲染
-                        form.render(null, 'LAY-msp-order-form2');
-
-                        // 表单监听 预约时间按钮
-                        form.on('submit(LAY-msp-order-savePreTime)', function (obj) {
-                            let field = obj.field; //获取提交的字段
-
-                            for (let name in field) {
-                                if (name == 'id' || name == 'preTime')
-                                    formData.set(name, field[name]);
-                            }
-
-                            admin.req({
-                                url: '/api/admin/msp/order/preTime',
-                                type: data.FORM_TYPE,
-                                data: formData,
-                                contentType: false,
-                                processData: false,
-                                done: function (res) {
-                                    layer.close(index);
-                                    layer.msg(res.msg, {icon: 1});
-                                    $('#LAY-msp-order-search').click();
-                                }
-                            });
-                        });
-
-                        // 表单监听 保存艺人按钮
-                        form.on('submit(LAY-msp-order-saveServicer)', function (obj) {
-                            let field = obj.field; //获取提交的字段
-
-                            for (let name in field) {
-                                if (name == 'id' || name == 'servicerId')
-                                    formData.set(name, field[name]);
-                            }
-
-                            admin.req({
-                                url: '/api/admin/msp/order/servicer',
-                                type: data.FORM_TYPE,
-                                data: formData,
-                                contentType: false,
-                                processData: false,
-                                done: function (res) {
-                                    layer.close(index);
-                                    layer.msg(res.msg, {icon: 1});
-                                    $('#LAY-msp-order-search').click();
-                                }
-                            });
-                        });
+                        form.render(null, 'LAY-msp-evaluate-form2');
 
                         // 表单监听 保存按钮
-                        form.on('submit(LAY-msp-order-save)', function (obj) {
+                        form.on('submit(LAY-msp-evaluate-save)', function (obj) {
                             let field = obj.field; //获取提交的字段
 
                             for (let name in field) {
-                                if (name == 'preTime') {
-                                } else if (name == 'servicerId') {
-                                } else
-                                    formData.set(name, field[name]);
+                                /*if (name == 'initTime') {
+                                } else if (name == 'detail') {
+                                } else*/
+                                formData.set(name, field[name]);
                             }
 
                             admin.req({
-                                url: '/api/admin/msp/order',
+                                url: '/api/admin/msp/evaluate',
                                 type: data.FORM_TYPE,
                                 data: formData,
                                 contentType: false,
@@ -246,13 +196,13 @@
                                 done: function (res) {
                                     layer.close(index);
                                     layer.msg(res.msg, {icon: 1});
-                                    $('#LAY-msp-order-search').click();
+                                    $('#LAY-msp-evaluate-search').click();
                                 }
                             });
                         });
 
                         // 监听 返回按钮
-                        $('#LAY-msp-order-popup').on('click', '#LAY-msp-order-return', function () {
+                        $('#LAY-msp-evaluate-popup').on('click', '#LAY-msp-evaluate-return', function () {
                             // 执行关闭
                             layer.close(index);
                         });

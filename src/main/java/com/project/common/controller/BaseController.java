@@ -11,6 +11,9 @@ import com.project.common.utils.ImageUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.Graphics;
@@ -22,10 +25,14 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyEditorSupport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -41,6 +48,40 @@ public class BaseController {
 
     @Autowired
     private FileInfoMapper fileInfoMapper;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        //SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //binder.registerCustomEditor(Date.class, new CustomDateEditor(format, true));
+        /**
+         * * 自动转换日期类型的字段格式
+         */
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        binder.registerCustomEditor(Date.class, new DateEditor());
+    }
+
+    private class DateEditor extends PropertyEditorSupport {
+        @Override
+        public void setAsText(String text) throws IllegalArgumentException {
+            //转换yyyy-MM-dd HH:mm:ss格式数据
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = null;
+            //如果不为空就格式化
+            if (!StringUtils.isEmpty(text)) {
+                try {
+                    date = format.parse(text);
+                } catch (ParseException e) {
+                    //转换为yyyy-MM-dd格式数据
+                    format = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        date = format.parse(text);
+                    } catch (ParseException e1) {
+                    }
+                }
+            }
+            setValue(date);
+        }
+    }
 
     /**
      * mybatis-plus分页封装

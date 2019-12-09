@@ -1,0 +1,104 @@
+<style>
+    .layui-form-label-second {
+        float: left;
+        display: block;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: right;
+        padding: 9px 0px;
+        position: relative;
+    }
+</style>
+<div class="layui-form" lay-filter="LAY-msp-evaluate-form2" style="padding: 20px 40px 0 0;">
+    <script template type="text/html">
+        <input type="hidden" name="id" value="{{ d.params.id || '' }}">
+        <input type="hidden" name="parentId" value="{{ d.params.parentId || '' }}">
+    </script>
+
+    <script template type="text/html">
+        <div class="layui-form-item">
+            <div class="layui-collapse" lay-filter="test">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">买家信息：{{d.params.projectName || ' ' }}</h2>
+                    <div class="layui-colla-content">
+                        <p> 昵称：{{d.params.projectName || ' ' }} ，电话：{{
+                            d.params.projectTag || ' ' }} ，真实姓名：{{ d.params.projectPrice || ' ' }}</p>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">订单信息：{{d.params.orderNo || ' ' }}</h2>
+                    <div class="layui-colla-content">
+                        <p> 昵称：{{d.params.projectName || ' ' }} ，电话：{{
+                            d.params.projectTag || ' ' }} ，真实姓名：{{ d.params.projectPrice || ' ' }}</p>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">项目：{{d.params.projectName || ' ' }} </h2>
+                    <div class="layui-colla-content">
+                        {{# let imageURL = d.params.projectImage || '/user/1141245074473861122.png'; }}
+                        <img src="{{ '/api' + imageURL }}" alt="" width="88" height="88" id="LAY-user-back-avatar">
+                        <p> 项目：{{d.params.projectName || ' ' }} 标签：{{
+                            d.params.projectTag || ' ' }} ，单价：{{ d.params.projectPrice || ' ' }}</p>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">店铺：{{d.params.shopName || ' ' }}</h2>
+                    <div class="layui-colla-content">
+                        <p> 铺名：{{d.params.shopName || ' ' }} ，地址：{{
+                            d.params.shopAddr || ' ' }} ，电话：{{ d.params.shopPhone || ' ' }}</p>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">艺人：{{d.params.servicername || ' ' }}</h2>
+                    <div class="layui-colla-content">
+                        <p> 铺名：{{d.params.shopName || ' ' }} ，地址：{{
+                            d.params.shopAddr || ' ' }} ，电话：{{ d.params.shopPhone || ' ' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <div class="layui-form-item">
+        <div class="layui-col-md6">
+            <label class="layui-form-label">评价时间</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <input type="text" name="initTime" id="initTime" value="{{ d.params.initTime || '' }}"
+                           placeholder="请选择评价时间" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-col-md12">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <script template type="text/html">
+                    <textarea type="text" name="detail" lay-verify="required"
+                              placeholder="请输入内容" autocomplete="off"
+                              class="layui-textarea">{{ d.params.detail || '' }}</textarea>
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md6">
+        <label class="layui-form-label">审核评价展示状态</label>
+        <div class="layui-input-block">
+            <script template type="text/html">
+                {{# let current = d.params.state || ''; }}
+                {{# let attribute0 = (current === 'yes') ? 'checked' : ''; }}
+                <input type="radio" name="state" value="yes" title="展示" {{ attribute0 }}>
+                {{# let attribute1 = (current === 'no' || !current) ? 'checked' : ''; }}
+                <input type="radio" name="state" value="no" title="隐藏" {{ attribute1 }}>
+            </script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="text-align: center; margin-left: 40px;">
+        <script template type="text/html">
+            <input type="button" value="保存" class="layui-btn" readonly lay-submit lay-filter="LAY-msp-evaluate-save">
+            <input type="button" value="返回" class="layui-btn layui-btn-primary" readonly id="LAY-msp-evaluate-return">
+        </script>
+    </div>
+</div>
