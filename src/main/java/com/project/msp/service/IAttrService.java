@@ -11,7 +11,7 @@ public interface IAttrService extends IService<Attr> {
      *
      * @param page 分页条件
      * @param attr 实体条件
-     * @return 轮播图分页
+     * @return 分页
      */
     IPage<Attr> pageByAttrCond(IPage<Attr> page, Attr attr);
 }

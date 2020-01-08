@@ -1233,7 +1233,7 @@ function getPost(orderBy) {
     paramObject.orderBy = orderBy;
     paramObject.orderMode = 'DESC';
     $.ajax({
-        url: link + "/social/posts/getPostList?" + $.param(paramObject),
+        url: link + "/system/banners?" + $.param(paramObject),
         dataType: "Json",
         success: function (res) {
             console.log(res);

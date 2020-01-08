@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 地区服务实现
  *
@@ -26,20 +28,35 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
     /**
      * 按地区条件查询分页
      *
+     * @param area 地区条件
+     * @return 地区分页
+     */
+    @Override
+    public List<Area> list(Area area) {
+        return list(getWrapperByArea(area));
+    }
+
+    /**
+     * 按地区条件查询分页
+     *
      * @param page 分页条件
      * @param area 地区条件
      * @return 地区分页
      */
     @Override
     public IPage<Area> pageByAreaCond(IPage<Area> page, Area area) {
+        return areaMapper.selectPage(page, getWrapperByArea(area));
+    }
+
+    private Wrapper<Area> getWrapperByArea(Area area) {
         String name = area.getAreaName();
         String code = area.getAreaCode();
-        String isHot = area.getIsHot();
+        String isHot = area.getAreaIsHot();
 
         Wrapper<Area> wrapper = new QueryWrapper<Area>().lambda()
                 .like(StringUtils.isNotBlank(name), Area::getAreaName, name)
                 .like(StringUtils.isNotBlank(code), Area::getAreaCode, code)
-                .eq(StringUtils.isNotBlank(isHot), Area::getIsHot, isHot);
-        return areaMapper.selectPage(page, wrapper);
+                .eq(StringUtils.isNotBlank(isHot), Area::getAreaIsHot, isHot);
+        return wrapper;
     }
 }

@@ -26,16 +26,26 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
      */
     @Override
     public IPage<Shop> pageByShopCond(IPage<Shop> page, Shop shop) {
-        String no = shop.getNo();
+        String areaId = shop.getAreaId();
+        String shopParentId0 = shop.getShopParentId0();
+        String shopParentId1 = shop.getShopParentId1();
+        String shopParentId2 = shop.getShopParentId2();
+        String shopParentId3 = shop.getShopParentId3();
         String shopName = shop.getShopName();
-        String isHot = shop.getIsHot();
-        String state = shop.getState();
+        String shopNo = shop.getShopNo();
+        String shopState = shop.getShopState();
+        String shopIsHot = shop.getShopIsHot();
 
         Wrapper<Shop> wrapper = new QueryWrapper<Shop>().lambda()
-                .eq(StringUtils.isNotBlank(no), Shop::getNo, no)
+                .eq(StringUtils.isNotBlank(areaId), Shop::getAreaId, areaId)
+                .eq(StringUtils.isNotBlank(shopParentId0), Shop::getShopParentId3, shopParentId0)
+                .eq(StringUtils.isNotBlank(shopParentId1), Shop::getShopParentId3, shopParentId1)
+                .eq(StringUtils.isNotBlank(shopParentId2), Shop::getShopParentId3, shopParentId2)
+                .eq(StringUtils.isNotBlank(shopParentId3), Shop::getShopParentId3, shopParentId3)
                 .like(StringUtils.isNotBlank(shopName), Shop::getShopName, shopName)
-                .eq(StringUtils.isNotBlank(isHot), Shop::getIsHot, isHot)
-                .eq(StringUtils.isNotBlank(state), Shop::getState, state);
+                .like(StringUtils.isNotBlank(shopNo), Shop::getShopNo, shopNo)
+                .eq(StringUtils.isNotBlank(shopState), Shop::getShopState, shopState)
+                .eq(StringUtils.isNotBlank(shopIsHot), Shop::getShopIsHot, shopIsHot);
         return shopMapper.selectPage(page, wrapper);
     }
 }

@@ -1,16 +1,16 @@
 <div class="layui-form" lay-filter="LAY-msp-attr-form2" style="padding: 20px 40px 0 0;">
     <script template type="text/html">
         <input type="hidden" name="id" value="{{ d.params.id || '' }}">
-        <input type="hidden" name="parentId" value="{{ d.params.parentId || '' }}">
-        <input type="hidden" name="type" value="{{ d.params.type || 'project' }}">
+        <input type="hidden" name="attrParentId" value="{{ d.params.attrParentId || '0' }}">
+        <input type="hidden" name="attrType" value="{{ d.params.attrType || '' }}">
     </script>
 
     <div class="layui-form-item">
         <label class="layui-form-label">分类名</label>
         <div class="layui-input-block">
             <script template type="text/html">
-                <input type="text" name="attrName" value="{{ d.params.attrName || '' }}" lay-verify="required"
-                       placeholder="请输入分类名" autocomplete="off" class="layui-input">
+                <input type="text" name="attrName" value="{{ d.params.attrName || '' }}" maxlength="12"
+                       lay-verify="required" placeholder="请输入分类名" autocomplete="off" class="layui-input">
             </script>
         </div>
     </div>
@@ -18,7 +18,7 @@
         <label class="layui-form-label">排序数字</label>
         <div class="layui-input-block">
             <script template type="text/html">
-                <input type="text" name="sortNumber" value="{{ d.params.sortNumber || '' }}" lay-verify="number"
+                <input type="text" name="sortNumber" value="{{ d.params.sortNumber || '0' }}" lay-verify="number"
                        placeholder="请输入排序数字" autocomplete="off" class="layui-input">
             </script>
         </div>
@@ -27,8 +27,7 @@
         <label class="layui-form-label">图片</label>
         <div class="layui-input-block">
             <script template type="text/html">
-                <img src="{{ '/api' + d.params.image }}" alt="" width="340" height="160" id="LAY-msp-attr-image">
-
+                <img src="{{ '/api' + d.params.attrImage }}" alt="" width="160" height="160" id="LAY-msp-attr-image">
                 <button type="button" class="layui-btn layui-btn-normal" style="margin-top: 84px;"
                         id="LAY-msp-attr-upload">选择图片
                 </button>

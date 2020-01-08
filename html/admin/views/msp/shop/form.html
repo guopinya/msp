@@ -1,7 +1,6 @@
 <div class="layui-form" lay-filter="LAY-msp-shop-form2" style="padding: 20px 40px 0 0;">
     <script template type="text/html">
         <input type="hidden" name="id" value="{{ d.params.id || '' }}">
-        <input type="hidden" name="parentId" value="{{ d.params.parentId || '' }}">
     </script>
 
     <div class="layui-form-item">
@@ -10,7 +9,7 @@
             <div class="layui-input-block">
                 <script template type="text/html">
                     <input type="text" name="shopName" value="{{ d.params.shopName || '' }}" lay-verify="required"
-                           placeholder="请输入店名" autocomplete="off" class="layui-input">
+                           maxlength="32" placeholder="请输入店名" autocomplete="off" class="layui-input">
                 </script>
             </div>
         </div>
@@ -18,13 +17,13 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">加盟商</label>
                 <div class="layui-input-block">
-                    <select name="parentId2">
+                    <select name="shopParentId2">
                         <option>请选择</option>
                         {{# let userPidData = d.params.userPidData; }}
                         {{# for (let i = 0; i < userPidData.length; i++) { }}
                         {{# let current = userPidData[i]; }}
                         {{# if (current.roleId == '1187637908193771523') { }}
-                        {{# let attribute = (current.id === d.params.parentId2) ? 'selected' : ''; }}
+                        {{# let attribute = (current.id === d.params.shopParentId2) ? 'selected' : ''; }}
                         <option value="{{ current.id }}" {{ attribute }}>{{ current.username }}</option>
                         {{# } }}
                         {{# } }}
@@ -36,8 +35,8 @@
             <label class="layui-form-label">编号</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    <input type="text" name="no" value="{{ d.params.no || '' }}" lay-verify="required"
-                           placeholder="请输入编号" autocomplete="off" class="layui-input">
+                    <input type="text" name="shopNo" value="{{ d.params.shopNo || '' }}" lay-verify="required"
+                           maxlength="32" placeholder="请输入编号" autocomplete="off" class="layui-input">
                 </script>
             </div>
         </div>
@@ -45,8 +44,8 @@
             <label class="layui-form-label">营业时间</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    <input type="text" name="stime" id="timeRangeSelect"
-                           value="{{ d.params.stime || '' }} - {{ d.params.etime || '' }}"
+                    <input type="text" name="shopStime" id="timeRangeSelect"
+                           value="{{ d.params.shopStime || '' }} - {{ d.params.shopEtime || '' }}"
                            lay-verify="required"
                            placeholder="请选择营业时间" autocomplete="off" class="layui-input">
                 </script>
@@ -57,11 +56,11 @@
             <label class="layui-form-label">营业状态</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    {{# let current = d.params.state || ''; }}
+                    {{# let current = d.params.shopState || ''; }}
                     {{# let attribute0 = (current === 'open' || !current) ? 'checked' : ''; }}
-                    <input type="radio" name="state" value="open" title="营业中" disabled {{ attribute0 }}>
+                    <input type="radio" name="shopState" value="open" title="营业中" disabled {{ attribute0 }}>
                     {{# let attribute1 = (current === 'off') ? 'checked' : ''; }}
-                    <input type="radio" name="state" value="off" title="歇息中" disabled {{ attribute1 }}>
+                    <input type="radio" name="shopState" value="off" title="歇息中" disabled {{ attribute1 }}>
                 </script>
             </div>
         </div>
@@ -116,8 +115,8 @@
             <label class="layui-form-label">地址</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    <input type="text" name="addr" value="{{ d.params.addr || '' }}" lay-verify="required"
-                           placeholder="请输入地址" autocomplete="off" class="layui-input">
+                    <input type="text" name="shopAddr" value="{{ d.params.shopAddr || '' }}" lay-verify="required"
+                           maxlength="50" placeholder="请输入地址" autocomplete="off" class="layui-input">
                 </script>
             </div>
         </div>
@@ -126,8 +125,8 @@
             <label class="layui-form-label">联系电话</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    <input type="text" name="phone" value="{{ d.params.phone || '' }}" placeholder="请输入联系电话"
-                           autocomplete="off" class="layui-input">
+                    <input type="text" name="shopPhone" value="{{ d.params.shopPhone || '' }}" lay-verify="phone"
+                           maxlength="12" placeholder="请输入联系电话" autocomplete="off" class="layui-input">
                 </script>
             </div>
         </div>
@@ -136,8 +135,8 @@
             <label class="layui-form-label">标签</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    <input type="text" name="tag" value="{{ d.params.tag || '' }}" placeholder="请输入标签"
-                           autocomplete="off" class="layui-input">
+                    <input type="text" name="shopTag" value="{{ d.params.shopTag || '' }}" placeholder="请输入标签"
+                           maxlength="50" autocomplete="off" class="layui-input">
                 </script>
             </div>
         </div>
@@ -146,11 +145,11 @@
             <label class="layui-form-label">是否推荐</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    {{# let current = d.params.isRecommd || ''; }}
+                    {{# let current = d.params.shopIsRecommend || ''; }}
                     {{# let attribute0 = (current === 'yes' || !current) ? 'checked' : ''; }}
-                    <input type="radio" name="isRecommd" value="yes" title="是" {{ attribute0 }}>
+                    <input type="radio" name="shopIsRecommend" value="yes" title="是" {{ attribute0 }}>
                     {{# let attribute1 = (current === 'no') ? 'checked' : ''; }}
-                    <input type="radio" name="isRecommd" value="no" title="否" {{ attribute1 }}>
+                    <input type="radio" name="shopIsRecommend" value="no" title="否" {{ attribute1 }}>
                 </script>
             </div>
         </div>
@@ -159,11 +158,11 @@
             <label class="layui-form-label">是否热门</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    {{# let current = d.params.isHot || ''; }}
+                    {{# let current = d.params.shopIsHot || ''; }}
                     {{# let attribute0 = (current === 'yes' || !current) ? 'checked' : ''; }}
-                    <input type="radio" name="isHot" value="yes" title="是" {{ attribute0 }}>
+                    <input type="radio" name="shopIsHot" value="yes" title="是" {{ attribute0 }}>
                     {{# let attribute1 = (current === 'no') ? 'checked' : ''; }}
-                    <input type="radio" name="isHot" value="no" title="否" {{ attribute1 }}>
+                    <input type="radio" name="shopIsHot" value="no" title="否" {{ attribute1 }}>
                 </script>
             </div>
         </div>
@@ -178,15 +177,39 @@
             </div>
         </div>
     </div>
+
     <div class="layui-form-item">
-        <label class="layui-form-label">图片</label>
+        <label class="layui-form-label">预览图</label>
         <div class="layui-input-block">
             <script template type="text/html">
-                <img src="{{ '/api' + d.params.image }}" alt="" width="340" height="160" id="LAY-msp-shop-image">
-
+                <img src="{{ '/api' + d.params.shopImage }}" alt="" width="160" height="160" id="LAY-msp-shop-image">
                 <button type="button" class="layui-btn layui-btn-normal" style="margin-top: 84px;"
                         id="LAY-msp-shop-upload">选择图片
                 </button>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">轮播图</label>
+        <div class="layui-upload">
+            <script template type="text/html">
+                <button type="button" class="layui-btn" id="LAY-msp-shop-banner">多图片上传</button>
+                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                    预览：
+                    <div class="layui-upload-list" id="div-slide_show">
+                        {{# let current = d.params.shopBanner || ''; }}
+                        {{# if(!!current){ }}
+                        {{# let banners = current.split(';'); }}
+                        {{# for (let i = 0; i < banners.length; i++) { }}
+                        <a>
+                            <img src="{{ '/api' +  banners[i] }}" alt="{{ '/api' + banners[i] }}"
+                                 title="点击删除" class="layui-upload-img" width="160" height="160" name="delMultipleImgs">
+                            <input type="hidden" name="shopBanner" value="{{ banners[i] }}"/>
+                        </a>
+                        {{# } }}
+                        {{# } }}
+                    </div>
+                </blockquote>
             </script>
         </div>
     </div>
@@ -196,7 +219,7 @@
             <label class="layui-form-label">富文本</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    <textarea id="LAY-msp-shop-richText" name="detail">{{ d.params.detail || '' }}</textarea>
+                    <textarea id="LAY-msp-shop-richText" name="shopDetail">{{ d.params.shopDetail || '' }}</textarea>
                 </script>
             </div>
         </div>

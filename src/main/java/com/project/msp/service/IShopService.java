@@ -10,8 +10,8 @@ public interface IShopService extends IService<Shop> {
      * 按条件查询分页
      *
      * @param page 分页条件
-     * @param shop 实体条件s
-     * @return 轮播图分页
+     * @param shop 条件
+     * @return 分页
      */
     IPage<Shop> pageByShopCond(IPage<Shop> page, Shop shop);
 }

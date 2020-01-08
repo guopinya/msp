@@ -26,12 +26,14 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     @Override
     public IPage<Project> pageByProjectCond(IPage<Project> page, Project project) {
-        String no = project.getNo();
-        String name = project.getProjectName();
+        String attrId = project.getAttrId();
+        String ProjectNo = project.getProjectNo();
+        String ProjectName = project.getProjectName();
 
         Wrapper<Project> wrapper = new QueryWrapper<Project>().lambda()
-                .like(StringUtils.isNotBlank(no), Project::getNo, no)
-                .like(StringUtils.isNotBlank(name), Project::getProjectName, name);
+                .eq(StringUtils.isNotBlank(attrId), Project::getAttrId, attrId)
+                .like(StringUtils.isNotBlank(ProjectNo), Project::getProjectNo, ProjectNo)
+                .like(StringUtils.isNotBlank(ProjectName), Project::getProjectName, ProjectName);
         return projectMapper.selectPage(page, wrapper);
     }
 }

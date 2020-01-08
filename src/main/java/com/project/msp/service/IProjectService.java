@@ -11,7 +11,7 @@ public interface IProjectService extends IService<Project> {
      *
      * @param page    分页条件
      * @param project 实体条件
-     * @return 轮播图分页
+     * @return 分页
      */
     IPage<Project> pageByProjectCond(IPage<Project> page, Project project);
 }

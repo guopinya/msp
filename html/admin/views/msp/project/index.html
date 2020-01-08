@@ -19,7 +19,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width: auto">编号</label>
                     <div class="layui-input-inline">
-                        <input autocomplete="off" class="layui-input" name="no" placeholder="请输入编号" type="text">
+                        <input autocomplete="off" class="layui-input" name="projectNo" placeholder="请输入编号" type="text">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -27,6 +27,14 @@
                     <div class="layui-input-inline">
                         <input autocomplete="off" class="layui-input" name="projectName" placeholder="请输入项目"
                                type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">分类</label>
+                    <div class="layui-input-inline">
+                        <select id="LAY-msp-project-attrId" name="attrId">
+                            <option value="">不限</option>
+                        </select>
                     </div>
                 </div>
 
@@ -45,7 +53,7 @@
             <table id="LAY-msp-project-table" lay-filter="LAY-msp-project-table"></table>
 
             <script id="imageTpl" type="text/html">
-                <img style="height: 100%;" src="{{ '/api' + d.image }}" alt="" lay-event="img">
+                <img style="height: 100%;" src="{{ '/api' + d.projectImage }}" alt="" lay-event="img">
             </script>
             <script id="LAY-msp-project-toolbar" type="text/html">
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
@@ -64,6 +72,45 @@
         let upload = layui.upload;
         let tinymce = layui.tinymce;
 
+        function filterArray(data, parent) {
+            var tree = [];
+            var temp;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].attrParentId == parent) {
+                    var obj = data[i];
+                    temp = filterArray(data, data[i].id);
+                    if (temp.length > 0) {
+                        obj.subs = temp;
+                    }
+                    tree.push(obj);
+                }
+            }
+            return tree;
+        }
+
+        // 获取分类列表
+        let attrList;
+        admin.req({
+            url: '/api/admin/msp/attr/type/project',
+            data: {},
+            done: function (res) {
+                attrList = filterArray(res.data, 0);
+
+                for (let i = 0; i < attrList.length; i++) {
+                    let current = attrList[i];
+                    $('#LAY-msp-project-attrId').append('<option disabled value="' + current.id + '">' + current.attrName + '</option>');
+                    console.log(current.subs);
+                    for (let i1 = 0; i1 < current.subs.length; i1++) {
+                        let current1 = current.subs[i1];
+                        $('#LAY-msp-project-attrId').append('<option value="' + current1.id + '">' + current1.attrName + '</option>')
+                    }
+                }
+
+                // 表单渲染
+                form.render('select', 'LAY-msp-project-form');
+            }
+        });
+
         // 表单渲染
         form.render(null, 'LAY-msp-project-form');
 
@@ -81,9 +128,9 @@
             url: '/api/admin/msp/project',
             cols: [[
                 {title: '图片', templet: '#imageTpl'},
-                {title: '编号', field: 'no'},
+                {title: '编号', field: 'projectNo'},
                 {title: '项目', field: 'projectName'},
-                {title: '售价', field: 'price'},
+                {title: '售价', field: 'projectPrice'},
                 {title: '排序数字', field: 'sortNumber'},
                 {title: '操作', align: 'center', toolbar: '#LAY-msp-project-toolbar'}
             ]],
@@ -103,50 +150,23 @@
             // 修改
             if (obj.event === 'edit') {
                 data.FORM_TYPE = 'put';
-                // 打开身份详情
                 openMspShopPopup(data);
             }
         });
 
         // 监听 添加按钮
         $('#LAY-msp-project-add').on('click', function () {
-            // 打开项目详情
-            openMspShopPopup({FORM_TYPE: 'post', parentId: '0'});
-        });
-
-        function filterArray(data, parent) {
-            var tree = [];
-            var temp;
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].parentId == parent) {
-                    var obj = data[i];
-                    temp = filterArray(data, data[i].id);
-                    if (temp.length > 0) {
-                        obj.subs = temp;
-                    }
-                    tree.push(obj);
-                }
-            }
-            return tree;
-        }
-
-        // 获取分类列表
-        let attrList;
-        admin.req({
-            url: '/api/admin/msp/attr/type/project',
-            data: {},
-            done: function (res) {
-                attrList = filterArray(res.data, 0);
-            }
+            openMspShopPopup({FORM_TYPE: 'post'});
         });
 
         // 打开项目详情
         function openMspShopPopup(data) {
             data.attrList = attrList;
+
             admin.popup({
                 title: '项目详情',
                 area: ['907px', ''],
-                offset: '100px',
+                offset: '10px',
                 id: 'LAY-msp-project-popup',
                 success: function (layero, index) {
                     console.log(data);
@@ -168,6 +188,39 @@
                             }
                         });
 
+                        var multiple_images = [];
+                        if (!!data && !!data.projectBanner) {
+                            multiple_images = data.projectBanner.split(";");
+                        }
+                        upload.render({
+                            elem: '#LAY-msp-project-banner',
+                            multiple: true,
+                            auto: false,
+                            accept: 'images',
+                            acceptMime: 'image/*',
+                            choose: function (obj) {//预读本地文件示例，不支持ie8
+                                obj.preview(function (index, file, result) {
+                                    $('#div-slide_show').append('<a><img src="' + result + '" alt="' + file.name
+                                        + '" title="点击删除" class="layui-upload-img" width="160" height="160" name="delMultipleImgs"></a>');
+                                    multiple_images.push(file);
+                                });
+                            }
+                        });
+
+                        $(document).on("click", "[name=delMultipleImgs]", function (e) {
+                            var this_img = $(this);
+                            var subscript = $("#div-slide_show img").index(this_img); //获取下标
+                            this_img.parent().remove(); //删除图片
+                            multiple_images.splice(subscript, 1); //删除数组
+                            multiple_images.sort(); //重新排序
+
+                        });
+
+                        $(document).on("click", "#LAY-msp-project-upload-del", function (event) {
+                            $('#LAY-msp-project-image').attr('src', ' ');
+                            formData.set('imageFile', '');
+                        });
+
                         //富文本
                         let edit = tinymce.render({
                             elem: '#LAY-msp-project-richText',
@@ -186,11 +239,23 @@
                             if (field.type === 'rich_text' && !content) return layer.msg('富文本不能为空', {icon: 5});
 
                             for (let name in field) {
-                                if (name === 'detail')
+                                if (name === 'projectDetail')
                                     formData.set(name, content);
                                 else
                                     formData.set(name, field[name]);
                             }
+
+                            formData.delete('bannerFiles');
+                            multiple_images.forEach(function (file) {
+                                formData.append('bannerFiles', file, file.name);
+                            });
+
+                            formData.delete('projectBanner');
+                            var projectBanner = "";
+                            $('[name=projectBanner]').each(function () {
+                                projectBanner += $(this).val() + ";";
+                            });
+                            formData.set('projectBanner', projectBanner);
 
                             admin.req({
                                 url: '/api/admin/msp/project',

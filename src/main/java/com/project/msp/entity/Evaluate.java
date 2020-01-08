@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.common.entity.BaseEnity;
+import com.project.system.entity.SysUser;
+import com.project.user.entity.User;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,27 +18,29 @@ import java.util.Date;
  * 评价-gpy
  */
 @Data
-@TableName(value = "msp_evaluate")
+@TableName(value = "msp_evaluate", resultMap = "evaluateResultMap")
 public class Evaluate extends BaseEnity implements Serializable {
     @TableId
     private String id;
+    private String userId;
     private String orderId;
     private String projectId;
     private String shopId;
     private String servicerId;
-    private String userId;
-    private String score;
-    private String detail;
-    private String banner;
-    private String state;
+
+    private String evaluateScore;
+    private String evaluateDetail;
+    private String evaluateBanner;
+    private String evaluateState;
+
     @TableField(exist = false)
-    private String orderNo;
+    private User user;
     @TableField(exist = false)
-    private String projectName;
+    private Order order;
     @TableField(exist = false)
-    private String shopName;
+    private Project project;
     @TableField(exist = false)
-    private String servicername;
+    private Shop shop;
     @TableField(exist = false)
-    private String username;
+    private SysUser servicer;
 }

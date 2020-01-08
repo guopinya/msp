@@ -1,5 +1,6 @@
 package com.project.system.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.project.common.entity.BaseEnity;
@@ -25,6 +26,7 @@ public class Banner extends BaseEnity implements Serializable {
     @TableId
     private String id;
     private String areaId;
+    @TableField(exist = false)
     private String areaName;
 
     /**

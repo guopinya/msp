@@ -19,11 +19,11 @@ public class Project extends BaseEnity implements Serializable {
     private String areaId;
     private String attrId;
     private String projectName;
-    private String no;
-    private String image;
-    private String banner;
-    private String tag;
-    private BigDecimal basePrice;
-    private BigDecimal price;
-    private String detail;
+    private String projectNo;
+    private String projectImage;
+    private String projectBanner;
+    private String projectTag;
+    private BigDecimal projectBasePrice;
+    private BigDecimal projectPrice;
+    private String projectDetail;
 }

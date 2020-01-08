@@ -19,5 +19,5 @@ public interface EvaluateMapper extends BaseMapper<Evaluate> {
     /**
      * 查询分页
      */
-    IPage<Evaluate> pageByEvaluateCond(IPage<Evaluate> page, Wrapper<Evaluate> evaluate);
+    IPage<Evaluate> pageByEvaluateCond(IPage<Evaluate> page, Evaluate evaluate);
 }

@@ -26,7 +26,7 @@
             <script template type="text/html">
                 <label class="layui-form-label">下单方式:</label>
                 <label class="layui-form-label-second">
-                    {{# let current = d.params.origin || ''; }}
+                    {{# let current = d.params.orderOrigin || ''; }}
                     {{# if (current=== '0') { }} h5 
                     {{# } else { }} 未知 
                     {{# } }} </label>
@@ -42,7 +42,7 @@
             <script template type="text/html">
                 <label class="layui-form-label">订单状态:</label>
                 <label class="layui-form-label-second">
-                    {{# let current = d.params.state || ''; }}
+                    {{# let current = d.params.orderState || ''; }}
                     {{# if (current=== '00') { }} 待付款 
                     {{# } else if (current=== '10') { }} 待服务
                     {{# } else if (current=== '20') { }} 待评价
@@ -54,26 +54,26 @@
         <div class="layui-col-md4">
             <script template type="text/html">
                 <label class="layui-form-label">订单价:</label>
-                <label class="layui-form-label-second">{{ d.params.baseAmount || '' }}</label>
+                <label class="layui-form-label-second">{{ d.params.orderBaseAmount || '' }}</label>
             </script>
         </div>
         <div class="layui-col-md4">
             <script template type="text/html">
                 <label class="layui-form-label">积分:</label>
-                <label class="layui-form-label-second">{{ d.params.creditAmount || '' }}</label>
+                <label class="layui-form-label-second">{{ d.params.orderCreditAmount || '' }}</label>
             </script>
         </div>
         <div class="layui-col-md4">
             <script template type="text/html">
                 <label class="layui-form-label">实收款:</label>
-                <label class="layui-form-label-second">{{ d.params.payTime || '' }}</label>
+                <label class="layui-form-label-second">{{ d.params.orderPayTime || '' }}</label>
             </script>
         </div>
         <div class="layui-col-md4">
             <script template type="text/html">
                 <label class="layui-form-label">支付方式:</label>
                 <label class="layui-form-label-second">
-                    {{# let current = d.params.payType || ''; }}
+                    {{# let current = d.params.orderPayType || ''; }}
                     {{# if (current=== '0') { }} 微信
                     {{# } else if (current=== '') { }} 尚未付款 
                     {{# } else { }} 未知 
@@ -83,25 +83,25 @@
         <div class="layui-col-md4">
             <script template type="text/html">
                 <label class="layui-form-label">付款时间:</label>
-                <label class="layui-form-label-second">{{ d.params.payTime || '' }}</label>
+                <label class="layui-form-label-second">{{ d.params.orderPayTime || '' }}</label>
             </script>
         </div>
         <div class="layui-col-md4">
             <script template type="text/html">
                 <label class="layui-form-label">预约时间:</label>
-                <label class="layui-form-label-second">{{ d.params.preTime || '' }}</label>
+                <label class="layui-form-label-second">{{ d.params.orderPreTime || '' }}</label>
             </script>
         </div>
         <div class="layui-col-md4">
             <script template type="text/html">
                 <label class="layui-form-label">服务时间:</label>
-                <label class="layui-form-label-second">{{ d.params.ServiceTime || '' }}</label>
+                <label class="layui-form-label-second">{{ d.params.orderServiceTime || '' }}</label>
             </script>
         </div>
         <div class="layui-col-md4">
             <script template type="text/html">
                 <label class="layui-form-label">评价时间:</label>
-                <label class="layui-form-label-second">{{ d.params.EvaTime || '' }}</label>
+                <label class="layui-form-label-second">{{ d.params.orderEvaTime || '' }}</label>
             </script>
         </div>
     </div>
@@ -110,26 +110,26 @@
         <div class="layui-form-item">
             <div class="layui-collapse" lay-filter="test">
                 <div class="layui-colla-item">
-                    <h2 class="layui-colla-title">买家信息：{{d.params.projectName || ' ' }}</h2>
+                    <h2 class="layui-colla-title">买家信息：{{d.params.user.username || ' ' }}</h2>
                     <div class="layui-colla-content">
-                        <p> 昵称：{{d.params.projectName || ' ' }} ，电话：{{
-                            d.params.projectTag || ' ' }} ，真实姓名：{{ d.params.projectPrice || ' ' }}</p>
+                        <p> 昵称：{{d.params.user.username || ' ' }} ，电话：{{
+                            d.params.user.mobile || ' ' }} </p>
                     </div>
                 </div>
                 <div class="layui-colla-item">
-                    <h2 class="layui-colla-title">项目：{{d.params.projectName || ' ' }} </h2>
+                    <h2 class="layui-colla-title">项目：{{d.params.project.projectName || ' ' }} </h2>
                     <div class="layui-colla-content">
-                        {{# let imageURL = d.params.projectImage || '/user/1141245074473861122.png'; }}
+                        {{# let imageURL = d.params.project.projectImage || '/user/1141245074473861122.png'; }}
                         <img src="{{ '/api' + imageURL }}" alt="" width="88" height="88" id="LAY-user-back-avatar">
-                        <p> 项目：{{d.params.projectName || ' ' }} 标签：{{
-                            d.params.projectTag || ' ' }} ，单价：{{ d.params.projectPrice || ' ' }}</p>
+                        <p> 项目：{{d.params.project.projectName || ' ' }} 标签：{{
+                            d.params.project.projectTag || ' ' }} ，单价：{{ d.params.project.projectPrice || ' ' }}</p>
                     </div>
                 </div>
                 <div class="layui-colla-item">
-                    <h2 class="layui-colla-title">店铺：{{d.params.shopName || ' ' }}</h2>
+                    <h2 class="layui-colla-title">店铺：{{d.params.shop.shopName || ' ' }}</h2>
                     <div class="layui-colla-content">
-                        <p> 铺名：{{d.params.shopName || ' ' }} ，地址：{{
-                            d.params.shopAddr || ' ' }} ，电话：{{ d.params.shopPhone || ' ' }}</p>
+                        <p> 铺名：{{d.params.shop.shopName || ' ' }} ，地址：{{
+                            d.params.shop.shopAddr || ' ' }} ，电话：{{ d.params.shop.shopPhone || ' ' }}</p>
                     </div>
                 </div>
             </div>
@@ -141,7 +141,7 @@
             <label class="layui-form-label">预约时间</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    <input type="text" name="preTime" id="preTime" value="{{ d.params.preTime || '' }}"
+                    <input type="text" name="orderPreTime" id="orderPreTime" value="{{ d.params.orderPreTime || '' }}"
                            placeholder="请选择预约时间" autocomplete="off" class="layui-input">
                 </script>
             </div>
@@ -180,7 +180,7 @@
             <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    <input type="text" name="remark" value="{{ d.params.remark || '' }}" lay-verify="required"
+                    <input type="text" name="orderRemark" value="{{ d.params.orderRemark || '' }}" lay-verify="required"
                            placeholder="请输入备注" autocomplete="off" class="layui-input">
                 </script>
             </div>

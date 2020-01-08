@@ -15,9 +15,10 @@ import java.io.Serializable;
 public class Param extends BaseEnity implements Serializable {
     @TableId
     private String id;
-    private String parentId;
-    private String key;
-    private String value;
-    private String desc;
-    private String type;
+    private String areaId;
+    private String paramParentId;
+    private String paramKey;
+    private String paramValue;
+    private String paramDesc;
+    private String paramType;
 }

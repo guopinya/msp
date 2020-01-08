@@ -21,7 +21,7 @@ public interface IEvaluateService extends IService<Evaluate> {
      *
      * @param page     分页条件
      * @param evaluate 实体条件
-     * @return 轮播图分页
+     * @return 分页
      */
     IPage<Evaluate> pageByEvaluateCond(IPage<Evaluate> page, Evaluate evaluate);
 }

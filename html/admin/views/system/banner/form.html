@@ -3,12 +3,11 @@
         <input type="hidden" name="id" value="{{ d.params.id || '' }}">
     </script>
 
-    <div class="layui-form-item layui-col-md-offset2">
+    <div class="layui-form-item">
         <label class="layui-form-label">图片</label>
         <div class="layui-input-block">
             <script template type="text/html">
-                <img src="{{ '/api' + d.params.image }}" alt="" width="340" height="160" id="LAY-system-banner-image">
-
+                <img src="{{ '/api' + d.params.image }}" alt="" width="160" height="160" id="LAY-system-banner-image">
                 <button type="button" class="layui-btn layui-btn-normal" style="margin-top: 84px;"
                         id="LAY-system-banner-upload">选择图片
                 </button>

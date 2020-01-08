@@ -19,7 +19,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width: auto">编号</label>
                     <div class="layui-input-inline">
-                        <input autocomplete="off" class="layui-input" name="no" placeholder="请输入编号" type="text">
+                        <input autocomplete="off" class="layui-input" name="shopNo" placeholder="请输入编号" type="text">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -31,7 +31,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width: auto">营业状态</label>
                     <div class="layui-input-inline">
-                        <select name="state">
+                        <select name="shopState">
                             <option value="">不限</option>
                             <option value="open">营业</option>
                             <option value="off">歇息</option>
@@ -41,7 +41,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width: auto">是否热门</label>
                     <div class="layui-input-inline">
-                        <select name="isHot">
+                        <select name="shopIsHot">
                             <option value="">不限</option>
                             <option value="yes">是</option>
                             <option value="no">否</option>
@@ -64,10 +64,10 @@
             <table id="LAY-msp-shop-table" lay-filter="LAY-msp-shop-table"></table>
 
             <script id="imageTpl" type="text/html">
-                <img style="height: 100%;" src="{{ '/api' + d.image }}" alt="" lay-event="img">
+                <img style="height: 100%;" src="{{ '/api' + d.shopImage }}" alt="" lay-event="img">
             </script>
             <script id="stateTpl" type="text/html">
-                {{# let state = d.state; }}
+                {{# let state = d.shopState; }}
                 {{# let stateFlag = d.stateFlag; }}
                 {{# if (state === 'open') { }}
                 <button class="layui-btn layui-btn-xs layui-btn-primary">营业中</button>
@@ -79,7 +79,7 @@
                 {{# } }}
             </script>
             <script id="isHotTpl" type="text/html">
-                {{# let isHot = d.isHot; }}
+                {{# let isHot = d.shopIsHot; }}
                 {{# if (isHot === 'yes') { }}
                 <button class="layui-btn layui-btn-xs layui-btn-primary">是</button>
                 {{# } else if (isHot === 'no') { }}
@@ -90,7 +90,7 @@
             </script>
             <script id="LAY-msp-shop-toolbar" type="text/html">
                 <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">修改</a>
-                {{# let state = d.state; }}
+                {{# let state = d.shopState; }}
                 {{# if (state === 'open') { }}
                 <a class="layui-btn layui-btn-xs layui-btn-checked" lay-event="off">进入歇息</a>
                 {{# } else  { }}
@@ -130,10 +130,10 @@
             url: '/api/admin/msp/shop',
             cols: [[
                 {title: '图片', templet: '#imageTpl'},
-                {title: '编号', field: 'no'},
+                {title: '编号', field: 'shopNo'},
                 {title: '店名', field: 'shopName'},
-                {title: '地址', field: 'addr'},
-                {title: '联系电话', field: 'phone'},
+                {title: '地址', field: 'shopAddr'},
+                {title: '联系电话', field: 'shopPhone'},
                 {title: '营业状态', templet: '#stateTpl'},
                 {title: '是否热门', templet: '#isHotTpl'},
                 {title: '开店时间', field: 'initTime'},
@@ -147,7 +147,6 @@
         // 表格监听 工具条
         table.on('tool(LAY-msp-shop-table)', function (obj) {
             let data = obj.data;
-            console.log(data);
             // 图片
             if (obj.event === 'img') {
                 layer.photos({
@@ -157,7 +156,6 @@
             // 修改
             if (obj.event === 'edit') {
                 data.FORM_TYPE = 'put';
-                // 打开身份详情
                 openMspShopPopup(data);
             }
             // 修改状态
@@ -187,7 +185,7 @@
             }
         });
 
-        // 打开店铺详情
+        //修改店铺状态
         function changeShopState(data) {
             var content = '确认更开始营业？';
             if (data.state === 'off')
@@ -216,15 +214,14 @@
 
         // 监听 添加按钮
         $('#LAY-msp-shop-add').on('click', function () {
-            // 打开店铺详情
-            openMspShopPopup({FORM_TYPE: 'post', parentId: '0'});
+            openMspShopPopup({FORM_TYPE: 'post'});
         });
 
         function filterArray(data, parent) {
             var tree = [];
             var temp;
             for (var i = 0; i < data.length; i++) {
-                if (data[i].parentId == parent) {
+                if (data[i].areaParentId == parent) {
                     var obj = data[i];
                     temp = filterArray(data, data[i].id);
                     if (temp.length > 0) {
@@ -250,15 +247,16 @@
         function openMspShopPopup(data) {
             data.areaList = areaList;
             data.userPidData = userPidData;
+
             admin.popup({
                 title: '店铺详情',
                 area: ['907px', ''],
-                offset: '100px',
+                offset: '10px',
                 id: 'LAY-msp-shop-popup',
                 success: function (layero, index) {
-                    console.log(data);
                     view(this.id).render('msp/shop/form', data).done(function () {
                         let formData = new FormData();
+
                         // 上传渲染
                         upload.render({
                             elem: '#LAY-msp-shop-upload',
@@ -273,6 +271,38 @@
                                     $('#LAY-msp-shop-image').attr('src', result);
                                 });
                             }
+                        });
+                        var multiple_images = [];
+                        if (!!data && !!data.shopBanner) {
+                            multiple_images = data.shopBanner.split(";");
+                        }
+                        upload.render({
+                            elem: '#LAY-msp-shop-banner',
+                            multiple: true,
+                            auto: false,
+                            accept: 'images',
+                            acceptMime: 'image/*',
+                            choose: function (obj) {//预读本地文件示例，不支持ie8
+                                obj.preview(function (index, file, result) {
+                                    $('#div-slide_show').append('<a><img src="' + result + '" alt="' + file.name
+                                        + '" title="点击删除" class="layui-upload-img" width="160" height="160" name="delMultipleImgs"></a>');
+                                    multiple_images.push(file);
+                                });
+                            }
+                        });
+
+                        $(document).on("click", "[name=delMultipleImgs]", function (e) {
+                            var this_img = $(this);
+                            var subscript = $("#div-slide_show img").index(this_img); //获取下标
+                            this_img.parent().remove(); //删除图片
+                            multiple_images.splice(subscript, 1); //删除数组
+                            multiple_images.sort(); //重新排序
+
+                        });
+
+                        $(document).on("click", "#LAY-msp-shop-upload-del", function (event) {
+                            $('#LAY-msp-shop-image').attr('src', ' ');
+                            formData.set('imageFile', '');
                         });
 
                         //富文本
@@ -292,7 +322,6 @@
                         // 表单渲染
                         form.render(null, 'LAY-msp-shop-form2');
 
-
                         // 表单监听 提交按钮
                         form.on('submit(LAY-msp-shop-save)', function (obj) {
                             let field = obj.field; //获取提交的字段
@@ -301,11 +330,23 @@
                             if (field.type === 'rich_text' && !content) return layer.msg('富文本不能为空', {icon: 5});
 
                             for (let name in field) {
-                                if (name === 'detail')
+                                if (name === 'shopDetail')
                                     formData.set(name, content);
                                 else
                                     formData.set(name, field[name]);
                             }
+
+                            formData.delete('bannerFiles');
+                            multiple_images.forEach(function (file) {
+                                formData.append('bannerFiles', file, file.name);
+                            });
+
+                            formData.delete('shopBanner');
+                            var shopBanner = "";
+                            $('[name=shopBanner]').each(function () {
+                                shopBanner += $(this).val() + ";";
+                            });
+                            formData.set('shopBanner', shopBanner);
 
                             admin.req({
                                 url: '/api/admin/msp/shop',

@@ -1,51 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.project.msp.mapper.EvaluateMapper">
-    <resultMap id="evaluateResultMap" type="com.project.msp.entity.Evaluate">
-        <id column="id" jdbcType="VARCHAR" property="id"/>
-        <result column="order_id" jdbcType="VARCHAR" property="orderId"/>
-        <result column="project_id" jdbcType="VARCHAR" property="projectId"/>
-        <result column="shop_id" jdbcType="VARCHAR" property="shopId"/>
-        <result column="servicer_id" jdbcType="VARCHAR" property="servicerId"/>
-        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
-        <result column="evaluate_score" jdbcType="VARCHAR" property="evaluateScore"/>
-        <result column="evaluate_detail" jdbcType="VARCHAR" property="evaluateDetail"/>
-        <result column="evaluate_banner" jdbcType="VARCHAR" property="evaluateBanner"/>
-        <result column="evaluate_state" jdbcType="VARCHAR" property="evaluateState"/>
-        <result column="sort_number" jdbcType="INTEGER" property="sortNumber"/>
-        <result column="is_display" jdbcType="VARCHAR" property="isDisplay"/>
-        <result column="init_time" jdbcType="TIMESTAMP" property="initTime"/>
-        <result column="init_addr" jdbcType="VARCHAR" property="initAddr"/>
-        <result column="init_user" jdbcType="VARCHAR" property="initUser"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <result column="update_addr" jdbcType="VARCHAR" property="updateAddr"/>
-        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
-        <association property="order" resultMap="OrderResultMap"/>
-        <association property="project" resultMap="ProjectResultMap"/>
-        <association property="shop" resultMap="ShopResultMap"/>
-        <association property="servicer" resultMap="SysUserResultMap"/>
-        <association property="user" resultMap="UserResultMap"/>
-    </resultMap>
-    <resultMap id="UserResultMap" type="com.project.user.entity.User">
-        <id column="user_id" jdbcType="VARCHAR" property="userId"/>
-        <result column="user_type" jdbcType="VARCHAR" property="userType"/>
-        <result column="username" jdbcType="VARCHAR" property="username"/>
-        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
-        <result column="sex" jdbcType="BIT" property="sex"/>
-        <result column="signature" jdbcType="VARCHAR" property="signature"/>
-        <result column="domain" jdbcType="VARCHAR" property="domain"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="recent_login" jdbcType="TIMESTAMP" property="recentLogin"/>
-        <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath"/>
-        <result column="back_ground_path" jdbcType="VARCHAR" property="backGroundPath"/>
-        <result column="user_level" jdbcType="INTEGER" property="userLevel"/>
-        <result column="vip_level" jdbcType="INTEGER" property="vipLevel"/>
-        <result column="status" jdbcType="VARCHAR" property="status"/>
-        <result column="ry_token" jdbcType="VARCHAR" property="ryToken"/>
-        <result column="user_pid0" jdbcType="VARCHAR" property="userPid0"/>
-        <result column="user_pid1" jdbcType="VARCHAR" property="userPid1"/>
-        <result column="shop_id" jdbcType="VARCHAR" property="shopId"/>
-    </resultMap>
+<mapper namespace="com.project.msp.mapper.OrderMapper">
     <resultMap id="OrderResultMap" type="com.project.msp.entity.Order">
         <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
@@ -82,6 +37,31 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="update_addr" jdbcType="VARCHAR" property="updateAddr"/>
         <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+
+        <association property="user" resultMap="UserResultMap"/>
+        <association property="project" resultMap="ProjectResultMap"/>
+        <association property="shop" resultMap="ShopResultMap"/>
+        <association property="servicer" resultMap="SysUserResultMap"/>
+    </resultMap>
+    <resultMap id="UserResultMap" type="com.project.user.entity.User">
+        <id column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="user_type" jdbcType="VARCHAR" property="userType"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="sex" jdbcType="BIT" property="sex"/>
+        <result column="signature" jdbcType="VARCHAR" property="signature"/>
+        <result column="domain" jdbcType="VARCHAR" property="domain"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="recent_login" jdbcType="TIMESTAMP" property="recentLogin"/>
+        <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath"/>
+        <result column="back_ground_path" jdbcType="VARCHAR" property="backGroundPath"/>
+        <result column="user_level" jdbcType="INTEGER" property="userLevel"/>
+        <result column="vip_level" jdbcType="INTEGER" property="vipLevel"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="ry_token" jdbcType="VARCHAR" property="ryToken"/>
+        <result column="user_pid0" jdbcType="VARCHAR" property="userPid0"/>
+        <result column="user_pid1" jdbcType="VARCHAR" property="userPid1"/>
+        <result column="shop_id" jdbcType="VARCHAR" property="shopId"/>
     </resultMap>
     <resultMap id="ProjectResultMap" type="com.project.msp.entity.Project">
         <id column="id" jdbcType="VARCHAR" property="id"/>
@@ -149,66 +129,104 @@
         <result column="shop_id" jdbcType="VARCHAR" property="shopId"/>
     </resultMap>
 
-    <select id="list" resultMap="evaluateResultMap">
+    <select id="list" resultMap="OrderResultMap">
         SELECT
-        e.*,u.*,o.*,s.*,p.*, su.*
+        e.*,u.*,o.*,s.*,p.*, su.username servicername
         FROM
-        msp_evaluate e
-        LEFT JOIN user u ON e.user_id = u.user_id
-        LEFT JOIN msp_order o ON e.order_id = o.id
-        LEFT JOIN msp_project p ON e.project_id = p.id
-        LEFT JOIN msp_shop s ON e.shop_id = s.id
+        msp_order e
+        LEFT JOIN USER u ON e.user_id = u.user_id
         LEFT JOIN system_user su ON e.servicer_id = su.id
+        LEFT JOIN msp_order o ON e.order_id = o.id
+        LEFT JOIN msp_shop s ON e.shop_id = s.id
+        LEFT JOIN msp_project p ON e.project_id = p.id
         <trim prefix="WHERE" prefixOverrides="AND|OR">
-            <if test='evaluate.evaluateState!=null and evaluate.evaluateState!=""'>
-                AND e.evaluate_state = #{evaluate.evaluateState}
+            <if test='order.state!=null and order.state!=""'>
+                AND e.state = #{order.state}
             </if>
-            <if test='evaluate.userId!=null and evaluate.userId!=""'>
-                AND u.id = #{evaluate.userId}
+            <if test='order.orderId!=null and order.orderId!=""'>
+                AND o.id = #{order.orderId}
             </if>
-            <if test='evaluate.orderId!=null and evaluate.orderId!=""'>
-                AND o.id = #{evaluate.orderId}
+            <if test='order.projectId!=null and order.projectId!=""'>
+                AND p.id = #{order.projectId}
             </if>
-            <if test='evaluate.projectId!=null and evaluate.projectId!=""'>
-                AND p.id = #{evaluate.projectId}
+            <if test='order.shopId!=null and order.shopId!=""'>
+                AND s.id = #{order.shopId}
             </if>
-            <if test='evaluate.shopId!=null and evaluate.shopId!=""'>
-                AND s.id = #{evaluate.shopId}
+            <if test='order.servicerId!=null and order.servicerId!=" "'>
+                AND su.id = #{order.servicerId}
             </if>
-            <if test='evaluate.servicerId!=null and evaluate.servicerId!=" "'>
-                AND su.id = #{evaluate.servicerId}
+            <if test='order.userId!=null and order.userId!=""'>
+                AND u.id = #{order.userId}
+            </if>
+            <if test='order.orderNo!=null and order.orderNo!=""'>
+                AND o.order_no like concat('%', #{order.orderNo},'%')
+            </if>
+            <if test='order.projectName!=null and order.projectName!=""'>
+                AND p.project_name like concat('%', #{order.projectName},'%')
+            </if>
+            <if test='order.shopName!=null and order.shopName!=""'>
+                AND s.shop_name like concat('%', #{order.shopName},'%')
+            </if>
+            <if test='order.servicername!=null and order.servicername!=""'>
+                AND su.username like concat('%', #{order.servicername},'%')
+            </if>
+            <if test='order.username!=null and order.username!=""'>
+                AND u.username like concat('%', #{order.username},'%')
             </if>
         </trim>
     </select>
 
-    <select id="pageByEvaluateCond" resultMap="evaluateResultMap">
+    <select id="pageByOrderCond" resultMap="OrderResultMap">
         SELECT
-        e.*,u.*,o.*,s.*,p.*, su.*
+        o.*, u.*,p.*, s.*,su.*
         FROM
-        msp_evaluate e
-        LEFT JOIN user u ON e.user_id = u.user_id
-        LEFT JOIN msp_order o ON e.order_id = o.id
-        LEFT JOIN msp_project p ON e.project_id = p.id
-        LEFT JOIN msp_shop s ON e.shop_id = s.id
-        LEFT JOIN system_user su ON e.servicer_id = su.id
+        msp_order o
+        LEFT JOIN user u ON o.user_id = u.user_id
+        LEFT JOIN msp_project p ON o.project_id = p.id
+        LEFT JOIN msp_shop s ON o.shop_id = s.id
+        LEFT JOIN system_user su ON o.servicer_id = su.id
         <trim prefix="WHERE" prefixOverrides="AND|OR">
-            <if test='evaluate.evaluateState!=null and evaluate.evaluateState!=""'>
-                AND e.evaluate_state = #{evaluate.evaluateState}
+            <if test='order.id!=null and order.id!=""'>
+                AND o.id = #{order.id}
             </if>
-            <if test='evaluate.userId!=null and evaluate.userId!=""'>
-                AND u.id = #{evaluate.userId}
+            <if test='order.orderNo!=null and order.orderNo!=""'>
+                AND o.order_no like concat('%', #{order.orderNo},'%')
             </if>
-            <if test='evaluate.orderId!=null and evaluate.orderId!=""'>
-                AND o.id = #{evaluate.orderId}
+            <if test='order.orderState!=null and order.orderState!=""'>
+                AND o.order_state like concat('%', #{order.orderState},'%')
             </if>
-            <if test='evaluate.projectId!=null and evaluate.projectId!=""'>
-                AND p.id = #{evaluate.projectId}
+            <if test='order.orderOrigin!=null and order.orderOrigin!=""'>
+                AND o.order_origin like concat('%', #{order.orderOrigin},'%')
             </if>
-            <if test='evaluate.shopId!=null and evaluate.shopId!=""'>
-                AND s.id = #{evaluate.shopId}
+            <if test='order.orderPayType!=null and order.orderPayType!=""'>
+                AND o.order_pay_type like concat('%', #{order.orderPayType},'%')
             </if>
-            <if test='evaluate.servicerId!=null and evaluate.servicerId!=" "'>
-                AND su.id = #{evaluate.servicerId}
+
+            <if test='order.orderProjectImage!=null and order.orderProjectImage!=""'>
+                AND o.order_project_name like concat('%', #{order.orderProjectImage},'%')
+            </if>
+            <if test='order.orderShopName!=null and order.orderShopName!=""'>
+                AND o.order_shop_name like concat('%', #{order.orderShopName},'%')
+            </if>
+            <if test='order.orderServicerName!=null and order.orderServicerName!=""'>
+                AND o.order_servicer_Name like concat('%', #{order.orderServicerName},'%')
+            </if>
+
+
+            <if test='order.userId!=null and order.userId!=""'>
+                AND u.id = #{order.userId}
+            </if>
+            <if test='order.projectId!=null and order.projectId!=""'>
+                AND p.id = #{order.projectId}
+            </if>
+            <if test='order.shopId!=null and order.shopId!=""'>
+                AND s.id = #{order.shopId}
+            </if>
+            <if test='order.servicerId!=null and order.servicerId!=" "'>
+                AND su.id = #{order.servicerId}
+            </if>
+            <if test='order.username!=null and order.username!=""'>
+                AND u.username like concat('%', #{order.username},'%')
             </if>
         </trim>
     </select>

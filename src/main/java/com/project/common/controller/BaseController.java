@@ -118,6 +118,22 @@ public class BaseController {
         return page;
     }
 
+    public String assembleFiles(String upLoadFiles, String hasFiles) {
+        String files = "";
+        if (StringUtils.isNotEmpty(hasFiles)) {
+            String[] hasFilesArray = hasFiles.split(";");
+            for (String hasFile : hasFilesArray) {
+                if (StringUtils.isNotEmpty(hasFile) && hasFile.contains("/file/"))
+                    files += hasFile + ";";
+            }
+        }
+        if (StringUtils.isNotEmpty(upLoadFiles))
+            files = files + upLoadFiles + ";";
+        if (StringUtils.isNotEmpty(files) && files.length() > 1)
+            files = files.substring(0, files.length() - 1);
+        return files;
+    }
+
     /**
      * 批量上传文件
      *
@@ -127,6 +143,24 @@ public class BaseController {
     public String upload(MultipartFile... fileArray) {
         // 数组长度
         if (fileArray == null || fileArray.length == 0) {
+            return null;
+        }
+        List<MultipartFile> fileArrays = new ArrayList();
+        for (MultipartFile multipartFile : fileArray) {
+            fileArrays.add(multipartFile);
+        }
+        return upload(fileArrays);
+    }
+
+    /**
+     * 批量上传文件
+     *
+     * @param fileArray 文件数组
+     * @return 文件链接
+     */
+    public String upload(List<MultipartFile> fileArray) {
+        // 数组长度
+        if (fileArray == null || fileArray.size() == 0) {
             return null;
         }
         // 文件url列表

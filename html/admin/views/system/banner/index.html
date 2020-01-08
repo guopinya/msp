@@ -25,8 +25,15 @@
                             <option value="">不限</option>
                             <option value="none">无操作</option>
                             <option value="link">跳转链接</option>
-                            <option value="auction">跳转拍品</option>
                             <option value="rich_text">跳转富文本</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">地区</label>
+                    <div class="layui-input-inline">
+                        <select id="LAY-system-banner-areaId" name="areaId">
+                            <option value="">不限</option>
                         </select>
                     </div>
                 </div>
@@ -54,8 +61,6 @@
                 <button class="layui-btn layui-btn-xs layui-btn-primary">无操作</button>
                 {{# } else if (type === 'link') { }}
                 <button class="layui-btn layui-btn-xs layui-btn-primary">跳转链接</button>
-                {{# } else if (type === 'auction') { }}
-                <button class="layui-btn layui-btn-xs layui-btn-primary">跳转拍品</button>
                 {{# } else if (type === 'rich_text') { }}
                 <button class="layui-btn layui-btn-xs layui-btn-primary">跳转富文本</button>
                 {{# } else { }}
@@ -134,7 +139,7 @@
             var tree = [];
             var temp;
             for (var i = 0; i < data.length; i++) {
-                if (data[i].parentId == parent) {
+                if (data[i].areaParentId == parent) {
                     var obj = data[i];
                     temp = filterArray(data, data[i].id);
                     if (temp.length > 0) {
@@ -153,6 +158,34 @@
             data: {},
             done: function (res) {
                 areaList = filterArray(res.data, 0);
+
+                if (!!areaList) {
+                    for (let i = 0; i < areaList.length; i++) {
+                        let current = areaList[i];
+                        $('#LAY-system-banner-areaId').append('<option disabled value="' + current.id + '">' + current.areaName + '</option>');
+                        if (!!current.subs) {
+                            for (let i1 = 0; i1 < current.subs.length; i1++) {
+                                let current1 = current.subs[i1];
+                                $('#LAY-system-banner-areaId').append('<option disabled value="' + current1.id + '">' + current1.areaName + '</option>');
+                                if (!!current1.subs) {
+                                    for (let i2 = 0; i2 < current1.subs.length; i2++) {
+                                        let current2 = current1.subs[i2];
+                                        $('#LAY-system-banner-areaId').append('<option disabled value="' + current2.id + '">' + current2.areaName + '</option>');
+                                        if (!!current2.subs) {
+                                            for (let i3 = 0; i3 < current2.subs.length; i3++) {
+                                                let current3 = current2.subs[i3];
+                                                $('#LAY-system-banner-areaId').append('<option value="' + current3.id + '">' + current3.areaName + '</option>');
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 表单渲染
+                form.render('select', 'LAY-system-banner-form');
             }
         });
 

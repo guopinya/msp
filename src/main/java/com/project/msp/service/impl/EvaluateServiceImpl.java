@@ -40,20 +40,7 @@ public class EvaluateServiceImpl extends ServiceImpl<EvaluateMapper, Evaluate> i
      */
     @Override
     public IPage<Evaluate> pageByEvaluateCond(IPage<Evaluate> page, Evaluate evaluate) {
-        String orderId = evaluate.getOrderId();
-        String projectId = evaluate.getProjectId();
-        String shopId = evaluate.getShopId();
-        String servicerId = evaluate.getServicerId();
-        String userId = evaluate.getUserId();
-
-        Wrapper<Evaluate> wrapper = new QueryWrapper<Evaluate>().lambda()
-                .eq(StringUtils.isNotBlank(orderId), Evaluate::getOrderId, orderId)
-                .eq(StringUtils.isNotBlank(projectId), Evaluate::getProjectId, projectId)
-                .eq(StringUtils.isNotBlank(shopId), Evaluate::getShopId, shopId)
-                .eq(StringUtils.isNotBlank(servicerId), Evaluate::getServicerId, servicerId)
-                .eq(StringUtils.isNotBlank(userId), Evaluate::getUserId, userId);
-        //return evaluateMapper.selectPage(page, wrapper);
-        return evaluateMapper.pageByEvaluateCond(page, wrapper);
+        return evaluateMapper.pageByEvaluateCond(page, evaluate);
     }
 
 }

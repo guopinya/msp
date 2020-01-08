@@ -11,7 +11,7 @@ public interface ISearchService extends IService<Search> {
      *
      * @param page   分页条件
      * @param search 实体条件
-     * @return 轮播图分页
+     * @return 分页
      */
     IPage<Search> pageBySearchCond(IPage<Search> page, Search search);
 }

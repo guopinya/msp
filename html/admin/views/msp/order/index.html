@@ -52,10 +52,22 @@
             <table id="LAY-msp-order-table" lay-filter="LAY-msp-order-table"></table>
 
             <script id="imageTpl" type="text/html">
-                <img style="height: 100%;" src="{{ '/api' + d.projectImage }}" alt="" lay-event="img">
+                <img style="height: 100%;" src="{{ '/api' + d.project.projectImage }}" alt="" lay-event="img">
+            </script>
+            <script id="usernameTpl" type="text/html">
+                {{   d.user.username }}
+            </script>
+            <script id="projectNameTpl" type="text/html">
+                {{   d.project.projectName }}
+            </script>
+            <script id="shopNameTpl" type="text/html">
+                {{   d.shop.shopName }}
+            </script>
+            <script id="servicerNameTpl" type="text/html">
+                {{   d.servicer.username }}
             </script>
             <script id="stateTpl" type="text/html">
-                {{# let state = d.state; }}
+                {{# let state = d.orderState; }}
                 {{# if (state === '00') { }}
                 <button class="layui-btn layui-btn-xs layui-btn-primary">待付款</button>
                 {{# } else if (state === '10') { }}
@@ -119,10 +131,13 @@
             elem: '#LAY-msp-order-table',
             url: '/api/admin/msp/order',
             cols: [[
-                {title: '单号', field: 'orderNo'},
-                {title: '状态', templet: '#stateTpl'},
-                {title: '项目', templet: '#imageTpl'},
-                {title: '项目名', field: 'projectName'},
+                {title: '单号', width: 186, field: 'orderNo'},
+                {title: '状态', width: 60, templet: '#stateTpl'},
+                {title: '用户', templet: '#usernameTpl'},
+                {title: '项目', width: 40, templet: '#imageTpl'},
+                {title: '项目名', templet: '#projectNameTpl'},
+                {title: '店铺', templet: '#shopNameTpl'},
+                {title: '艺人', templet: '#servicerNameTpl'},
                 {title: '下单时间', field: 'initTime'},
                 {title: '操作', align: 'center', toolbar: '#LAY-msp-order-toolbar'}
             ]],
@@ -159,7 +174,7 @@
 
             admin.popup({
                 title: '订单详情',
-                area: ['907px', ''],
+                area: ['1107px', ''],
                 offset: '100px',
                 id: 'LAY-msp-order-popup',
                 success: function (layero, index) {
@@ -172,7 +187,7 @@
 
                         //时间选择器
                         laydate.render({
-                            elem: '#preTime',
+                            elem: '#orderPreTime',
                             type: 'datetime',
                             format: 'yyyy-MM-dd HH:mm:ss'
                         });
@@ -183,7 +198,7 @@
                         // 表单监听 预约时间按钮
                         $('[lay-filter=LAY-msp-order-savePreTime]').on('click', function () {
                             formData.set("id", $('[name="id"]').val());
-                            formData.set("preTime", $('#preTime').val());
+                            formData.set("orderPreTime", $('#orderPreTime').val());
                             admin.req({
                                 url: '/api/admin/msp/order/preTime',
                                 type: data.FORM_TYPE,
@@ -221,7 +236,7 @@
                             let field = obj.field; //获取提交的字段
 
                             for (let name in field) {
-                                if (name == 'preTime') {
+                                if (name == 'orderPreTime') {
                                 } else if (name == 'servicerId') {
                                 } else
                                     formData.set(name, field[name]);

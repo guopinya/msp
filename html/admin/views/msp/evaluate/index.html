@@ -19,14 +19,14 @@
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width: auto">用户信息</label>
                     <div class="layui-input-inline">
-                        <input autocomplete="off" class="layui-input" name="evaluateNo" placeholder="请输入用户信息"
+                        <input autocomplete="off" class="layui-input" name="username" placeholder="请输入用户信息"
                                type="text">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width: auto">单号</label>
                     <div class="layui-input-inline">
-                        <input autocomplete="off" class="layui-input" name="evaluateNo" placeholder="请输入单号" type="text">
+                        <input autocomplete="off" class="layui-input" name="orderNo" placeholder="请输入单号" type="text">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -46,8 +46,18 @@
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width: auto">艺人信息</label>
                     <div class="layui-input-inline">
-                        <input autocomplete="off" class="layui-input" name="evaluateNo" placeholder="请输入艺人信息"
+                        <input autocomplete="off" class="layui-input" name="servicername" placeholder="请输入艺人信息"
                                type="text">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">展示状态</label>
+                    <div class="layui-input-inline">
+                        <select name="state">
+                            <option value="">不限</option>
+                            <option value="yes">展示</option>
+                            <option value="no">隐藏</option>
+                        </select>
                     </div>
                 </div>
 
@@ -66,18 +76,29 @@
             <table id="LAY-msp-evaluate-table" lay-filter="LAY-msp-evaluate-table"></table>
 
             <script id="imageTpl" type="text/html">
-                <img style="height: 100%;" src="{{ '/api' + d.projectImage }}" alt="" lay-event="img">
+                <img style="height: 100%;" src="{{ '/api' + d.project.projectImage }}" alt="" lay-event="img">
+            </script>
+            <script id="orderNoTpl" type="text/html">
+                {{   d.order.orderNo }}
+            </script>
+            <script id="usernameTpl" type="text/html">
+                {{   d.user.username }}
+            </script>
+            <script id="projectNameTpl" type="text/html">
+                {{   d.project.projectName }}
+            </script>
+            <script id="shopNameTpl" type="text/html">
+                {{   d.shop.shopName }}
+            </script>
+            <script id="servicerNameTpl" type="text/html">
+                {{   d.servicer.username }}
             </script>
             <script id="stateTpl" type="text/html">
-                {{# let state = d.state; }}
-                {{# if (state === '00') { }}
-                <button class="layui-btn layui-btn-xs layui-btn-primary">待付款</button>
-                {{# } else if (state === '10') { }}
-                <button class="layui-btn layui-btn-xs layui-btn-primary">待服务</button>
-                {{# } else if (state === '20') { }}
-                <button class="layui-btn layui-btn-xs layui-btn-primary">待评价</button>
-                {{# } else if (state === '30') { }}
-                <button class="layui-btn layui-btn-xs layui-btn-primary">售后</button>
+                {{# let state = d.evaluateState; }}
+                {{# if (state === 'yes') { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">展示</button>
+                {{# } else if (state === 'no') { }}
+                <button class="layui-btn layui-btn-xs layui-btn-primary">隐藏</button>
                 {{# } else { }}
                 <button class="layui-btn layui-btn-xs layui-btn-primary">未知</button>
                 {{# } }}
@@ -90,12 +111,13 @@
 </div>
 
 <script type="text/javascript">
-    layui.use(['form', 'table', 'element', 'laydate'], function () {
+    layui.use(['form', 'table', 'upload', 'element', 'laydate'], function () {
         let $ = layui.$,
             view = layui.view,
             admin = layui.admin,
             form = layui.form,
             table = layui.table;
+        let upload = layui.upload;
         var element = layui.element;
         var laydate = layui.laydate;
 
@@ -115,13 +137,15 @@
             elem: '#LAY-msp-evaluate-table',
             url: '/api/admin/msp/evaluate',
             cols: [[
-                {title: '用户', field: 'username'},
-                {title: '单号', field: 'orderNo'},
-                {title: '项目', field: 'projectName'},
-                {title: '店铺', field: 'shopName'},
-                {title: '艺人', field: 'servicername'},
-                {title: '状态', templet: '#stateTpl'},
+                {title: '单号', width: 186, templet: '#orderNoTpl'},
+                {title: '用户', templet: '#usernameTpl'},
+                {title: '项目', width: 40, templet: '#imageTpl'},
+                {title: '项目名', templet: '#projectNameTpl'},
+                {title: '店铺', templet: '#shopNameTpl'},
+                {title: '艺人', templet: '#servicerNameTpl'},
+                {title: '状态', width: 60, templet: '#stateTpl'},
                 {title: '评价时间', field: 'initTime'},
+                {title: '内容', field: 'evaluateDetail'},
                 {title: '操作', align: 'center', toolbar: '#LAY-msp-evaluate-toolbar'}
             ]],
             page: true,
@@ -156,7 +180,7 @@
             admin.popup({
                 title: '订单详情',
                 area: ['907px', ''],
-                offset: '100px',
+                offset: '10px',
                 id: 'LAY-msp-evaluate-popup',
                 success: function (layero, index) {
                     console.log(data);
@@ -173,6 +197,39 @@
                             format: 'yyyy-MM-dd HH:mm:ss'
                         });
 
+                        var multiple_images = [];
+                        if (!!data && !!data.evaluateBanner) {
+                            multiple_images = data.evaluateBanner.split(";");
+                        }
+                        upload.render({
+                            elem: '#LAY-msp-evaluate-banner',
+                            multiple: true,
+                            auto: false,
+                            accept: 'images',
+                            acceptMime: 'image/*',
+                            choose: function (obj) {//预读本地文件示例，不支持ie8
+                                obj.preview(function (index, file, result) {
+                                    $('#div-slide_show').append('<a><img src="' + result + '" alt="' + file.name
+                                        + '" title="点击删除" class="layui-upload-img" width="160" height="160" name="delMultipleImgs"></a>');
+                                    multiple_images.push(file);
+                                });
+                            }
+                        });
+
+                        $(document).on("click", "[name=delMultipleImgs]", function (e) {
+                            var this_img = $(this);
+                            var subscript = $("#div-slide_show img").index(this_img); //获取下标
+                            this_img.parent().remove(); //删除图片
+                            multiple_images.splice(subscript, 1); //删除数组
+                            multiple_images.sort(); //重新排序
+
+                        });
+
+                        $(document).on("click", "#LAY-msp-evaluate-upload-del", function (event) {
+                            $('#LAY-msp-evaluate-image').attr('src', ' ');
+                            formData.set('imageFile', '');
+                        });
+
                         // 表单渲染
                         form.render(null, 'LAY-msp-evaluate-form2');
 
@@ -181,11 +238,20 @@
                             let field = obj.field; //获取提交的字段
 
                             for (let name in field) {
-                                /*if (name == 'initTime') {
-                                } else if (name == 'detail') {
-                                } else*/
                                 formData.set(name, field[name]);
                             }
+
+                            formData.delete('bannerFiles');
+                            multiple_images.forEach(function (file) {
+                                formData.append('bannerFiles', file, file.name);
+                            });
+
+                            formData.delete('evaluateBanner');
+                            var evaluateBanner = "";
+                            $('[name=evaluateBanner]').each(function () {
+                                evaluateBanner += $(this).val() + ";";
+                            });
+                            formData.set('evaluateBanner', evaluateBanner);
 
                             admin.req({
                                 url: '/api/admin/msp/evaluate',

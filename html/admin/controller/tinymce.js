@@ -27,7 +27,8 @@ layui.define(['jquery'], function (exports) {
         },
         success: function (res, succFun, failFun) {//上传完成回调
             if (res[this.response.statusName] === this.response.statusCode.ok) {
-                succFun('http://192.168.18.14/api/' + res.data);
+                //succFun('http://192.168.18.14/api/' + res.data);
+                succFun('http://localhost/api/' + res.data);
             } else {
                 failFun(res[this.response.msgName]);
             }
@@ -73,7 +74,8 @@ layui.define(['jquery'], function (exports) {
                 contentType: false,
                 processData: false,
                 success: function (res) {
-                    succFun('http://192.168.18.14/api' + res.data);
+                    //succFun('http://192.168.18.14/api' + res.data);
+                    succFun('http://localhost/api' + res.data);
                 },
                 error: function (res) {
                     failFun("网络错误：" + res.status);

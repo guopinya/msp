@@ -4,10 +4,25 @@
 
     <select id="pageByBannerCond" resultType="com.project.system.entity.Banner">
         SELECT
-            *
+        *
         FROM
-            system_banner b
+        system_banner b
         LEFT JOIN
-            system_area a on a.id = b.area_id
+        system_area a on a.id = b.area_id
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test='banner.id!=null and banner.id!=""'>
+                AND b.id = #{banner.id}
+            </if>
+            <if test='banner.title!=null and banner.title!=""'>
+                AND b.title like concat('%', #{banner.title},'%')
+            </if>
+            <if test='banner.type!=null and banner.type!=""'>
+                AND b.type = #{banner.type}
+            </if>
+
+            <if test='banner.areaId!=null and banner.areaId!=""'>
+                AND a.id = #{banner.areaId}
+            </if>
+        </trim>
     </select>
 </mapper>

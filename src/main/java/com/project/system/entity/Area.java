@@ -15,15 +15,15 @@ import java.io.Serializable;
 public class Area extends BaseEnity implements Serializable {
     @TableId
     private String id;
-    private String parentId;
+    private String areaParentId;
     private String areaName;
     private String areaCode;
-    private String abbre;
-    private String level;
-    private String citycode;
-    private String zipcode;
-    private String baiducode;
-    private String lng;
-    private String lat;
-    private String isHot;
+    private String areaAbbre;
+    private String areaLevel;
+    private String areaCitycode;
+    private String areaZipcode;
+    private String areaBaiducode;
+    private String areaLng;
+    private String areaLat;
+    private String areaIsHot;
 }

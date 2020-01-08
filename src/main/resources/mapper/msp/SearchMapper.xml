@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.msp.mapper.SearchMapper">
+    <resultMap id="SearchResultMap" type="com.project.msp.entity.Search">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="area_id" jdbcType="VARCHAR" property="areaId"/>
+        <result column="search_value" jdbcType="VARCHAR" property="searchValue"/>
+        <result column="search_type" jdbcType="VARCHAR" property="searchType"/>
+        <result column="search_version" jdbcType="VARCHAR" property="searchVersion"/>
+        <result column="search_model" jdbcType="VARCHAR" property="searchModel"/>
+        <result column="sort_number" jdbcType="INTEGER" property="sortNumber"/>
+        <result column="is_display" jdbcType="VARCHAR" property="isDisplay"/>
+        <result column="init_time" jdbcType="TIMESTAMP" property="initTime"/>
+        <result column="init_addr" jdbcType="VARCHAR" property="initAddr"/>
+        <result column="init_user" jdbcType="VARCHAR" property="initUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_addr" jdbcType="VARCHAR" property="updateAddr"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+
+        <association property="user" resultMap="UserResultMap"/>
+    </resultMap>
+    <resultMap id="UserResultMap" type="com.project.user.entity.User">
+        <id column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="user_type" jdbcType="VARCHAR" property="userType"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="sex" jdbcType="BIT" property="sex"/>
+        <result column="signature" jdbcType="VARCHAR" property="signature"/>
+        <result column="domain" jdbcType="VARCHAR" property="domain"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="recent_login" jdbcType="TIMESTAMP" property="recentLogin"/>
+        <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath"/>
+        <result column="back_ground_path" jdbcType="VARCHAR" property="backGroundPath"/>
+        <result column="user_level" jdbcType="INTEGER" property="userLevel"/>
+        <result column="vip_level" jdbcType="INTEGER" property="vipLevel"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="ry_token" jdbcType="VARCHAR" property="ryToken"/>
+        <result column="user_pid0" jdbcType="VARCHAR" property="userPid0"/>
+        <result column="user_pid1" jdbcType="VARCHAR" property="userPid1"/>
+        <result column="shop_id" jdbcType="VARCHAR" property="shopId"/>
+    </resultMap>
+
+    <select id="list" resultMap="SearchResultMap">
+        SELECT
+        s.*,u.*
+        FROM
+        msp_search s
+        LEFT JOIN USER u ON s.init_user = u.user_id
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test='search.id!=null and search.id!=""'>
+                AND s.id = #{search.id}
+            </if>
+            <if test='search.initUser!=null and search.initUser!=""'>
+                AND s.init_user = #{search.initUser}
+            </if>
+            <if test='search.searchValue!=null and search.searchValue!=""'>
+                AND s.search_value like concat('%', #{search.searchValue},'%')
+            </if>
+            <if test='search.searchType!=null and search.searchType!=""'>
+                AND s.search_type = #{search.searchType}
+            </if>
+        </trim>
+    </select>
+
+    <select id="pageBySearchCond" resultMap="SearchResultMap">
+        SELECT
+        s.*,u.*
+        FROM
+        msp_search s
+        LEFT JOIN USER u ON s.init_user = u.user_id
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test='search.id!=null and search.id!=""'>
+                AND s.id = #{search.id}
+            </if>
+            <if test='search.initUser!=null and search.initUser!=""'>
+                AND s.init_user = #{search.initUser}
+            </if>
+            <if test='search.searchValue!=null and search.searchValue!=""'>
+                AND s.search_value like concat('%', #{search.searchValue},'%')
+            </if>
+            <if test='search.searchType!=null and search.searchType!=""'>
+                AND s.search_type = #{search.searchType}
+            </if>
+        </trim>
+    </select>
+
+</mapper>

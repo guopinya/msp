@@ -1,0 +1,138 @@
+<title>搜索管理</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a>
+            <cite>系统管理</cite>
+        </a>
+        <a>
+            <cite>搜索管理</cite>
+        </a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="LAY-msp-search-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: auto">关键词</label>
+                    <div class="layui-input-inline">
+                        <input autocomplete="off" class="layui-input" name="searchValue" placeholder="请输入关键词"
+                               type="text">
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="vertical-align: bottom;">
+                    <button class="layui-btn" id="LAY-msp-search-search" lay-filter="LAY-msp-search-search"
+                            lay-submit>搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <table id="LAY-msp-search-table" lay-filter="LAY-msp-search-table"></table>
+
+            <script id="usernameTpl" type="text/html">
+                {{   d.user.username }}
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['form', 'table', 'tinymce'], function () {
+        let $ = layui.$,
+            view = layui.view,
+            admin = layui.admin,
+            form = layui.form,
+            table = layui.table;
+        let tinymce = layui.tinymce;
+
+        // 表单渲染
+        form.render(null, 'LAY-msp-search-form');
+
+        // 表单监听 搜索按钮
+        form.on('submit(LAY-msp-search-search)', function (obj) {
+            // 执行重载
+            table.reload('LAY-msp-search-table', {
+                where: obj.field
+            });
+        });
+
+        // 表格渲染
+        table.render({
+            elem: '#LAY-msp-search-table',
+            url: '/api/admin/msp/search',
+            cols: [[
+                {title: '搜索词', field: 'searchValue'},
+                {title: '版本', field: 'searchVersion'},
+                {title: '机型', field: 'searchModel'},
+                {title: '用户', templet: '#usernameTpl'},
+                {title: '搜索时间', field: 'initTime'}
+            ]],
+            page: true,
+            text: {none: '暂无相关数据！'}
+        });
+
+        // 表格监听 工具条
+        table.on('tool(LAY-msp-search-table)', function (obj) {
+            let data = obj.data;
+            if (obj.event === 'edit') {
+                data.FORM_TYPE = 'put';
+                openMspShopPopup(data);
+            }
+        });
+
+        // 打开搜索详情
+        function openMspShopPopup(data) {
+            data.attrList = attrList;
+
+            admin.popup({
+                title: '搜索详情',
+                area: ['507px', ''],
+                offset: '110px',
+                id: 'LAY-msp-search-popup',
+                success: function (layero, index) {
+                    console.log(data);
+                    view(this.id).render('msp/search/form', data).done(function () {
+                        let formData = new FormData();
+
+                        // 表单渲染
+                        form.render(null, 'LAY-msp-search-form2');
+
+                        // 表单监听 提交按钮
+                        form.on('submit(LAY-msp-search-save)', function (obj) {
+                            let field = obj.field; //获取提交的字段
+
+                            for (let name in field) {
+                                formData.set(name, field[name]);
+                            }
+
+                            admin.req({
+                                url: '/api/admin/msp/search',
+                                type: data.FORM_TYPE,
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                done: function (res) {
+                                    layer.close(index);
+                                    layer.msg(res.msg, {icon: 1});
+                                    $('#LAY-msp-search-search').click();
+                                }
+                            });
+                        });
+
+
+                        // 监听 返回按钮
+                        $('#LAY-msp-search-popup').on('click', '#LAY-msp-search-return', function () {
+                            // 执行关闭
+                            layer.close(index);
+                        });
+                    });
+                }
+            });
+        }
+
+    });
+</script>

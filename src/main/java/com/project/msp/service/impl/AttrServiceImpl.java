@@ -26,12 +26,14 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, Attr> implements IA
      */
     @Override
     public IPage<Attr> pageByAttrCond(IPage<Attr> page, Attr attr) {
-        String type = attr.getType();
-        String name = attr.getAttrName();
+        String attrParentId = attr.getAttrParentId();
+        String attrName = attr.getAttrName();
+        String attrType = attr.getAttrType();
 
         Wrapper<Attr> wrapper = new QueryWrapper<Attr>().lambda()
-                .eq(StringUtils.isNotBlank(type), Attr::getType, type)
-                .like(StringUtils.isNotBlank(name), Attr::getAttrName, name);
+                .eq(StringUtils.isNotBlank(attrParentId), Attr::getAttrParentId, attrParentId)
+                .like(StringUtils.isNotBlank(attrName), Attr::getAttrName, attrName)
+                .eq(StringUtils.isNotBlank(attrType), Attr::getAttrType, attrType);
         return attrMapper.selectPage(page, wrapper);
     }
 }

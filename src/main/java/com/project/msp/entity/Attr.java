@@ -16,10 +16,10 @@ public class Attr extends BaseEnity implements Serializable {
     @TableId
     private String id;
     private String areaId;
-    private String parentId;
+    private String attrParentId;
     private String attrName;
     private String attrCode;
-    private String image;
+    private String attrImage;
     private String attrDesc;
-    private String type;
+    private String attrType;
 }

@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author zhuyifa
  * @since 2019-08-08
  */
-@RestController
+@RestController("areaController_admin")
 @RequestMapping("/admin/system/area")
 public class AreaController extends BaseController {
 
@@ -34,14 +34,7 @@ public class AreaController extends BaseController {
      */
     @GetMapping
     public JsonResult getArea(Area area) {
-        String name = area.getAreaName();
-        String code = area.getAreaCode();
-        String isHot = area.getIsHot();
-        Wrapper<Area> wrapper = new QueryWrapper<Area>().lambda().orderByAsc(Area::getSortNumber)
-                .like(StringUtils.isNotBlank(name), Area::getAreaName, name)
-                .like(StringUtils.isNotBlank(code), Area::getAreaCode, code)
-                .eq(StringUtils.isNotBlank(isHot), Area::getIsHot, isHot);
-        return JsonResult.ok("获取菜单成功", areaService.list(wrapper));
+        return JsonResult.ok("获取菜单成功", areaService.list(area));
     }
 
     /**

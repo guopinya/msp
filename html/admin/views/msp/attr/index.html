@@ -38,7 +38,7 @@
             <table id="LAY-msp-attr-table" lay-filter="LAY-msp-attr-table"></table>
 
             <script id="imageTpl" type="text/html">
-                <img style="height: 100%;" src="{{ '/api' + d.image }}" alt="" lay-event="img">
+                <img style="height: 100%;" src="{{ '/api' + d.attrImage }}" alt="" lay-event="img">
             </script>
             <script id="LAY-msp-attr-toolbar" type="text/html">
                 <a class="layui-btn layui-btn-xs " lay-event="post">添加下一级</a>
@@ -73,7 +73,7 @@
             elem: '#LAY-msp-attr-table',
             url: '/api/admin/msp/attr/type/project',
             treeId: 'id',// 树形id字段名称
-            treeUpId: 'parentId',// 树形父id字段名称
+            treeUpId: 'attrParentId',// 树形父id字段名称
             treeShowName: 'attrName',// 以树形式显示的字段
             cols: [[
                 {title: '图片', templet: '#imageTpl'},
@@ -107,14 +107,14 @@
 
         // 监听 添加按钮
         $('#LAY-msp-attr-add').on('click', function () {
-            openMspShopPopup({FORM_TYPE: 'post', parentId: '0'});
+            openMspShopPopup({FORM_TYPE: 'post', attrParentId: '0', attrType: 'project'});
         });
 
         // 打开分类详情
         function openMspShopPopup(data) {
             admin.popup({
                 title: '分类详情',
-                area: ['907px', ''],
+                area: ['507px', ''],
                 offset: '100px',
                 id: 'LAY-msp-attr-popup',
                 success: function (layero, index) {
@@ -144,14 +144,8 @@
                         form.on('submit(LAY-msp-attr-save)', function (obj) {
                             let field = obj.field; //获取提交的字段
 
-                            // let content = edit.getContent();
-                            // if (field.type === 'rich_text' && !content) return layer.msg('富文本不能为空', {icon: 5});
-
                             for (let name in field) {
-                                if (name === 'detail')
-                                    formData.set(name, content);
-                                else
-                                    formData.set(name, field[name]);
+                                formData.set(name, field[name]);
                             }
 
                             admin.req({

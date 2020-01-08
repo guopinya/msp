@@ -19,40 +19,38 @@
         <div class="layui-form-item">
             <div class="layui-collapse" lay-filter="test">
                 <div class="layui-colla-item">
-                    <h2 class="layui-colla-title">买家信息：{{d.params.projectName || ' ' }}</h2>
+                    <h2 class="layui-colla-title">买家信息：{{d.params.user.username || ' ' }}</h2>
                     <div class="layui-colla-content">
-                        <p> 昵称：{{d.params.projectName || ' ' }} ，电话：{{
-                            d.params.projectTag || ' ' }} ，真实姓名：{{ d.params.projectPrice || ' ' }}</p>
+                        <p> 昵称：{{d.params.user.username || ' ' }} ，电话：{{
+                            d.params.user.mobile || ' ' }} </p>
                     </div>
                 </div>
                 <div class="layui-colla-item">
-                    <h2 class="layui-colla-title">订单信息：{{d.params.orderNo || ' ' }}</h2>
+                    <h2 class="layui-colla-title">订单信息：{{d.params.order.orderNo || ' ' }}</h2>
                     <div class="layui-colla-content">
-                        <p> 昵称：{{d.params.projectName || ' ' }} ，电话：{{
-                            d.params.projectTag || ' ' }} ，真实姓名：{{ d.params.projectPrice || ' ' }}</p>
+                        <p> 单号：{{d.params.order.orderNo || ' ' }} </p>
                     </div>
                 </div>
                 <div class="layui-colla-item">
-                    <h2 class="layui-colla-title">项目：{{d.params.projectName || ' ' }} </h2>
+                    <h2 class="layui-colla-title">项目：{{d.params.project.projectName || ' ' }} </h2>
                     <div class="layui-colla-content">
-                        {{# let imageURL = d.params.projectImage || '/user/1141245074473861122.png'; }}
+                        {{# let imageURL = d.params.project.projectImage || '/user/1141245074473861122.png'; }}
                         <img src="{{ '/api' + imageURL }}" alt="" width="88" height="88" id="LAY-user-back-avatar">
-                        <p> 项目：{{d.params.projectName || ' ' }} 标签：{{
-                            d.params.projectTag || ' ' }} ，单价：{{ d.params.projectPrice || ' ' }}</p>
+                        <p> 项目：{{d.params.project.projectName || ' ' }} 标签：{{
+                            d.params.project.projectTag || ' ' }} ，单价：{{ d.params.project.projectPrice || ' ' }}</p>
                     </div>
                 </div>
                 <div class="layui-colla-item">
-                    <h2 class="layui-colla-title">店铺：{{d.params.shopName || ' ' }}</h2>
+                    <h2 class="layui-colla-title">店铺：{{d.params.shop.shopName || ' ' }}</h2>
                     <div class="layui-colla-content">
-                        <p> 铺名：{{d.params.shopName || ' ' }} ，地址：{{
-                            d.params.shopAddr || ' ' }} ，电话：{{ d.params.shopPhone || ' ' }}</p>
+                        <p> 铺名：{{d.params.shop.shopName || ' ' }} ，地址：{{
+                            d.params.shop.shopAddr || ' ' }} ，电话：{{ d.params.shop.shopPhone || ' ' }}</p>
                     </div>
                 </div>
                 <div class="layui-colla-item">
-                    <h2 class="layui-colla-title">艺人：{{d.params.servicername || ' ' }}</h2>
+                    <h2 class="layui-colla-title">艺人：{{d.params.servicer.username || ' ' }}</h2>
                     <div class="layui-colla-content">
-                        <p> 铺名：{{d.params.shopName || ' ' }} ，地址：{{
-                            d.params.shopAddr || ' ' }} ，电话：{{ d.params.shopPhone || ' ' }}</p>
+                        <p> 姓名：{{d.params.servicer.username || ' ' }} </p>
                     </div>
                 </div>
             </div>
@@ -75,22 +73,46 @@
             <label class="layui-form-label">内容</label>
             <div class="layui-input-block">
                 <script template type="text/html">
-                    <textarea type="text" name="detail" lay-verify="required"
+                    <textarea type="text" name="evaluateDetail" lay-verify="required"
                               placeholder="请输入内容" autocomplete="off"
-                              class="layui-textarea">{{ d.params.detail || '' }}</textarea>
+                              class="layui-textarea">{{ d.params.evaluateDetail || '' }}</textarea>
                 </script>
             </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">评价图</label>
+        <div class="layui-upload">
+            <script template type="text/html">
+                <button type="button" class="layui-btn" id="LAY-msp-evaluate-banner">多图片上传</button>
+                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                    预览：
+                    <div class="layui-upload-list" id="div-slide_show">
+                        {{# let current = d.params.evaluateBanner || ''; }}
+                        {{# if(!!current){ }}
+                        {{# let banners = current.split(';'); }}
+                        {{# for (let i = 0; i < banners.length; i++) { }}
+                        <a>
+                            <img src="{{ '/api' +  banners[i] }}" alt="{{ '/api' + banners[i] }}"
+                                 title="点击删除" class="layui-upload-img" width="160" height="160" name="delMultipleImgs">
+                            <input type="hidden" name="evaluateBanner" value="{{ banners[i] }}"/>
+                        </a>
+                        {{# } }}
+                        {{# } }}
+                    </div>
+                </blockquote>
+            </script>
         </div>
     </div>
     <div class="layui-col-md6">
         <label class="layui-form-label">审核评价展示状态</label>
         <div class="layui-input-block">
             <script template type="text/html">
-                {{# let current = d.params.state || ''; }}
+                {{# let current = d.params.evaluateState || ''; }}
                 {{# let attribute0 = (current === 'yes') ? 'checked' : ''; }}
-                <input type="radio" name="state" value="yes" title="展示" {{ attribute0 }}>
+                <input type="radio" name="evaluateState" value="yes" title="展示" {{ attribute0 }}>
                 {{# let attribute1 = (current === 'no' || !current) ? 'checked' : ''; }}
-                <input type="radio" name="state" value="no" title="隐藏" {{ attribute1 }}>
+                <input type="radio" name="evaluateState" value="no" title="隐藏" {{ attribute1 }}>
             </script>
         </div>
     </div>

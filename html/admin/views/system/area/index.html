@@ -41,12 +41,11 @@
             elem: '#LAY-system-area-table',
             url: '/api/admin/system/area',
             treeId: 'id',// 树形id字段名称
-            treeUpId: 'parentId',// 树形父id字段名称
+            treeUpId: 'areaParentId',// 树形父id字段名称
             treeShowName: 'areaName',// 以树形式显示的字段
             cols: [[
                 {title: '地区名', field: 'areaName'},
                 {title: '简称', field: 'areaCode'},
-                /*{title: '排序数字', field: 'sortNumber'},*/
                 {title: '操作', align: 'center', toolbar: '#LAY-system-area-toolbar'}
             ]],
             text: {none: '暂无相关数据！'}
@@ -70,7 +69,7 @@
         // 监听 添加按钮
         $('#LAY-system-area-add').on('click', function () {
             // 打开地区详情
-            openContentThemePopup({FORM_TYPE: 'post', parentId: '0'});
+            openContentThemePopup({FORM_TYPE: 'post', areaParentId: '0'});
         });
 
         // 打开地区详情

@@ -17,34 +17,22 @@ public class Shop extends BaseEnity implements Serializable {
     @TableId
     private String id;
     private String areaId;
-    /**
-     * 区代
-     */
-    private String parentId0;
-    /**
-     * 督导
-     */
-    private String parentId1;
-    /**
-     * 加盟商
-     */
-    private String parentId2;
-    /**
-     * 店长
-     */
-    private String parentId3;
+    private String shopParentId0; // 区代
+    private String shopParentId1; // 督导
+    private String shopParentId2; //加盟商
+    private String shopParentId3; //店长
     private String shopName;
-    private String no;
-    private String image;
-    private String banner;
-    private String tag;
-    private String state;
-    private String stateFlag;
-    private String stime;
-    private String etime;
-    private String addr;
-    private String phone;
-    private String isHot;
-    private String isRecommd;
-    private String detail;
+    private String shopNo;
+    private String shopImage;
+    private String shopBanner;
+    private String shopTag;
+    private String shopState;
+    private String shopStateFlag;
+    private String shopStime;
+    private String shopEtime;
+    private String shopAddr;
+    private String shopPhone;
+    private String shopIsHot;
+    private String shopIsRecommend;
+    private String shopDetail;
 }
