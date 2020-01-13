@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.sq.mapper.CrowdMasterMapper">
+
+    <select id="exists" resultType="java.lang.Boolean">
+        select
+            count(1)
+        from
+            sq_crowd_master
+        where
+            crowd_id = #{crowdId}
+        and master_id = #{masterId}
+    </select>
+
+    <select id="selectPage" resultType="com.project.sq.entity.CrowdMaster">
+        select
+            scm.*,
+            su.nickname, sc.single_amount
+        from
+            sq_crowd_master scm
+        left join sq_crowd sc on scm.crowd_id = sc.id
+        left join system_user su on scm.master_id = su.id
+        <where>
+            <if test="p2.crowdId != null and p2.crowdId != ''">
+                and scm.crowd_id = #{p2.crowdId}
+            </if>
+        </where>
+    </select>
+</mapper>

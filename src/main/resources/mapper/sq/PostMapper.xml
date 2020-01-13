@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.sq.mapper.PostMapper">
+
+    <select id="selectById" resultType="com.project.sq.entity.Post">
+        select
+            sp.*,
+            st.name topic_name,
+            sc.name circle_name,
+            su.avatar,
+            su.nickname
+        from
+            sq_post sp
+        left join sq_topic st on sp.topic_id = st.id
+        left join sq_circle sc on sp.circle_id = sc.id
+        left join system_user su on sp.user_id = su.id
+        where sp.id = #{id}
+    </select>
+
+    <select id="selectList" resultType="com.project.sq.entity.Post">
+        select
+            sp.*
+        from
+            sq_post sp
+        where
+            user_id = #{userId}
+        limit 10
+    </select>
+
+    <select id="selectPage" resultType="com.project.sq.entity.Post">
+        select
+            sp.*,
+            st.name topic_name,
+            sc.name circle_name,
+            su.avatar, su.nickname
+        from
+            sq_post sp
+        <if test="p2.isLiked != null and p2.isLiked">
+            left join sq_post_master spm on sp.id = spm.post_id
+        </if>
+        left join sq_topic st on sp.topic_id = st.id
+        left join sq_circle sc on sp.circle_id = sc.id
+        left join system_user su on sp.user_id = su.id
+        <if test="p2.isFollowed != null and p2.isFollowed">
+            left join sq_follow sf on sp.user_id = sf.target_id
+        </if>
+        <where>
+            <if test="p2.isLiked != null and p2.isLiked">
+                and spm.act_type = '0' and spm.master_id = #{p2.userId}
+            </if>
+            <if test="p2.isFollowed != null and p2.isFollowed">
+                and sf.user_id = #{p2.userId}
+            </if>
+            <if test="p2.isRecommend != null and p2.isRecommend">
+                and sp.is_recommend = #{p2.isRecommend}
+            </if>
+        </where>
+    </select>
+</mapper>

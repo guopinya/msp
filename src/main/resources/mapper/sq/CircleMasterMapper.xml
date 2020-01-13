@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.sq.mapper.CircleMasterMapper">
+
+    <delete id="delete">
+        delete from
+            sq_circle_master
+        where
+            circle_id = #{circleId}
+        and master_id = #{masterId}
+    </delete>
+
+    <select id="exists" resultType="java.lang.Boolean">
+        select
+            count(1)
+        from
+            sq_circle_master
+        where
+            circle_id = #{circleId}
+        and master_id = #{masterId}
+    </select>
+
+    <select id="selectPage" resultType="com.project.sq.entity.CircleMaster">
+        select
+            scm.*,
+            su.avatar, su.nickname
+        from
+            sq_circle_master scm
+        left join
+            system_user su on scm.master_id = su.id
+        <where>
+            <if test="p2.circleId != null and p2.circleId != ''">
+                and scm.circle_id = #{p2.circleId}
+            </if>
+        </where>
+    </select>
+</mapper>

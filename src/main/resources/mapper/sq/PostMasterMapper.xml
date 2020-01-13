@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.sq.mapper.PostMasterMapper">
+
+    <delete id="delete">
+        delete from
+            sq_post_master
+        where
+            act_type = #{actType}
+        and post_id = #{postId}
+        and master_id = #{masterId}
+    </delete>
+
+    <select id="exists" resultType="java.lang.Boolean">
+        select
+            count(1)
+        from
+            sq_post_master
+        where
+            act_type = #{actType}
+        and post_id = #{postId}
+        and master_id = #{masterId}
+    </select>
+
+    <select id="selectPage" resultType="com.project.sq.entity.PostMaster">
+        select
+            spm.*,
+            su.avatar, su.nickname
+        from
+            sq_post_master spm
+        left join system_user su on spm.master_id = su.id
+        <where>
+            <if test="p2.postId != null and p2.postId != ''">
+                and spm.post_id = #{p2.postId}
+            </if>
+            <if test="p2.actType != null and p2.actType != ''">
+                and spm.act_type = #{p2.actType}
+            </if>
+        </where>
+    </select>
+</mapper>

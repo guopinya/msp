@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.sq.mapper.CircleMapper">
+
+    <select id="selectPage" resultType="com.project.sq.entity.Circle">
+        select
+            sc.*
+        from
+            sq_circle sc
+        <if test="p2.isJoined != null and p2.isJoined">
+            left join sq_circle_master scm on scm.circle_id = sc.id
+        </if>
+        <where>
+            <if test="p2.name != null and p2.name != ''">
+                and sc.name like concat('%', #{p2.name}, '%')
+            </if>
+            <if test="p2.isJoined != null and p2.isJoined">
+                and scm.master_id = #{p2.masterId}
+            </if>
+        </where>
+    </select>
+</mapper>

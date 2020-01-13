@@ -13,7 +13,8 @@ import com.project.user.entity.User;
 public class SecurityUtils extends org.apache.shiro.SecurityUtils {
 
     /**
-     * 获取用户ID
+     * 获取用户ID<br/>
+     * 强制登录
      *
      * @return 用户ID
      */
@@ -29,4 +30,23 @@ public class SecurityUtils extends org.apache.shiro.SecurityUtils {
 
         throw new LoginExpiredException("未登录/登录过期");
     }
+
+    /**
+     * 获取用户ID
+     *
+     * @return 用户ID
+     */
+    public static String getUserId2() {
+        Object principal = getSubject().getPrincipal();
+        if (principal instanceof User) {
+            return ((User) principal).getUserId();
+        }
+
+        if (principal instanceof SysUser) {
+            return ((SysUser) principal).getId();
+        }
+
+        return null;
+    }
+
 }

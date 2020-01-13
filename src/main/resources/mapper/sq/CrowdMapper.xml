@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.sq.mapper.CrowdMapper">
+
+    <select id="selectPage" resultType="com.project.sq.entity.Crowd">
+        select
+            sc.*
+        from
+            sq_crowd sc
+        <if test="p2.isJoined != null and p2.isJoined">
+            left join sq_crowd_master scm on scm.crowd_id = sc.id
+        </if>
+        <where>
+            <if test="p2.isJoined != null and p2.isJoined">
+                and scm.master_id = #{p2.userId}
+            </if>
+            <if test="p2.isCarousel != null and p2.isCarousel">
+                and sc.is_carousel = #{p2.isCarousel}
+            </if>
+            <if test="p2.isRecommend != null and p2.isRecommend">
+                and sc.is_recommend = #{p2.isRecommend}
+            </if>
+        </where>
+    </select>
+</mapper>

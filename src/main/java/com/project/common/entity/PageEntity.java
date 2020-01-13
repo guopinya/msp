@@ -1,7 +1,7 @@
 package com.project.common.entity;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -11,6 +11,7 @@ import java.io.Serializable;
  * @author zhuyifa
  * @since 2019-10-14
  */
+@Data
 public class PageEntity<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,30 +40,15 @@ public class PageEntity<T> implements Serializable {
      *
      * @return mybatisplus分页
      */
-    public final IPage<T> getMpPage() {
+    public final Page<T> getMpPage() {
         if (page == null) {
             page = 1;
         }
         if (limit == null) {
-            limit = Integer.MAX_VALUE;
+            limit = 10;
         }
 
         return new Page<>(page, limit);
     }
 
-    public Integer getPage() {
-        return page;
-    }
-
-    public void setPage(Integer page) {
-        this.page = page;
-    }
-
-    public Integer getLimit() {
-        return limit;
-    }
-
-    public void setLimit(Integer limit) {
-        this.limit = limit;
-    }
 }
